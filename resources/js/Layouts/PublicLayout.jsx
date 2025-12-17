@@ -1,4 +1,7 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
+import { useEffect, useRef, useState } from "react";
+import SiteFooter from "@/Components/SiteFooter";
+import useTranslate from "@/hooks/useTranslate";
 
 const socials = [
   { name: "TikTok", href: "#", icon: TikTokIcon },
@@ -7,18 +10,44 @@ const socials = [
 ];
 
 const navItems = [
-  { label: "Home", routeName: "home" },
-  { label: "About Us", routeName: "about" },
-  { label: "Products", routeName: "products" },
-  { label: "Promotion", routeName: "promotion" },
-  { label: "Contact Us", routeName: "contact" },
+  { key: "messages.home", routeName: "home" },
+  { key: "messages.about", routeName: "about" },
+  { key: "messages.products", routeName: "products" },
+  { key: "messages.promotion", routeName: "promotion" },
+  { key: "messages.contact", routeName: "contact" },
 ];
 
 export default function PublicLayout({ children }) {
-  const { url } = usePage();
+  const { t, locale } = useTranslate();
+  const page = usePage();
+  const url = page.url;
 
-  // Inertia url က "/about" "/products" စတာမျိုးဖြစ်မယ်
+
+  const [openLang, setOpenLang] = useState(false);
+  const langRef = useRef(null);
+
   const isActive = (path) => url === path || url.startsWith(path + "/");
+
+  const changeLanguage = (lang) => {
+    setOpenLang(false);
+
+    router.visit(route("language.switch", lang), {
+      method: "get",
+      preserveScroll: true,
+      preserveState: false, // ✅ props (locale/t) update ဖြစ်အောင်
+      replace: true,
+    });
+  };
+
+  // ✅ click outside => close dropdown
+  useEffect(() => {
+    const onDown = (e) => {
+      if (!langRef.current) return;
+      if (!langRef.current.contains(e.target)) setOpenLang(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -26,26 +55,18 @@ export default function PublicLayout({ children }) {
         <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-4">
           {/* Left: Logo */}
           <Link href={route("home")} className="flex items-center gap-2">
-            {/* TODO: မင်း logo image file ထည့်ချင်ရင် public/images/logo.png ထားပြီး img သုံး */}
             <img
               src="/images/logo.png"
               alt="DKTD-Genki"
               className="h-10 w-auto"
-              onError={(e) => {
-                // logo မရှိသေးရင် text fallback
-                e.currentTarget.style.display = "none";
-              }}
+              onError={(e) => (e.currentTarget.style.display = "none")}
             />
-            <span className="text-sm font-semibold tracking-wide text-slate-800">
-              {/* fallback text (logo မထည့်သေးရင်မြင်ချင်တာ) */}
-            </span>
           </Link>
 
           {/* Center: Nav */}
           <nav className="hidden items-center gap-10 md:flex">
             {navItems.map((item) => {
               const href = route(item.routeName);
-              // path ကို route URL ကနေယူ (simple)
               const path = new URL(href, window.location.origin).pathname;
               const active = isActive(path);
 
@@ -55,11 +76,12 @@ export default function PublicLayout({ children }) {
                   href={href}
                   className={[
                     "text-[16px] font-semibold",
-                    active ? "text-[#0C4A6E]" : "text-[#0C4A6E]",
-                    "hover:opacity-80",
+                    "text-[#0C4A6E] hover:opacity-80",
+                    active ? "opacity-100" : "opacity-90",
                   ].join(" ")}
                 >
-                  {item.label}
+                  {/* ✅ translation key မရရင် fallback */}
+                  {t(item.key)}
                 </Link>
               );
             })}
@@ -67,14 +89,43 @@ export default function PublicLayout({ children }) {
 
           {/* Right: Language + Social */}
           <div className="flex items-center gap-4">
-            {/* Language dropdown (UI only) */}
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-full border border-[#0C4A6E] px-4 py-2 text-sm font-semibold text-[#0C4A6E] hover:bg-slate-50"
-            >
-              EN
-              <ChevronDownIcon className="h-4 w-4" />
-            </button>
+            {/* Language dropdown */}
+            <div ref={langRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setOpenLang((v) => !v)}
+                className="flex items-center gap-2 rounded-full border border-[#0C4A6E] px-4 py-2 text-sm font-semibold text-[#0C4A6E] hover:bg-slate-50"
+              >
+                {locale.toUpperCase()}
+                <ChevronDownIcon className="h-4 w-4" />
+              </button>
+
+              {openLang && (
+                <div className="absolute right-0 mt-2 w-36 overflow-hidden rounded-md border bg-white shadow z-50">
+                  <button
+                    type="button"
+                    onClick={() => changeLanguage("en")}
+                    className={[
+                      "block w-full px-4 py-2 text-left hover:bg-gray-100",
+                      locale === "en" ? "bg-gray-50 font-semibold" : "",
+                    ].join(" ")}
+                  >
+                    English
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => changeLanguage("kh")}
+                    className={[
+                      "block w-full px-4 py-2 text-left hover:bg-gray-100",
+                      locale === "th" ? "bg-gray-50 font-semibold" : "",
+                    ].join(" ")}
+                  >
+                    ខ្មែរ
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Social icons */}
             <div className="flex items-center gap-4">
@@ -94,11 +145,11 @@ export default function PublicLayout({ children }) {
           </div>
         </div>
 
-        {/* Divider line */}
         <div className="h-[1px] w-full bg-slate-100" />
       </header>
 
       <main>{children}</main>
+      <SiteFooter />
     </div>
   );
 }
@@ -132,8 +183,15 @@ function InstagramIcon({ className = "" }) {
 
 function FacebookIcon({ className = "" }) {
   return (
-    <svg className={className} viewBox="0 0 48 48" fill="currentColor">
-      <path d="M27.5 41V26.6h4.8l.7-5.6h-5.5v-3.6c0-1.6.4-2.7 2.8-2.7h3V9.6c-.5-.1-2.3-.2-4.4-.2-4.4 0-7.4 2.7-7.4 7.6V21h-5v5.6h5V41h5z" />
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.5c0-2.5 1.5-3.9 3.8-3.9
+        1.1 0 2.2.2 2.2.2v2.4H15c-1.4 0-1.8.9-1.8 1.8V12H16l-.5 3h-2.3v7A10 10 0 0 0 22 12z"/>
     </svg>
   );
 }
+

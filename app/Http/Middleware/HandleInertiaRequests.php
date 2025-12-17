@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\File;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -29,10 +30,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
+        $locale = app()->getLocale();
+
+        // lang/{locale}/messages.php ကို array အဖြစ်ဖတ်
+        $messages = [];
+        $path = lang_path($locale.'/messages.php');
+
+        if (File::exists($path)) {
+            $messages = require $path;
+        }
+
         return [
             ...parent::share($request),
+
             'auth' => [
                 'user' => $request->user(),
+            ],
+
+            // ✅ language locale ကိုထပ်ပေါင်း
+            'locale' => app()->getLocale(),
+            'translations' => [
+                'messages' => $messages,
             ],
         ];
     }
