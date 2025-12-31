@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
+
+const ITEMS_PER_PAGE = 5;
 
 const demoPromos = [
   {
@@ -69,6 +72,22 @@ const demoPromos = [
 
 export default function Promotion() {
   const { t } = useTranslate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(demoPromos.length / ITEMS_PER_PAGE);
+  
+  // Get current items
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentItems = demoPromos.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Generate page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <InnerPageLayout titleKey="messages.promotion">
@@ -97,20 +116,27 @@ export default function Promotion() {
 
           {/* List */}
           <div className="mt-10 space-y-8">
-            {demoPromos.map((p) => (
+            {currentItems.map((p) => (
               <PromoRow key={p.id} item={p} />
             ))}
           </div>
 
           {/* Pagination */}
-          <div className="mt-14 flex justify-center">
-            <div className="flex items-center gap-2">
-              <PageBox active={false}>1</PageBox>
-              <PageBox active={true}>2</PageBox>
-              <PageBox active={false}>3</PageBox>
-              <PageBox active={false}>4</PageBox>
+          {totalPages > 1 && (
+            <div className="mt-14 flex justify-center">
+              <div className="flex items-center gap-2">
+                {pageNumbers.map((number) => (
+                  <PageBox 
+                    key={number} 
+                    active={currentPage === number}
+                    onClick={() => paginate(number)}
+                  >
+                    {number}
+                  </PageBox>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </InnerPageLayout>
@@ -167,10 +193,11 @@ function PromoRow({ item }) {
   );
 }
 
-function PageBox({ active, children }) {
+function PageBox({ active, children, onClick }) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className={[
         "h-9 w-9 border text-[13px] font-semibold",
         active
