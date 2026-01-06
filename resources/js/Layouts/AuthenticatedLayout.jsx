@@ -8,7 +8,7 @@ export default function AuthenticatedLayout({
   children,
 
   // Optional (မသုံးလည်းရ)
-  subtitle = "Manage Dine Hub operations easily.",
+  subtitle = "",
   headerActions = null, // JSX buttons (optional)
 }) {
   const { auth } = usePage().props;
@@ -87,53 +87,116 @@ export default function AuthenticatedLayout({
 
   return (
     // ✅ BODY background ကို ပို premium ဖြစ်အောင်
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-slate-50 to-slate-100">
-      {/* ===== Topbar (unchanged) ===== */}
-      <div className="sticky top-0 z-40 bg-[#4f46e5] border-b">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-slate-50 to-slate-100 font-sans admin-font">
+        {/* ===== Topbar ===== */}
+        <div className="sticky top-0 z-40 bg-[#4f46e5] border-b">
         <div className="flex items-center justify-between h-16 px-4 sm:px-6">
-          <div className="flex items-center gap-3 min-w-0">
+
+            {/* Left Brand */}
+            <div className="flex items-center gap-3 min-w-0">
             <button
-              onClick={() => {
+                onClick={() => {
                 if (isDesktop) setDesktopCollapsed((v) => !v);
                 else setDrawerOpen(true);
-              }}
-              className="inline-flex items-center justify-center w-10 h-10 rounded-xl"
-              type="button"
-              aria-label="Toggle sidebar"
+                }}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-xl hover:bg-white/10"
+                type="button"
+                aria-label="Toggle sidebar"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path
-                  d="M4 6h16M4 12h16M4 18h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  style={{ color: "white" }}
+                    d="M4 6h16M4 12h16M4 18h16"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    style={{ color: "white" }}
                 />
-              </svg>
+                </svg>
             </button>
 
             <Link href={route("dashboard")} className="flex items-center gap-2 min-w-0 text-white">
-              <ApplicationLogo className="h-8 w-auto" />
-              <span className="font-semibold truncate">Dine Hub</span>
+                <ApplicationLogo className="h-8 w-auto" />
+                <div className="flex flex-col leading-tight">
+                <span className="font-semibold truncate text-base">DKDT</span>
+                <span className="text-xs text-white/70 hidden sm:block">Admin Panel</span>
+                </div>
             </Link>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="text-sm text-white/90 hidden md:block truncate max-w-[200px]">
-              {auth?.user?.name}
             </div>
 
+            {/* Right User + Logout */}
+            <div className="flex items-center gap-3">
+
+            {/* ✅ User badge */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 hover:bg-white/15 transition">
+                {/* Avatar circle */}
+                <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path
+                    d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    />
+                    <path
+                    d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    />
+                </svg>
+                </div>
+
+                <div className="flex flex-col leading-tight max-w-[160px]">
+                <span className="text-sm font-semibold text-white truncate">
+                    {auth?.user?.name}
+                </span>
+                </div>
+            </div>
+
+            {/* ✅ Logout Button */}
             <Link
-              href={route("logout")}
-              method="post"
-              as="button"
-              className="text-sm px-3 py-2 rounded-xl text-white font-medium hover:bg-white/10"
-            >
-              Log out
+                href={route("logout")}
+                method="post"
+                as="button"
+                title="Log out"
+                className="
+                    inline-flex items-center justify-center
+                    w-11 h-11 rounded-full
+                    bg-white/10 text-white
+                    hover:bg-white/20
+                    transition shadow-sm
+                    ring-1 ring-white/20
+                    hover:ring-white/40
+                "
+                >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                    d="M10 17l5-5-5-5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    />
+                    <path
+                    d="M15 12H3"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    />
+                    <path
+                    d="M21 21V3"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    />
+                </svg>
             </Link>
-          </div>
+
+            </div>
+
         </div>
-      </div>
+        </div>
+
 
       {/* ===== Overlay (mobile drawer) ===== */}
       {!isDesktop && drawerOpen && (

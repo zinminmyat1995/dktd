@@ -16,3 +16,21 @@
         letter-spacing: 0.05em;
     }
 }
+
+
+/* ✅ Admin side only font override (don't affect public pages) */
+.admin-font {
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 500;
+}
+
+.admin-font h1,
+.admin-font h2,
+.admin-font h3,
+.admin-font h4,
+.admin-font h5,
+.admin-font h6 {
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: normal !important;
+}
