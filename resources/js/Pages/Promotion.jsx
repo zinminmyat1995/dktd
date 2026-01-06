@@ -95,10 +95,10 @@ export default function Promotion() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
-            <h2 className="text-[35px] font-semibold tracking-[0.25em] text-[#D4793F]">
+            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
               PROMOTIONS
             </h2>
-            <p className="mt-3 text-[15px] font-semibold tracking-[0.25em] text-[#185C9B]">
+            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
               Business Insights &amp; Beyond
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function Promotion() {
           <div className="mt-10 flex justify-end">
             <button
               type="button"
-              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-semibold tracking-[0.18em] text-white hover:opacity-90"
+              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-SemiBold tracking-[0.18em] text-white hover:opacity-90"
             >
               <SortIcon className="h-4 w-4" />
               Sort By
@@ -150,7 +150,7 @@ function PromoRow({ item }) {
       <div className="md:col-span-4">
         <div className="relative overflow-hidden border border-slate-200">
           {/* NEW badge */}
-          <div className="absolute left-0 top-0 z-10 bg-[#185C9B] px-6 py-1 text-[12px] font-semibold tracking-[0.2em] text-white">
+          <div className="absolute left-0 top-0 z-10 bg-[#185C9B] px-6 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
             {item.badge}
           </div>
 
@@ -173,11 +173,11 @@ function PromoRow({ item }) {
       <div className="relative md:col-span-8">
         {/* Title + Date row */}
         <div className="flex items-end justify-between gap-4">
-          <h3 className="text-[30px] font-semibold tracking-[0.12em] text-slate-900">
+          <h3 className="text-[30px] font-SemiBold tracking-[0.12em] text-slate-900">
             {item.title}
           </h3>
 
-          <div className="bg-[#185C9B] px-6 py-1 text-[12px] font-semibold tracking-[0.2em] text-white">
+          <div className="bg-[#185C9B] px-6 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
             {item.date}
           </div>
         </div>
@@ -199,7 +199,7 @@ function PageBox({ active, children, onClick }) {
       type="button"
       onClick={onClick}
       className={[
-        "h-9 w-9 border text-[13px] font-semibold",
+        "h-9 w-9 border text-[13px] font-SemiBold",
         active
           ? "border-[#1E4F7A] bg-[#1E4F7A] text-white"
           : "border-slate-400 bg-white text-slate-900 hover:bg-slate-50",

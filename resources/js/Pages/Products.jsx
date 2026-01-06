@@ -4,19 +4,19 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 const ITEMS_PER_PAGE = 9;
 
 const demoProducts = [
-  { id: 1, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 2, img: "/images/products/p2.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 3, img: "/images/products/p3.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 4, img: "/images/products/p4.png", tag: "PASTRY", label: "COOKIES" },
+  { id: 1, img: "/images/products/1.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 2, img: "/images/products/2.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 3, img: "/images/products/3.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 4, img: "/images/products/4.jpeg", tag: "PASTRY", label: "COOKIES" },
   { id: 5, img: "/images/products/p5.png", tag: "PASTRY", label: "COOKIES" },
   { id: 6, img: "/images/products/p6.png", tag: "PASTRY", label: "COOKIES" },
   { id: 7, img: "/images/products/p7.png", tag: "PASTRY", label: "COOKIES" },
   { id: 8, img: "/images/products/p8.png", tag: "PASTRY", label: "COOKIES" },
   { id: 9, img: "/images/products/p9.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 10, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 11, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 12, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 13, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
+  { id: 10, img: "/images/products/1.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 11, img: "/images/products/2.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 12, img: "/images/products/3.jpeg", tag: "PASTRY", label: "COOKIES" },
+  { id: 13, img: "/images/products/4.jpeg", tag: "PASTRY", label: "COOKIES" },
   { id: 14, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
   { id: 15, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
   { id: 16, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
@@ -57,10 +57,10 @@ export default function Products() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
-            <h2 className="text-[35px] font-semibold tracking-[0.25em] text-[#D4793F]">
+            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
               OUR PRODUCTS
             </h2>
-            <p className="mt-3 text-[15px] font-semibold tracking-[0.25em] text-[#185C9B]">
+            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
               Business Insights &amp; Beyond
             </p>
           </div>
@@ -69,7 +69,7 @@ export default function Products() {
           <div className="mt-10 flex justify-end">
             <button
               type="button"
-              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-semibold tracking-[0.18em] text-white hover:opacity-90"
+              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-SemiBold tracking-[0.18em] text-white hover:opacity-90"
             >
               <SortIcon className="h-4 w-4" />
               Sort By
@@ -89,14 +89,14 @@ export default function Products() {
               <button 
                 onClick={() => paginate(1)} 
                 disabled={currentPage === 1}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-semibold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
+                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
               >
                 «
               </button>
               <button 
                 onClick={() => paginate(Math.max(1, currentPage - 1))} 
                 disabled={currentPage === 1}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-semibold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
+                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
               >
                 ‹
               </button>
@@ -114,14 +114,14 @@ export default function Products() {
               <button 
                 onClick={() => paginate(Math.min(totalPages, currentPage + 1))} 
                 disabled={currentPage === totalPages}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-semibold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
+                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
               >
                 ›
               </button>
               <button 
                 onClick={() => paginate(totalPages)} 
                 disabled={currentPage === totalPages}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-semibold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
+                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
               >
                 »
               </button>
@@ -149,12 +149,12 @@ function ProductCard({ item }) {
       {/* <div className="h-[300px] w-full bg-slate-50 sm:h-[320px] lg:h-[340px]" /> */}
 
       {/* Top-right tag */}
-      <div className="absolute right-4 top-4 bg-[#185C9B] px-4 py-1 text-[12px] font-semibold tracking-[0.2em] text-white">
+      <div className="absolute right-4 top-4 bg-[#185C9B] px-4 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
         {item.tag}
       </div>
 
       {/* Bottom-left label */}
-      <div className="absolute bottom-4 left-4 text-[12px] font-semibold tracking-[0.25em] text-white/80">
+      <div className="absolute bottom-4 left-4 text-[12px] font-SemiBold tracking-[0.25em] text-white/80">
         {item.label}
       </div>
     </div>
@@ -167,7 +167,7 @@ function PageBox({ active, children, onClick }) {
       type="button"
       onClick={onClick}
       className={[
-        "h-9 w-9 border text-[13px] font-semibold",
+        "h-9 w-9 border text-[13px] font-SemiBold",
         active
           ? "border-[#1E4F7A] bg-[#1E4F7A] text-white"
           : "border-slate-400 bg-white text-slate-900 hover:bg-slate-50",

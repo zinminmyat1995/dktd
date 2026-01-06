@@ -21,7 +21,7 @@ const footerLinksCol3 = [
 const socials = [
   { name: "TikTok", href: "#", icon: TikTokIcon },
   { name: "Instagram", href: "#", icon: InstagramIcon },
-  { name: "Facebook", href: "#", icon: FacebookIcon },
+  { name: "Facebook", href: "https://www.facebook.com/DKTD.Genki", icon: FacebookIcon },
 ];
 
 export default function SiteFooter() {
@@ -66,7 +66,7 @@ export default function SiteFooter() {
           {/* Center: Useful links */}
           <div className="lg:col-span-8">
             <div className="text-center lg:text-left">
-              <div className="text-[18px] font-semibold tracking-[0.25em] text-[#C46A2A]">
+              <div className="text-[18px] font-SemiBold tracking-[0.25em] text-[#C46A2A]">
                 USEFUL LINKS
               </div>
 

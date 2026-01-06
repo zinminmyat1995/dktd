@@ -10,7 +10,7 @@ export default function InnerBanner({
   const locale = props.locale ?? "en";
 
   // Title font style (optional)
-  const titleClass = locale === "en" ? "font-[cursive]" : "font-semibold";
+  const titleClass = locale === "en" ? "font-[cursive]" : "font-SemiBold";
 
   return (
     <section className="relative w-full overflow-hidden">

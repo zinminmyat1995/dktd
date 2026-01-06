@@ -6,7 +6,7 @@ import useTranslate from "@/hooks/useTranslate";
 const socials = [
   { name: "TikTok", href: "#", icon: TikTokIcon },
   { name: "Instagram", href: "#", icon: InstagramIcon },
-  { name: "Facebook", href: "#", icon: FacebookIcon },
+  { name: "Facebook", href: "https://www.facebook.com/DKTD.Genki", icon: FacebookIcon },
 ];
 
 const navItems = [
@@ -75,7 +75,7 @@ export default function PublicLayout({ children }) {
                   key={item.routeName}
                   href={href}
                   className={[
-                    "text-[16px] font-semibold",
+                    "text-[16px] font-SemiBold",
                     "text-[#0C4A6E] hover:opacity-80",
                     active ? "opacity-100" : "opacity-90",
                   ].join(" ")}
@@ -94,7 +94,7 @@ export default function PublicLayout({ children }) {
               <button
                 type="button"
                 onClick={() => setOpenLang((v) => !v)}
-                className="flex items-center gap-2 rounded-full border border-[#0C4A6E] px-4 py-2 text-sm font-semibold text-[#0C4A6E] hover:bg-slate-50"
+                className="flex items-center gap-2 rounded-full border border-[#0C4A6E] px-4 py-2 text-sm font-SemiBold text-[#0C4A6E] hover:bg-slate-50"
               >
                 {locale.toUpperCase()}
                 <ChevronDownIcon className="h-4 w-4" />
@@ -107,7 +107,7 @@ export default function PublicLayout({ children }) {
                     onClick={() => changeLanguage("en")}
                     className={[
                       "block w-full px-4 py-2 text-left hover:bg-gray-100",
-                      locale === "en" ? "bg-gray-50 font-semibold" : "",
+                      locale === "en" ? "bg-gray-50 font-SemiBold" : "",
                     ].join(" ")}
                   >
                     English
@@ -118,7 +118,7 @@ export default function PublicLayout({ children }) {
                     onClick={() => changeLanguage("kh")}
                     className={[
                       "block w-full px-4 py-2 text-left hover:bg-gray-100",
-                      locale === "th" ? "bg-gray-50 font-semibold" : "",
+                      locale === "th" ? "bg-gray-50 font-SemiBold" : "",
                     ].join(" ")}
                   >
                     ខ្មែរ

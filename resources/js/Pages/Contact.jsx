@@ -28,10 +28,10 @@ export default function Contact() {
       <section className="py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-[35px] font-semibold tracking-[0.25em] text-[#D4793F]">
+            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
               CONTACT US
             </h2>
-            <p className="mt-3 text-[15px] font-semibold tracking-[0.25em] text-[#185C9B]">
+            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
               Business Insights &amp; Beyond
             </p>
           </div>
@@ -43,7 +43,7 @@ export default function Contact() {
                 {/* Name + Email */}
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
                   <div>
-                    <label className="block text-[15px] font-semibold tracking-[0.15em] text-[#185C9B]">
+                    <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
                       Name
                     </label>
                     <input
@@ -59,7 +59,7 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label className="block text-[15px] font-semibold tracking-[0.15em] text-[#185C9B]">
+                    <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
                       Email
                     </label>
                     <input
@@ -77,7 +77,7 @@ export default function Contact() {
 
                 {/* Description */}
                 <div className="mt-6">
-                  <label className="block text-[15px] font-semibold tracking-[0.15em] text-[#185C9B]">
+                  <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
                     Description
                   </label>
                   <textarea
@@ -99,7 +99,7 @@ export default function Contact() {
                     className="
                       inline-flex h-[44px] w-[220px] items-center justify-center
                       border-2 border-[#C46A2A]
-                      text-[15px] font-semibold tracking-[0.15em] text-[#C46A2A]
+                      text-[15px] font-SemiBold tracking-[0.15em] text-[#C46A2A]
                       hover:bg-[#C46A2A] hover:text-white transition
                     "
                   >
@@ -115,7 +115,7 @@ export default function Contact() {
                   <a href="#" className="hover:opacity-80" aria-label="Instagram">
                     <InstagramIcon className="h-7 w-7" />
                   </a>
-                  <a href="#" className="hover:opacity-80" aria-label="Facebook">
+                  <a href="https://www.facebook.com/DKTD.Genki" className="hover:opacity-80" aria-label="Facebook">
                     <FacebookIcon className="h-7 w-7" />
                   </a>
                 </div>
@@ -131,17 +131,17 @@ export default function Contact() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
             {/* Left text */}
             <div className="lg:col-span-6">
-              <p className="text-[15px] font-semibold tracking-[0.25em] text-[#185C9B]">
+              <p className="text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
                 Business Insights &amp; Beyond
               </p>
 
-              <h2 className="mt-1 text-[32px] font-semibold tracking-[0.25em] text-[#D4793F]">
+              <h2 className="mt-1 text-[32px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
                 OUR LOCATION
               </h2>
 
               <div className="mt-5 space-y-6 text-[15px]  tracking-[0.12em] text-slate-900">
                 <div>
-                  Opening Hour : <span className="font-semibold">9am to 9pm</span>
+                  Opening Hour : <span className="font-SemiBold">9am to 9pm</span>
                 </div>
 
                 <div>
