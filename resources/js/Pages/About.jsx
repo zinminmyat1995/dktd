@@ -12,11 +12,11 @@ export default function About() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
             {/* Left */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-semibold tracking-[0.25em] text-[#185C9B]">
+              <p className="text-[20px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
                 Business Insights &amp; Beyond
               </p>
 
-              <h2 className="mt-3 text-[34px] font-semibold tracking-[0.25em] text-[#C46A2A] sm:text-[40px]">
+              <h2 className="mt-3 text-[34px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[40px]">
                 {t("messages.about", "About Us")}
               </h2>
 
@@ -33,7 +33,7 @@ export default function About() {
 
               <button
                 type="button"
-                className="mt-6 inline-flex items-center border-2 justify-center border border-[#C46A2A] px-8 py-3 text-[15px] font-semibold tracking-[0.1em] text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition"
+                className="mt-6 inline-flex items-center border-2 justify-center border border-[#C46A2A] px-8 py-3 text-[15px] font-SemiBold tracking-[0.1em] text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition"
               >
                 Contact US
               </button>
@@ -89,15 +89,15 @@ export default function About() {
 
             {/* Right text */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-semibold tracking-[0.35em] text-[#185C9B]">
+              <p className="text-[20px] font-SemiBold tracking-[0.35em] text-[#185C9B]">
                 Business Insights &amp; Beyond
               </p>
 
-              <h2 className="mt-3 text-[32px] font-semibold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
+              <h2 className="mt-3 text-[32px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
                 Our Leader
               </h2>
 
-              <p className="mt-4 text-[15px] leading-6 tracking-[0.12em] text-[#185C9B]">
+              <p className="mt-4 text-[15px] font-Medium leading-6 tracking-[0.12em] text-[#185C9B]">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
@@ -120,15 +120,15 @@ export default function About() {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-center">
             {/* Left text */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-semibold tracking-[0.35em] text-[#185C9B]">
+              <p className="text-[20px] font-SemiBold tracking-[0.35em] text-[#185C9B]">
                 Business Insights &amp; Beyond
               </p>
 
-              <h2 className="mt-3 text-[32px] font-semibold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
+              <h2 className="mt-3 text-[32px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
                 Our Factory
               </h2>
 
-              <p className="mt-4 text-[15px] leading-6 tracking-[0.12em] text-[#185C9B]">
+              <p className="mt-4 text-[15px] font-Medium leading-6 tracking-[0.12em] text-[#185C9B]">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
