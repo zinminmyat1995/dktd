@@ -1,182 +1,338 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
+import { Link, usePage } from "@inertiajs/react";
+import ApplicationLogo from "@/Components/ApplicationLogo";
+import { menu } from "@/Layouts/menu.jsx";
 
-export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+export default function AuthenticatedLayout({
+  header,
+  children,
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+  // Optional (မသုံးလည်းရ)
+  subtitle = "Manage Dine Hub operations easily.",
+  headerActions = null, // JSX buttons (optional)
+}) {
+  const { auth } = usePage().props;
 
-    return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
+  // desktop collapsed (icon-only) state
+  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
+  // drawer state for small screens / zoomed-in
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.name}
+  // track desktop vs mobile using media query (zoom changes this too)
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.matchMedia("(min-width: 768px)").matches; // Tailwind md
+  });
 
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
+  // submenu open states: { "Users": true, "Settings": false }
+  const [openGroups, setOpenGroups] = useState({});
 
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
+  // ===== media query listener (auto hide/show) =====
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+    const mq = window.matchMedia("(min-width: 768px)");
+
+    const onChange = (e) => {
+      setIsDesktop(e.matches);
+      if (e.matches) setDrawerOpen(false);
+    };
+
+    setIsDesktop(mq.matches);
+
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    else mq.addListener(onChange);
+
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
+
+  // ===== helpers =====
+  const isRouteActive = (routeName) => {
+    if (!routeName) return false;
+    try {
+      return route().current(routeName);
+    } catch {
+      return false;
+    }
+  };
+
+  const findActiveGroups = useMemo(() => {
+    const actives = {};
+    for (const sec of menu) {
+      for (const item of sec.items) {
+        if (item.children?.length) {
+          const anyChildActive = item.children.some((c) => isRouteActive(c.routeName));
+          if (anyChildActive) actives[item.label] = true;
+        }
+      }
+    }
+    return actives;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setOpenGroups((prev) => ({ ...prev, ...findActiveGroups }));
+  }, [findActiveGroups]);
+
+  const toggleGroup = (label) => {
+    setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
+
+  // ===== sidebar mode =====
+  const sidebarExpanded = isDesktop ? !desktopCollapsed : true;
+
+  return (
+    // ✅ BODY background ကို ပို premium ဖြစ်အောင်
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-slate-50 to-slate-100">
+      {/* ===== Topbar (unchanged) ===== */}
+      <div className="sticky top-0 z-40 bg-[#4f46e5] border-b">
+        <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              onClick={() => {
+                if (isDesktop) setDesktopCollapsed((v) => !v);
+                else setDrawerOpen(true);
+              }}
+              className="inline-flex items-center justify-center w-10 h-10 rounded-xl"
+              type="button"
+              aria-label="Toggle sidebar"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M4 6h16M4 12h16M4 18h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  style={{ color: "white" }}
+                />
+              </svg>
+            </button>
+
+            <Link href={route("dashboard")} className="flex items-center gap-2 min-w-0 text-white">
+              <ApplicationLogo className="h-8 w-auto" />
+              <span className="font-semibold truncate">Dine Hub</span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="text-sm text-white/90 hidden md:block truncate max-w-[200px]">
+              {auth?.user?.name}
+            </div>
+
+            <Link
+              href={route("logout")}
+              method="post"
+              as="button"
+              className="text-sm px-3 py-2 rounded-xl text-white font-medium hover:bg-white/10"
+            >
+              Log out
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Overlay (mobile drawer) ===== */}
+      {!isDesktop && drawerOpen && (
+        <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setDrawerOpen(false)} />
+      )}
+
+      {/* ✅ ✅ ✅ Layout body (FIXED HEIGHT + ONLY BODY SCROLL) ✅ ✅ ✅ */}
+      <div className="flex min-w-0 h-[calc(100vh-4rem)] overflow-hidden">
+        {/* ===== Sidebar (NO LOGIC CHANGE, only height/scroll behavior) ===== */}
+        <aside
+          className={[
+            "bg-white border-r transition-all duration-200 overflow-hidden",
+            "h-full flex flex-col", // ✅ important: sidebar height fixed, not growing with content
+            isDesktop ? (desktopCollapsed ? "w-20" : "w-72") : "fixed z-50 top-16 left-0 h-[calc(100vh-4rem)] w-72",
+            !isDesktop ? (drawerOpen ? "translate-x-0" : "-translate-x-full") : "",
+            !isDesktop ? "transform transition-transform duration-200" : "",
+          ].join(" ")}
+        >
+          {/* Sidebar header */}
+          <div className="px-4 pt-4 shrink-0">
+            <div className="rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 border p-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white border flex items-center justify-center">
+                  <span className="font-bold text-gray-800">G</span>
                 </div>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
+                {sidebarExpanded && (
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-gray-900 truncate">Welcome</div>
+                    <div className="text-xs text-gray-600 truncate">{auth?.user?.email}</div>
+                  </div>
+                )}
+
+                {!isDesktop && (
+                  <button
+                    type="button"
+                    className="ml-auto w-9 h-9 rounded-xl hover:bg-white/70 flex items-center justify-center"
+                    onClick={() => setDrawerOpen(false)}
+                    aria-label="Close drawer"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ✅ Scrollable menu (only sidebar menu scroll) */}
+          <div className="mt-4 px-3 pb-4 overflow-y-auto flex-1 min-h-0">
+            {menu.map((sec) => (
+              <div key={sec.section} className="mb-4">
+                <div className="px-2 mb-2 text-[11px] font-semibold tracking-wider text-gray-500">
+                  {sidebarExpanded ? sec.section : "•"}
+                </div>
+
+                <div className="space-y-1">
+                  {sec.items.map((item) => {
+                    const hasChildren = !!item.children?.length;
+
+                    const active =
+                      (item.routeName && isRouteActive(item.routeName)) ||
+                      (hasChildren && item.children.some((c) => isRouteActive(c.routeName)));
+
+                    if (!hasChildren) {
+                      return (
+                        <SidebarLink
+                          key={item.label}
+                          open={sidebarExpanded}
+                          href={route(item.routeName)}
+                          label={item.label}
+                          icon={item.icon}
+                          active={active}
+                          onNavigate={() => !isDesktop && setDrawerOpen(false)}
+                        />
+                      );
                     }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+
+                    const expanded = !!openGroups[item.label];
+
+                    return (
+                      <div key={item.label} className="rounded-xl">
+                        <button
+                          type="button"
+                          onClick={() => toggleGroup(item.label)}
+                          className={[
+                            "w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition",
+                            active ? "bg-indigo-50 text-indigo-700" : "text-gray-700 hover:bg-gray-100",
+                          ].join(" ")}
                         >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
+                          <span className="shrink-0">{item.icon}</span>
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
+                          {sidebarExpanded && (
+                            <>
+                              <span className="font-medium flex-1 text-left">{item.label}</span>
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                className={["transition-transform", expanded ? "rotate-180" : ""].join(" ")}
+                              >
+                                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                              </svg>
+                            </>
+                          )}
+                        </button>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
+                        {sidebarExpanded && expanded && (
+                          <div className="mt-1 ml-10 space-y-1">
+                            {item.children.map((child) => {
+                              const childActive = isRouteActive(child.routeName);
+                              return (
+                                <Link
+                                  key={child.label}
+                                  href={route(child.routeName)}
+                                  onClick={() => !isDesktop && setDrawerOpen(false)}
+                                  className={[
+                                    "block px-3 py-2 rounded-xl text-sm transition",
+                                    childActive
+                                      ? "bg-indigo-50 text-indigo-700"
+                                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
+                                  ].join(" ")}
+                                >
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <span
+                                      className={[
+                                        "w-2 h-2 rounded-full",
+                                        childActive ? "bg-indigo-600" : "bg-gray-300",
+                                      ].join(" ")}
+                                    />
+                                    <span className="font-medium truncate">{child.label}</span>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-            </nav>
+              </div>
+            ))}
+          </div>
+        </aside>
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        {/* ✅ Main (ONLY main scroll, sidebar not affected) */}
+        <main className="flex-1 min-w-0 h-full overflow-y-auto p-4 sm:p-6">
+          {/* container to keep nice width on large screens */}
+          <div className="mx-auto max-w-6xl min-w-0">
+            {/* Page header area (premium) */}
+            {(header || headerActions) && (
+              <div className="mb-5 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="min-w-0">
+                  {header &&
+                    (typeof header === "string" ? (
+                      <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight break-words">
                         {header}
-                    </div>
-                </header>
+                      </h1>
+                    ) : (
+                      <div>{header}</div>
+                    ))}
+                  {subtitle && <p className="mt-1 text-sm text-slate-600">{subtitle}</p>}
+                </div>
+
+                {headerActions && <div className="flex flex-wrap items-center gap-2">{headerActions}</div>}
+              </div>
             )}
 
-            <main>{children}</main>
-        </div>
-    );
+            {/* Content shell (reference style) */}
+            <div className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+              <div className="p-4 sm:p-6">
+                {/* ✅ body only responsive scroll for wide content */}
+                <div className="min-w-0 overflow-x-auto">{children}</div>
+              </div>
+            </div>
+
+            <div className="h-8" />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function SidebarLink({ open, href, label, icon, active, onNavigate }) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      className={[
+        "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition",
+        active ? "bg-indigo-50 text-indigo-700" : "text-gray-700 hover:bg-gray-100",
+      ].join(" ")}
+    >
+      <span className="shrink-0">{icon}</span>
+      {open && <span className="font-medium truncate">{label}</span>}
+    </Link>
+  );
 }
