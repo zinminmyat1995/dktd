@@ -11,7 +11,7 @@ class ImageStorageService
      * Store image under: storage/app/public/{folder}
      * Save path in DB as: /storage/{folder}/xxx.jpg
      */
-    public function store(?UploadedFile $file, string $folder = 'product'): ?string
+    public function store(?UploadedFile $file, string $folder = 'products'): ?string
     {
         if (!$file) return null;
 

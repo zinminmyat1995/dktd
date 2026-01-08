@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,18 +42,38 @@ Route::middleware(['auth', 'verified'])
     ->name('admin.')
     ->group(function () {
 
-        // Products
+        // ✅ Product view/list (staff also can view)
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/data', [ProductController::class, 'data'])->name('products.data');
 
-        // Categories CRUD
-        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-        Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+            // ✅ PRODUCT
+            Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+            Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+            Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+            Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+            Route::post('/products/promotion', [ProductController::class, 'promotion'])->name('products.promotion');
+            Route::get('/products/all-ids', [ProductController::class, 'allIds']);
+
+
+            // ✅ Categories Admin Only
+            Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+            Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+            Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+            Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+            // ✅ Users Admin Only
+            Route::get('/users', [UserController::class, 'index'])->name('users.index');
+            Route::get('/users/create', [UserController::class, 'create'])->name('users.create'); // ✅ ADD THIS
+            Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+            Route::post('/users', [UserController::class, 'store'])->name('users.store');
+            Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+            Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+            Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])->name('users.password');
+
+            // ✅ Show MUST be at the bottom (after create)
+            Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
     });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +93,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::get('/', fn () => Inertia::render('Home'))->name('home');
 Route::get('/about', fn () => Inertia::render('About'))->name('about');
-Route::get('/products', fn () => Inertia::render('Products'))->name('products');     // ✅ public products
+Route::get('/products', fn () => Inertia::render('Products'))->name('products');     
 Route::get('/promotion', fn () => Inertia::render('Promotion'))->name('promotion');
 Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CommonToast from "@/Components/CommonToast";
 import CommonConfirmModal from "@/Components/CommonConfirmModal";
 
-const API_BASE = ""; // web.php routes (no /api prefix)
+const API_BASE = "";
 
 // -------------------- helpers --------------------
 function getCsrfToken() {
@@ -84,7 +84,11 @@ function Modal({ open, title, children, onClose, maxWidth = "max-w-lg" }) {
       <div className={cn("w-full rounded-2xl bg-white shadow-xl", maxWidth)}>
         <div className="flex items-center justify-between border-b px-5 py-4">
           <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-100" type="button">
+          <button
+            onClick={onClose}
+            className="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-100"
+            type="button"
+          >
             ✕
           </button>
         </div>
@@ -99,10 +103,18 @@ function Toggle({ value, onChange }) {
     <button
       type="button"
       onClick={() => onChange(!value)}
-      className={cn("relative inline-flex h-8 w-14 items-center rounded-full transition", value ? "bg-indigo-600" : "bg-slate-300")}
+      className={cn(
+        "relative inline-flex h-8 w-14 items-center rounded-full transition",
+        value ? "bg-indigo-600" : "bg-slate-300"
+      )}
       aria-label="toggle"
     >
-      <span className={cn("inline-block h-6 w-6 transform rounded-full bg-white transition", value ? "translate-x-7" : "translate-x-1")} />
+      <span
+        className={cn(
+          "inline-block h-6 w-6 transform rounded-full bg-white transition",
+          value ? "translate-x-7" : "translate-x-1"
+        )}
+      />
     </button>
   );
 }
@@ -115,13 +127,17 @@ function extract422Errors(err) {
   const errors = err?.data?.errors;
   if (!errors) return {};
   const out = {};
-  for (const k of Object.keys(errors)) out[k] = errors[k]?.[0] ?? String(errors[k]);
+  for (const k of Object.keys(errors))
+    out[k] = errors[k]?.[0] ?? String(errors[k]);
   return out;
 }
 
 // -------------------- component --------------------
 export default function ProductCreate() {
   const [categories, setCategories] = useState([]);
+
+  // ✅ file input ref (for reset choose file)
+  const fileInputRef = useRef(null);
 
   // Product form states
   const [title, setTitle] = useState("");
@@ -131,8 +147,6 @@ export default function ProductCreate() {
   const [status, setStatus] = useState("draft");
   const [isNew, setIsNew] = useState(false);
   const [publishedAt, setPublishedAt] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   const [imageFile, setImageFile] = useState(null);
 
@@ -154,12 +168,18 @@ export default function ProductCreate() {
     title: "",
     categoryId: "",
     description: "",
+    status: "",
     publishedAt: "",
-    endDate: "",
+    image: "",
     newCategoryName: "",
   });
 
-  const [toast, setToast] = useState({ open: false, type: "", title: "", message: "" });
+  const [toast, setToast] = useState({
+    open: false,
+    type: "",
+    title: "",
+    message: "",
+  });
   const closeToast = () => setToast((p) => ({ ...p, open: false }));
 
   // Add Category modal
@@ -172,7 +192,12 @@ export default function ProductCreate() {
   const [editingCategoryName, setEditingCategoryName] = useState("");
   const [editCategoryError, setEditCategoryError] = useState("");
 
-  const [confirm, setConfirm] = useState({ open: false, title: "", message: "", onConfirm: null });
+  const [confirm, setConfirm] = useState({
+    open: false,
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
 
   // load categories
   useEffect(() => {
@@ -181,7 +206,12 @@ export default function ProductCreate() {
         const res = await apiGet("/admin/categories");
         setCategories(normalizeArray(res));
       } catch {
-        setToast({ open: true, type: "error", title: "Error", message: "Failed to load categories." });
+        setToast({
+          open: true,
+          type: "error",
+          title: "Error",
+          message: "Failed to load categories.",
+        });
       }
     })();
   }, []);
@@ -195,13 +225,21 @@ export default function ProductCreate() {
   async function onCreateCategory() {
     const name = newCategoryName.trim();
     if (!name) {
-      setFieldErrors((p) => ({ ...p, newCategoryName: "Category Name is required." }));
+      setFieldErrors((p) => ({
+        ...p,
+        newCategoryName: "Category Name is required.",
+      }));
       return;
     }
 
-    const exists = categories.some((c) => String(c.name).trim().toLowerCase() === name.toLowerCase());
+    const exists = categories.some(
+      (c) => String(c.name).trim().toLowerCase() === name.toLowerCase()
+    );
     if (exists) {
-      setFieldErrors((p) => ({ ...p, newCategoryName: "This category already exists." }));
+      setFieldErrors((p) => ({
+        ...p,
+        newCategoryName: "This category already exists.",
+      }));
       return;
     }
 
@@ -217,13 +255,23 @@ export default function ProductCreate() {
       setNewCategoryName("");
       setOpenAddCategoryModal(false);
 
-      setToast({ open: true, type: "success", title: "Success", message: "Category added." });
+      setToast({
+        open: true,
+        type: "success",
+        title: "Success",
+        message: "Category added.",
+      });
     } catch (e) {
       const errs = extract422Errors(e);
       if (e.status === 422 && errs.name) {
         setFieldErrors((p) => ({ ...p, newCategoryName: errs.name }));
       }
-      setToast({ open: true, type: "error", title: "Error", message: "Failed to add category." });
+      setToast({
+        open: true,
+        type: "error",
+        title: "Error",
+        message: "Failed to add category.",
+      });
     } finally {
       setLoading(false);
     }
@@ -250,7 +298,9 @@ export default function ProductCreate() {
     }
 
     const existsOther = categories.some(
-      (c) => c.id !== editingCategoryId && String(c.name ?? "").trim().toLowerCase() === name.toLowerCase()
+      (c) =>
+        c.id !== editingCategoryId &&
+        String(c.name ?? "").trim().toLowerCase() === name.toLowerCase()
     );
     if (existsOther) {
       setEditCategoryError("This category already exists.");
@@ -261,18 +311,33 @@ export default function ProductCreate() {
       setLoading(true);
       setEditCategoryError("");
 
-      const updated = await apiJson("PUT", `/admin/categories/${editingCategoryId}`, { name });
+      const updated = await apiJson(
+        "PUT",
+        `/admin/categories/${editingCategoryId}`,
+        { name }
+      );
       const obj = updated?.data ?? updated;
 
-      setCategories((prev) => prev.map((c) => (c.id === editingCategoryId ? { ...c, ...obj } : c)));
+      setCategories((prev) =>
+        prev.map((c) => (c.id === editingCategoryId ? { ...c, ...obj } : c))
+      );
 
-      // if currently selected, keep label updated
-      setToast({ open: true, type: "success", title: "Success", message: "Category updated." });
+      setToast({
+        open: true,
+        type: "success",
+        title: "Success",
+        message: "Category updated.",
+      });
       cancelEditCategory();
     } catch (e) {
       const errs = extract422Errors(e);
       if (e.status === 422 && errs.name) setEditCategoryError(errs.name);
-      setToast({ open: true, type: "error", title: "Error", message: "Failed to update category." });
+      setToast({
+        open: true,
+        type: "error",
+        title: "Error",
+        message: "Failed to update category.",
+      });
     } finally {
       setLoading(false);
     }
@@ -299,62 +364,90 @@ export default function ProductCreate() {
       setCategories((prev) => prev.filter((c) => c.id !== id));
       if (String(categoryId) === String(id)) setCategoryId("");
 
-      setToast({ open: true, type: "success", title: "Success", message: "Category deleted." });
+      setToast({
+        open: true,
+        type: "success",
+        title: "Success",
+        message: "Category deleted.",
+      });
     } catch (e) {
       setToast({
         open: true,
         type: "error",
         title: "Error",
-        message: e?.data?.message || "Failed to delete category (maybe in use).",
+        message: e?.data?.message || "Failed to delete category.",
       });
     } finally {
       setLoading(false);
     }
   }
 
-  // Save Product (multipart)
+  // ✅ Save Product (multipart + REQUIRED)
   async function onSaveProduct() {
-    // validate
-    const nextErrors = { title: "", categoryId: "", description: "", publishedAt: "", endDate: "", newCategoryName: "" };
-    if (!title.trim()) nextErrors.title = "Title is required.";
+    const nextErrors = {
+      title: "",
+      categoryId: "",
+      description: "",
+      status: "",
+      publishedAt: "",
+      image: "",
+      newCategoryName: "",
+    };
 
-    if (endDate && startDate && endDate < startDate) nextErrors.endDate = "End date must be after start date.";
+    if (!title.trim()) nextErrors.title = "Title is required.";
+    if (!categoryId) nextErrors.categoryId = "Category is required.";
+    if (!description.trim()) nextErrors.description = "Description is required.";
+    if (!status) nextErrors.status = "Status is required.";
+    if (!publishedAt) nextErrors.publishedAt = "Published date is required.";
+    if (!imageFile) nextErrors.image = "Image is required.";
 
     setFieldErrors(nextErrors);
-    if (nextErrors.title || nextErrors.endDate) return;
+
+    if (
+      nextErrors.title ||
+      nextErrors.categoryId ||
+      nextErrors.description ||
+      nextErrors.status ||
+      nextErrors.publishedAt ||
+      nextErrors.image
+    )
+      return;
 
     const fd = new FormData();
     fd.append("title", title.trim());
-    fd.append("category_id", categoryId ? String(Number(categoryId)) : "");
+    fd.append("category_id", String(Number(categoryId)));
     fd.append("description", description.trim());
     fd.append("status", status);
     fd.append("is_new", isNew ? "1" : "0");
-    fd.append("published_at", publishedAt || "");
-    fd.append("start_date", startDate || "");
-    fd.append("end_date", endDate || "");
-    if (imageFile) fd.append("image", imageFile);
+    fd.append("published_at", publishedAt);
+    fd.append("image", imageFile);
 
     try {
       setLoading(true);
-      const res = await apiFormData("/admin/products", fd);
+      await apiFormData("/admin/products", fd);
 
-      setToast({ open: true, type: "success", title: "Success", message: "Product saved successfully." });
+      setToast({
+        open: true,
+        type: "success",
+        title: "Success",
+        message: "Product saved successfully.",
+      });
 
-      // reset
+      // ✅ reset
       setTitle("");
       setCategoryId("");
       setDescription("");
       setStatus("draft");
       setIsNew(false);
       setPublishedAt("");
-      setStartDate("");
-      setEndDate("");
       setImageFile(null);
 
-      // refresh categories to ensure consistency
-      await refreshCategories();
+      // ✅ IMPORTANT: reset choose file UI (file name disappear)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
 
-      return res;
+      await refreshCategories();
     } catch (e) {
       if (e.status === 422) {
         const errs = extract422Errors(e);
@@ -362,29 +455,53 @@ export default function ProductCreate() {
           ...p,
           title: errs.title || p.title,
           categoryId: errs.category_id || p.categoryId,
-          endDate: errs.end_date || p.endDate,
+          description: errs.description || p.description,
+          status: errs.status || p.status,
+          publishedAt: errs.published_at || p.publishedAt,
+          image: errs.image || p.image,
         }));
-        setToast({ open: true, type: "error", title: "Save Failed", message: e?.data?.message || "Validation error." });
+
+        setToast({
+          open: true,
+          type: "error",
+          title: "Save Failed",
+          message: e?.data?.message || "Validation error.",
+        });
       } else {
-        setToast({ open: true, type: "error", title: "Error", message: "Failed to save product." });
+        setToast({
+          open: true,
+          type: "error",
+          title: "Error",
+          message: "Failed to save product.",
+        });
       }
     } finally {
       setLoading(false);
     }
   }
 
-  const activeCategoryCount = useMemo(() => categories.filter((c) => c.is_active).length, [categories]);
+  const activeCategoryCount = useMemo(
+    () => categories.filter((c) => c.is_active).length,
+    [categories]
+  );
 
   // -------------------- UI --------------------
   return (
-    <AuthenticatedLayout header="Product Management" subtitle="Create product item and manage categories quickly.">
+    <AuthenticatedLayout
+      header="Product Management"
+      subtitle="Create product item and manage categories quickly."
+    >
       <div className="mx-auto max-w-6xl px-4 py-8" style={{ paddingTop: "1px" }}>
         {/* Quick Actions */}
         <div className="rounded-3xl bg-white shadow-sm ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="text-base font-semibold text-slate-900">Quick Actions</div>
-              <div className="text-xs text-slate-500">Add & manage categories quickly.</div>
+              <div className="text-base font-semibold text-slate-900">
+                Quick Actions
+              </div>
+              <div className="text-xs text-slate-500">
+                Add & manage categories quickly.
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
@@ -413,34 +530,54 @@ export default function ProductCreate() {
           <div className="lg:col-span-2">
             <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
               <div className="space-y-4">
-
                 {/* Title */}
                 <div>
-                  <label className="text-sm font-semibold text-slate-700">Product Title</label>
+                  <label className="text-sm font-semibold text-slate-700">
+                    Product Title <span className="text-rose-500">*</span>
+                  </label>
                   <input
                     value={title}
                     onChange={(e) => {
                       setTitle(e.target.value);
-                      if (fieldErrors.title) setFieldErrors((p) => ({ ...p, title: "" }));
+                      if (fieldErrors.title)
+                        setFieldErrors((p) => ({ ...p, title: "" }));
                     }}
-                    placeholder="e.g. KitKat Matcha Promotion"
                     className={cn(
                       "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
-                      fieldErrors.title ? "border-rose-400" : "border-slate-200"
+                      fieldErrors.title
+                        ? "border-rose-400"
+                        : "border-slate-200"
                     )}
                   />
-                  {fieldErrors.title && <p className="mt-1 text-xs font-medium text-rose-600">{fieldErrors.title}</p>}
+                  {fieldErrors.title && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">
+                      {fieldErrors.title}
+                    </p>
+                  )}
                 </div>
 
                 {/* Category */}
                 <div>
                   <label className="text-sm font-semibold text-slate-700">
-                    Category <span className="text-xs font-normal text-slate-400">({activeCategoryCount} active)</span>
+                    Category{" "}
+                    <span className="text-xs font-normal text-slate-400">
+                      ({activeCategoryCount} active)
+                    </span>{" "}
+                    <span className="text-rose-500">*</span>
                   </label>
                   <select
                     value={categoryId}
-                    onChange={(e) => setCategoryId(e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-indigo-400"
+                    onChange={(e) => {
+                      setCategoryId(e.target.value);
+                      if (fieldErrors.categoryId)
+                        setFieldErrors((p) => ({ ...p, categoryId: "" }));
+                    }}
+                    className={cn(
+                      "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
+                      fieldErrors.categoryId
+                        ? "border-rose-400"
+                        : "border-slate-200"
+                    )}
                   >
                     <option value="">Select category...</option>
                     {categories
@@ -451,100 +588,155 @@ export default function ProductCreate() {
                         </option>
                       ))}
                   </select>
-                  {fieldErrors.categoryId && <p className="mt-1 text-xs font-medium text-rose-600">{fieldErrors.categoryId}</p>}
+                  {fieldErrors.categoryId && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">
+                      {fieldErrors.categoryId}
+                    </p>
+                  )}
                 </div>
 
                 {/* Image */}
                 <div>
-                  <label className="text-sm font-semibold text-slate-700">Upload Image (optional)</label>
+                  <label className="text-sm font-semibold text-slate-700">
+                    Upload Image <span className="text-rose-500">*</span>
+                  </label>
+
                   <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+                    onChange={(e) => {
+                      setImageFile(e.target.files?.[0] ?? null);
+                      if (fieldErrors.image)
+                        setFieldErrors((p) => ({ ...p, image: "" }));
+                    }}
+                    className={cn(
+                      "mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm",
+                      fieldErrors.image
+                        ? "border-rose-400"
+                        : "border-slate-200"
+                    )}
                   />
+
+                  {fieldErrors.image && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">
+                      {fieldErrors.image}
+                    </p>
+                  )}
+
                   {imagePreviewUrl && (
-                    <img src={imagePreviewUrl} alt="preview" className="mt-3 h-32 w-full rounded-xl object-cover ring-1 ring-slate-200" />
+                    <div className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 p-2 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={imagePreviewUrl}
+                        alt="preview"
+                        className="h-28 w-full object-contain rounded-lg"
+                      />
+                    </div>
                   )}
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="text-sm font-semibold text-slate-700">Description</label>
+                  <label className="text-sm font-semibold text-slate-700">
+                    Description <span className="text-rose-500">*</span>
+                  </label>
                   <textarea
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                      if (fieldErrors.description)
+                        setFieldErrors((p) => ({ ...p, description: "" }));
+                    }}
                     rows={4}
                     placeholder="Short description for card..."
-                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-indigo-400"
+                    className={cn(
+                      "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
+                      fieldErrors.description
+                        ? "border-rose-400"
+                        : "border-slate-200"
+                    )}
                   />
+                  {fieldErrors.description && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">
+                      {fieldErrors.description}
+                    </p>
+                  )}
                 </div>
 
                 {/* Status */}
                 <div className="rounded-2xl border border-slate-200 p-4 space-y-3">
                   <div>
-                    <label className="text-sm font-semibold text-slate-700">Status</label>
+                    <label className="text-sm font-semibold text-slate-700">
+                      Status <span className="text-rose-500">*</span>
+                    </label>
                     <select
                       value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-indigo-400"
+                      onChange={(e) => {
+                        setStatus(e.target.value);
+                        if (fieldErrors.status)
+                          setFieldErrors((p) => ({ ...p, status: "" }));
+                      }}
+                      className={cn(
+                        "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
+                        fieldErrors.status
+                          ? "border-rose-400"
+                          : "border-slate-200"
+                      )}
                     >
+                      <option value="">Select status...</option>
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
                       <option value="archived">Archived</option>
                     </select>
+
+                    {fieldErrors.status && (
+                      <p className="mt-1 text-xs font-medium text-rose-600">
+                        {fieldErrors.status}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-semibold text-slate-900">Mark as NEW</div>
-                      <div className="text-xs text-slate-600">Show NEW badge on card.</div>
+                      <div className="text-sm font-semibold text-slate-900">
+                        Mark as NEW
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Show NEW badge on card.
+                      </div>
                     </div>
                     <Toggle value={isNew} onChange={setIsNew} />
                   </div>
                 </div>
 
-                {/* Dates */}
-                <div className="grid grid-cols-1 gap-3">
-                  <div>
-                    <label className="text-sm font-semibold text-slate-700">Published At</label>
-                    <input
-                      type="date"
-                      value={publishedAt}
-                      onChange={(e) => setPublishedAt(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-indigo-400"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-sm font-semibold text-slate-700">Start Date</label>
-                      <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-indigo-400"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-semibold text-slate-700">End Date</label>
-                      <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => {
-                          setEndDate(e.target.value);
-                          if (fieldErrors.endDate) setFieldErrors((p) => ({ ...p, endDate: "" }));
-                        }}
-                        className={cn(
-                          "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
-                          fieldErrors.endDate ? "border-rose-400" : "border-slate-200"
-                        )}
-                      />
-                      {fieldErrors.endDate && <p className="mt-1 text-xs font-medium text-rose-600">{fieldErrors.endDate}</p>}
-                    </div>
-                  </div>
+                {/* PublishedAt */}
+                <div>
+                  <label className="text-sm font-semibold text-slate-700">
+                    Published At <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={publishedAt}
+                    onChange={(e) => {
+                      setPublishedAt(e.target.value);
+                      if (fieldErrors.publishedAt)
+                        setFieldErrors((p) => ({ ...p, publishedAt: "" }));
+                    }}
+                    className={cn(
+                      "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
+                      fieldErrors.publishedAt
+                        ? "border-rose-400"
+                        : "border-slate-200"
+                    )}
+                  />
+                  {fieldErrors.publishedAt && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">
+                      {fieldErrors.publishedAt}
+                    </p>
+                  )}
                 </div>
 
+                {/* Save */}
                 <button
                   onClick={() =>
                     setConfirm({
@@ -560,7 +752,9 @@ export default function ProductCreate() {
                   disabled={loading}
                   className={cn(
                     "w-full rounded-2xl px-4 py-3 text-sm font-bold text-white shadow-sm",
-                    loading ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
+                    loading
+                      ? "bg-indigo-400"
+                      : "bg-indigo-600 hover:bg-indigo-700"
                   )}
                   type="button"
                 >
@@ -574,28 +768,38 @@ export default function ProductCreate() {
             </div>
           </div>
 
-          {/* Right Preview / Summary */}
+          {/* Right Preview */}
           <div className="lg:col-span-3">
             <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="border-b px-5 py-4">
                 <h2 className="text-lg font-bold text-slate-900">Preview</h2>
-                <p className="text-sm text-slate-600">This is how your product card will look.</p>
+                <p className="text-sm text-slate-600">
+                  This is how your product card will look.
+                </p>
               </div>
 
               <div className="p-6">
                 <div className="rounded-2xl border border-slate-200 overflow-hidden">
-                  {imagePreviewUrl ? (
-                    <img src={imagePreviewUrl} className="h-56 w-full object-cover" alt="preview" />
-                  ) : (
-                    <div className="h-56 w-full bg-slate-50 flex items-center justify-center text-slate-400">
-                      No Image Selected
-                    </div>
-                  )}
+                  <div className="relative w-full h-[260px] overflow-hidden bg-slate-100">
+                    {imagePreviewUrl ? (
+                      <img
+                        src={imagePreviewUrl}
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        alt="preview"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
+                        No Image Selected
+                      </div>
+                    )}
+                  </div>
 
                   <div className="p-5">
                     <div className="flex items-center justify-between gap-2">
                       <div className="text-sm font-semibold text-indigo-600">
-                        {categories.find((c) => String(c.id) === String(categoryId))?.name ?? "Category"}
+                        {categories.find(
+                          (c) => String(c.id) === String(categoryId)
+                        )?.name ?? "Category"}
                       </div>
 
                       {isNew && (
@@ -605,24 +809,31 @@ export default function ProductCreate() {
                       )}
                     </div>
 
-                    <h3 className="mt-2 text-xl font-bold text-slate-900">{title || "Product Title"}</h3>
+                    <h3 className="mt-2 text-xl font-bold text-slate-900">
+                      {title || "Product Title"}
+                    </h3>
 
                     <p className="mt-2 text-sm text-slate-600 line-clamp-3">
                       {description || "Product description will appear here..."}
                     </p>
 
                     <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-500">
-                      <span className="rounded-full bg-slate-100 px-3 py-1">Status: {status}</span>
-                      {publishedAt && <span className="rounded-full bg-slate-100 px-3 py-1">Publish: {publishedAt}</span>}
-                      {startDate && <span className="rounded-full bg-slate-100 px-3 py-1">Start: {startDate}</span>}
-                      {endDate && <span className="rounded-full bg-slate-100 px-3 py-1">End: {endDate}</span>}
+                      <span className="rounded-full bg-slate-100 px-3 py-1">
+                        Status: {status || "-"}
+                      </span>
+                      {publishedAt && (
+                        <span className="rounded-full bg-slate-100 px-3 py-1">
+                          Publish: {publishedAt}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="border-t px-5 py-4 text-xs text-slate-500">
-                Note: Preview is for admin only. Public page will filter by <b>published</b>.
+                Note: Preview is for admin only. Public page will filter by{" "}
+                <b>published</b>.
               </div>
             </div>
           </div>
@@ -630,22 +841,35 @@ export default function ProductCreate() {
       </div>
 
       {/* Add Category Modal */}
-      <Modal open={openAddCategoryModal} title="Add Category" onClose={() => setOpenAddCategoryModal(false)}>
+      <Modal
+        open={openAddCategoryModal}
+        title="Add Category"
+        onClose={() => setOpenAddCategoryModal(false)}
+      >
         <div className="space-y-3">
           <div>
-            <label className="text-sm font-semibold text-slate-700">Category Name</label>
+            <label className="text-sm font-semibold text-slate-700">
+              Category Name
+            </label>
             <input
               value={newCategoryName}
               onChange={(e) => {
                 setNewCategoryName(e.target.value);
-                if (fieldErrors.newCategoryName) setFieldErrors((p) => ({ ...p, newCategoryName: "" }));
+                if (fieldErrors.newCategoryName)
+                  setFieldErrors((p) => ({ ...p, newCategoryName: "" }));
               }}
               className={cn(
                 "mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-indigo-400",
-                fieldErrors.newCategoryName ? "border-rose-400" : "border-slate-200"
+                fieldErrors.newCategoryName
+                  ? "border-rose-400"
+                  : "border-slate-200"
               )}
             />
-            {fieldErrors.newCategoryName && <p className="mt-1 text-xs font-medium text-rose-600">{fieldErrors.newCategoryName}</p>}
+            {fieldErrors.newCategoryName && (
+              <p className="mt-1 text-xs font-medium text-rose-600">
+                {fieldErrors.newCategoryName}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end gap-2">
@@ -659,7 +883,12 @@ export default function ProductCreate() {
             <button
               onClick={onCreateCategory}
               disabled={loading}
-              className={cn("rounded-xl px-4 py-2 text-sm font-bold text-white", loading ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700")}
+              className={cn(
+                "rounded-xl px-4 py-2 text-sm font-bold text-white",
+                loading
+                  ? "bg-indigo-400"
+                  : "bg-indigo-600 hover:bg-indigo-700"
+              )}
               type="button"
             >
               {loading ? "Saving..." : "Save"}
@@ -704,13 +933,21 @@ export default function ProductCreate() {
                               }}
                               className={cn(
                                 "w-full rounded-lg border px-3 py-2 text-sm outline-none focus:border-indigo-400",
-                                editCategoryError ? "border-rose-400" : "border-slate-200"
+                                editCategoryError
+                                  ? "border-rose-400"
+                                  : "border-slate-200"
                               )}
                             />
-                            {editCategoryError && <p className="mt-1 text-xs font-medium text-rose-600">{editCategoryError}</p>}
+                            {editCategoryError && (
+                              <p className="mt-1 text-xs font-medium text-rose-600">
+                                {editCategoryError}
+                              </p>
+                            )}
                           </>
                         ) : (
-                          <span className="font-medium text-slate-900">{c.name}</span>
+                          <span className="font-medium text-slate-900">
+                            {c.name}
+                          </span>
                         )}
                       </td>
 
@@ -718,24 +955,41 @@ export default function ProductCreate() {
                         <div className="flex justify-end gap-2">
                           {isEditing ? (
                             <>
-                              <button type="button" onClick={cancelEditCategory} className="rounded-lg border px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                              <button
+                                type="button"
+                                onClick={cancelEditCategory}
+                                className="rounded-lg border px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                              >
                                 Cancel
                               </button>
                               <button
                                 type="button"
                                 onClick={submitEditCategory}
                                 disabled={loading}
-                                className={cn("rounded-lg px-3 py-2 text-xs font-bold text-white", loading ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700")}
+                                className={cn(
+                                  "rounded-lg px-3 py-2 text-xs font-bold text-white",
+                                  loading
+                                    ? "bg-indigo-400"
+                                    : "bg-indigo-600 hover:bg-indigo-700"
+                                )}
                               >
                                 Save
                               </button>
                             </>
                           ) : (
                             <>
-                              <button type="button" onClick={() => startEditCategory(c)} className="rounded-lg border px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                              <button
+                                type="button"
+                                onClick={() => startEditCategory(c)}
+                                className="rounded-lg border px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                              >
                                 Edit
                               </button>
-                              <button type="button" onClick={() => askDeleteCategory(c)} className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-bold text-white hover:bg-rose-700">
+                              <button
+                                type="button"
+                                onClick={() => askDeleteCategory(c)}
+                                className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-bold text-white hover:bg-rose-700"
+                              >
                                 Delete
                               </button>
                             </>
@@ -748,7 +1002,10 @@ export default function ProductCreate() {
 
                 {categories.length === 0 && (
                   <tr>
-                    <td colSpan={2} className="px-4 py-10 text-center text-slate-500">
+                    <td
+                      colSpan={2}
+                      className="px-4 py-10 text-center text-slate-500"
+                    >
                       No categories yet.
                     </td>
                   </tr>
@@ -760,7 +1017,13 @@ export default function ProductCreate() {
       </Modal>
 
       {/* Toast */}
-      <CommonToast open={toast.open} type={toast.type} title={toast.title} message={toast.message} onClose={closeToast} />
+      <CommonToast
+        open={toast.open}
+        type={toast.type}
+        title={toast.title}
+        message={toast.message}
+        onClose={closeToast}
+      />
 
       {/* Confirm */}
       <CommonConfirmModal

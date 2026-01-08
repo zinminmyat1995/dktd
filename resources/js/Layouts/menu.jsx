@@ -16,7 +16,8 @@ export const menu = [
       },
 
       {
-        label: "Users",
+        label: "User Register",
+        routeName: "admin.users.create",
         icon: (
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path
@@ -27,10 +28,6 @@ export const menu = [
             />
           </svg>
         ),
-        children: [
-          { label: "User Register", routeName: "admin.users.create" },
-          { label: "User List", routeName: "dmin.users.index" },
-        ],
       },
     ],
   },
