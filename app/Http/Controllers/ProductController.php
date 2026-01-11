@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\ImageStorageService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -107,7 +108,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id'   => ['nullable', 'exists:categories,id'],
-            'title'         => ['required', 'string', 'max:255', 'unique:products,title'],
+            'title'         => [
+                'required', 'string', 'max:255',
+                Rule::unique('products', 'title')->ignore($product->id),
+            ],
             'description'   => ['nullable', 'string'],
             'image'         => ['nullable', 'image', 'max:5120'],
             'is_new'        => ['boolean'],

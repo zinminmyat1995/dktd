@@ -3,10 +3,31 @@ export const menu = [
     section: "MANAGEMENT",
     items: [
       {
+        label: "Dashboard",
+        routeName: "dashboard", // ✅ correct
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 13h8V3H3v10Zm10 8h8V11h-8v10ZM3 21h8v-6H3v6Zm10-12h8V3h-8v6Z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ),
+      },
+
+      {
         label: "Products",
         icon: (
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M6 6h12M6 12h12M6 18h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path
+              d="M6 6h12M6 12h12M6 18h12"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
           </svg>
         ),
         children: [
