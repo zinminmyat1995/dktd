@@ -73,7 +73,7 @@ function ProductCard({ product }) {
   return (
     <Link
       href={route('products.show_detail', product.id)}
-      className="group relative overflow-hidden rounded-2xl bg-gray-100 aspect-square shadow-md transition-all duration-500 hover:shadow-xl flex items-center justify-center"
+      className="group relative overflow-hidden rounded-2xl aspect-square shadow-md transition-all duration-500 hover:shadow-xl flex items-center justify-center"
     >
       <img
         src={product.image_path}
@@ -85,7 +85,7 @@ function ProductCard({ product }) {
       />
 
       {/* Simple Overlay with Product Name & Desc */}
-      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-black/0 text-white p-5 opacity-80 transition-opacity duration-300 group-hover:opacity-100">
+      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/0 text-white p-5 opacity-80 transition-opacity duration-300 group-hover:opacity-100">
         <h3 className="text-base font-SemiBold tracking-wider uppercase mb-1">
           {product.title}
         </h3>

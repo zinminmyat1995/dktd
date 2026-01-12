@@ -26,6 +26,8 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $validated['name'],
             'is_active' => $validated['is_active'] ?? true,
+            'created_by' => auth()->id(),
+            'updated_by' => auth()->id(),
         ]);
 
         return response()->json([
@@ -47,6 +49,7 @@ class CategoryController extends Controller
         $category->update([
             'name' => $validated['name'],
             'is_active' => $validated['is_active'] ?? $category->is_active,
+            'updated_by' => auth()->id(),
         ]);
 
         return response()->json([

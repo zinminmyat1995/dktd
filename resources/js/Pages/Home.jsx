@@ -171,7 +171,7 @@ export default function Home({ products, promotions }) {
               <Link
                 key={product.id}
                 href={route('products.show_detail', product.id)}
-                className="group relative h-120 overflow-hidden rounded-2xl bg-gray-50 shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
+                className="group relative h-120 overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
               >
                 {/* Product Image */}
                 <div className="sm:h-[350px] h-[500px] lg:h-[500px] w-full overflow-hidden flex items-center justify-center">
@@ -186,7 +186,7 @@ export default function Home({ products, promotions }) {
                 </div>
 
                 {/* Product Info Overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-black/0 to-transparent p-8 text-white transition-all duration-500 group-hover:from-black/90">
+                <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-white/0 to-transparent p-8 text-white transition-all duration-500 group-hover:from-black/90">
                   <div className="mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
                     <span className="text-xl font-Bold text-[#D4793F] font-display">
                       0{index + 1}
