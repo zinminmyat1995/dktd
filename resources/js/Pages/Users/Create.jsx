@@ -268,7 +268,7 @@ export default function Create() {
   ======================= */
   return (
     <AuthenticatedLayout header="User Management" subtitle="Register users and manage roles safely.">
-      <div className="mx-auto max-w-6xl px-4 py-8" style={{ paddingTop: "1px" }}>
+      <div className="w-full px-3 sm:px-4 lg:px-6 py-6" style={{ paddingTop: "1px" }}>
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-5">
           {/* ✅ Area 1: Register */}
           <div className="lg:col-span-2">

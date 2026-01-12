@@ -346,9 +346,9 @@ export default function AuthenticatedLayout({
         </aside>
 
         {/* ✅ Main (ONLY main scroll, sidebar not affected) */}
-        <main className="flex-1 min-w-0 h-full overflow-y-auto p-4 sm:p-6">
+        <main className="flex-1 min-w-0 h-full overflow-y-auto px-3 sm:px-4 lg:px-6 py-4">
           {/* container to keep nice width on large screens */}
-          <div className="mx-auto max-w-6xl min-w-0">
+          <div className="w-full min-w-0">
             {/* Page header area (premium) */}
             {(header || headerActions) && (
               <div className="mb-5 sm:mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

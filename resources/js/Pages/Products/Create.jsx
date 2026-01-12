@@ -491,7 +491,7 @@ export default function ProductCreate() {
       header="Product Management"
       subtitle="Create product item and manage categories quickly."
     >
-      <div className="mx-auto max-w-6xl px-4 py-8" style={{ paddingTop: "1px" }}>
+      <div className="w-full px-3 sm:px-4 lg:px-6 py-6" style={{ paddingTop: "1px" }}>
         {/* Quick Actions */}
         <div className="rounded-3xl bg-white shadow-sm ring-1 ring-slate-200">
           <div className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
