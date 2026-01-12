@@ -91,11 +91,14 @@ Route::middleware('auth')->group(function () {
 | Public Site Routes (DO NOT TOUCH ✅)
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn () => Inertia::render('Home'))->name('home');
-Route::get('/about', fn () => Inertia::render('About'))->name('about');
-Route::get('/products', fn () => Inertia::render('Products'))->name('products');     
-Route::get('/promotion', fn () => Inertia::render('Promotion'))->name('promotion');
-Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
+use App\Http\Controllers\PublicController;
+
+Route::get('/', [PublicController::class, 'home'])->name('home');
+Route::get('/about', [PublicController::class, 'about'])->name('about');
+Route::get('/products', [PublicController::class, 'products'])->name('products');     
+Route::get('/products/{product}', [PublicController::class, 'show'])->name('products.show_detail');
+Route::get('/promotion', [PublicController::class, 'promotion'])->name('promotion');
+Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
 
 Route::get('/language/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'kh'])) {

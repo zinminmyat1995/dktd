@@ -1,93 +1,10 @@
-import { useState } from 'react';
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
+import { Link } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
+import Pagination from "@/Components/Pagination";
 
-const ITEMS_PER_PAGE = 5;
-
-const demoPromos = [
-  {
-    id: 1,
-    img: "/images/promotion/promo-1.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 2,
-    img: "/images/promotion/promo-2.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 3,
-    img: "/images/promotion/promo-3.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 4,
-    img: "/images/promotion/promo-4.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 5,
-    img: "/images/promotion/promo-5.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 6,
-    img: "/images/promotion/promo-6.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-  {
-    id: 7,
-    img: "/images/promotion/promo-7.png",
-    title: "Title",
-    date: "12-March 2025",
-    badge: "New",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book........",
-  },
-];
-
-export default function Promotion() {
+export default function Promotion({ promotions = { data: [] } }) {
   const { t } = useTranslate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(demoPromos.length / ITEMS_PER_PAGE);
-  
-  // Get current items
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = demoPromos.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
 
   return (
     <InnerPageLayout titleKey="messages.promotion">
@@ -103,128 +20,78 @@ export default function Promotion() {
             </p>
           </div>
 
-          {/* Sort button row */}
-          <div className="mt-10 flex justify-end">
-            <button
-              type="button"
-              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-SemiBold tracking-[0.18em] text-white hover:opacity-90"
-            >
-              <SortIcon className="h-4 w-4" />
-              Sort By
-            </button>
-          </div>
-
           {/* List */}
-          <div className="mt-10 space-y-8">
-            {currentItems.map((p) => (
-              <PromoRow key={p.id} item={p} />
-            ))}
+          <div className="mt-12 space-y-6">
+            {promotions.data && promotions.data.length > 0 ? (
+              promotions.data.map((promo) => (
+                <PromoRow key={promo.id} promo={promo} />
+              ))
+            ) : (
+              <p className="text-center text-slate-500 py-20">No active promotions at the moment.</p>
+            )}
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-14 flex justify-center">
-              <div className="flex items-center gap-2">
-                {pageNumbers.map((number) => (
-                  <PageBox 
-                    key={number} 
-                    active={currentPage === number}
-                    onClick={() => paginate(number)}
-                  >
-                    {number}
-                  </PageBox>
-                ))}
-              </div>
-            </div>
-          )}
+          <Pagination links={promotions.links} />
         </div>
       </section>
     </InnerPageLayout>
   );
 }
 
-function PromoRow({ item }) {
+function PromoRow({ promo }) {
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8">
+    <Link
+      href={route('products.show_detail', promo.id)}
+      className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8 group bg-white border border-slate-100 p-5 transition-all duration-500 rounded-[2rem] hover:shadow-2xl hover:shadow-slate-200/50 hover:translate-y-[-4px]"
+    >
       {/* Left image */}
       <div className="md:col-span-4">
-        <div className="relative overflow-hidden border border-slate-200">
-          {/* NEW badge */}
-          <div className="absolute left-0 top-0 z-10 bg-[#185C9B] px-6 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
-            {item.badge}
-          </div>
-
+        <div className="relative overflow-hidden rounded-2xl bg-slate-100 aspect-[16/10] ring-1 ring-slate-100">
           <img
-            src={item.img}
-            alt={item.title}
-            className="h-[150px] w-full object-cover md:h-[165px]"
+            src={promo.image_path}
+            alt={promo.title}
+            className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
             onError={(e) => {
-              // fallback blank
               e.currentTarget.style.display = "none";
             }}
           />
-
-          {/* if image missing, keep height */}
-          {/* <div className="h-[150px] w-full bg-slate-50 md:h-[165px]" /> */}
         </div>
       </div>
 
       {/* Right content */}
-      <div className="relative md:col-span-8">
-        {/* Title + Date row */}
-        <div className="flex items-end justify-between gap-4">
-          <h3 className="text-[30px] font-SemiBold tracking-[0.12em] text-slate-900">
-            {item.title}
+      <div className="relative md:col-span-8 flex flex-col justify-center py-2">
+        <div className="flex items-center justify-between gap-6 mb-2">
+          <h3 className="text-[26px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase">
+            {promo.title}
           </h3>
-
-          <div className="bg-[#185C9B] px-6 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
-            {item.date}
-          </div>
+          {promo.is_new && (
+            <div className="shrink-0 bg-[#1E4F7A] px-5 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
+              NEW
+            </div>
+          )}
         </div>
 
-        {/* ✅ dotted line: title အောက် + date အောက် “တန်းတူ” */}
-        <div className="mt-2 h-[1px] w-full border-t border-dotted border-slate-300" />
+        <div className="h-[1px] w-full border-t border-dotted border-slate-200 mb-4 opacity-60" />
 
-        <p className="mt-3 text-[15px] leading-6 tracking-[0.12em] text-slate-800">
-          {item.desc}
+        <p className="text-[15px] leading-relaxed tracking-wide text-slate-600 line-clamp-2 transition-colors duration-500 group-hover:text-slate-900">
+          {promo.description}
         </p>
+
+        <div className="mt-6 flex items-center justify-between">
+          <div className="text-[12px] font-Bold text-slate-400 tracking-widest uppercase">
+            {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Latest Update'}
+          </div>
+          <div className="text-[#D4793F] font-Bold text-[13px] tracking-[0.2em] uppercase flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
+            Read More
+            <svg className="h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </div>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
-function PageBox({ active, children, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "h-9 w-9 border text-[13px] font-SemiBold",
-        active
-          ? "border-[#1E4F7A] bg-[#1E4F7A] text-white"
-          : "border-slate-400 bg-white text-slate-900 hover:bg-slate-50",
-      ].join(" ")}
-    >
-      {children}
-    </button>
-  );
-}
 
-function SortIcon({ className = "" }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 6h10" />
-      <path d="M3 12h14" />
-      <path d="M3 18h18" />
-      <path d="M17 6l2 2 2-2" />
-    </svg>
-  );
-}

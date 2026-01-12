@@ -36,7 +36,7 @@ async function apiJson(method, path, body) {
   let data = null;
   try {
     data = text ? JSON.parse(text) : null;
-  } catch {}
+  } catch { }
 
   if (!res.ok) {
     const err = new Error(text || "Request failed");
@@ -62,7 +62,7 @@ async function apiFormData(path, formData, method = "POST") {
   let data = null;
   try {
     data = text ? JSON.parse(text) : null;
-  } catch {}
+  } catch { }
 
   if (!res.ok) {
     const err = new Error(text || "Request failed");
@@ -780,11 +780,11 @@ export default function ProductCreate() {
 
               <div className="p-6">
                 <div className="rounded-2xl border border-slate-200 overflow-hidden">
-                  <div className="relative w-full h-[260px] overflow-hidden bg-slate-100">
+                  <div className="relative w-full h-[500px] overflow-hidden bg-slate-100 flex items-center justify-center">
                     {imagePreviewUrl ? (
                       <img
                         src={imagePreviewUrl}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        className="w-full h-[90%] object-contain transition-transform duration-300 hover:scale-105"
                         alt="preview"
                       />
                     ) : (

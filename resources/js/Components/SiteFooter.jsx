@@ -28,7 +28,7 @@ export default function SiteFooter() {
   const { t } = useTranslate();
 
   return (
-    <footer className="mt-16">
+    <footer className="mt-8">
       {/* Top footer (white) */}
       <div className="bg-white">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-10 sm:px-6 lg:grid-cols-12 lg:px-8">

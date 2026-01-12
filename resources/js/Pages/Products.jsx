@@ -1,60 +1,20 @@
-import { useState } from 'react';
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
+import { Link, router } from "@inertiajs/react";
+import Pagination from "@/Components/Pagination";
 
-const ITEMS_PER_PAGE = 9;
+export default function Products({ products, categories, filters }) {
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    router.get(route('products'), { category: categoryId }, {
+      preserveState: true,
+      replace: true
+    });
+  };
 
-const demoProducts = [
-  { id: 1, img: "/images/products/1.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 2, img: "/images/products/2.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 3, img: "/images/products/3.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 4, img: "/images/products/4.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 5, img: "/images/products/p5.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 6, img: "/images/products/p6.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 7, img: "/images/products/p7.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 8, img: "/images/products/p8.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 9, img: "/images/products/p9.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 10, img: "/images/products/1.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 11, img: "/images/products/2.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 12, img: "/images/products/3.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 13, img: "/images/products/4.jpeg", tag: "PASTRY", label: "COOKIES" },
-  { id: 14, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 15, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 16, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 17, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 18, img: "/images/products/p7.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 19, img: "/images/products/p8.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 20, img: "/images/products/p9.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 21, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 22, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 23, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 24, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 25, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 26, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 27, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-  { id: 28, img: "/images/products/p1.png", tag: "PASTRY", label: "COOKIES" },
-];
-
-export default function Products() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(demoProducts.length / ITEMS_PER_PAGE);
-  
-  // Get current items
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = demoProducts.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Generate page numbers
-  const pageNumbers = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
   return (
     <InnerPageLayout titleKey="messages.products">
       <section className="py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
             <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
@@ -65,134 +25,78 @@ export default function Products() {
             </p>
           </div>
 
-          {/* Sort button */}
-          <div className="mt-10 flex justify-end">
-            <button
-              type="button"
-              className="inline-flex items-center gap-3 bg-[#185C9B] px-6 py-2 text-[12px] font-SemiBold tracking-[0.18em] text-white hover:opacity-90"
-            >
-              <SortIcon className="h-4 w-4" />
-              Sort By
-            </button>
+          {/* Sort Dropdown */}
+          <div className="mt-12 flex justify-end">
+            <div className="relative inline-block w-64">
+              <select
+                value={filters.category || ""}
+                onChange={handleCategoryChange}
+                className="block w-full appearance-none rounded-xl border border-slate-200 bg-white px-6 py-3 pr-10 text-xs font-Bold tracking-widest text-slate-700 uppercase focus:border-[#185C9B] focus:outline-none focus:ring-1 focus:ring-[#185C9B] transition-all cursor-pointer"
+              >
+                <option value="">All Categories</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Grid */}
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {currentItems.map((p) => (
-              <ProductCard key={p.id} item={p} />
-            ))}
+          <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {products.data.length > 0 ? (
+              products.data.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center">
+                <p className="text-slate-500 font-Medium italic">No products found in this category.</p>
+              </div>
+            )}
           </div>
 
           {/* Pagination */}
-          <div className="mt-14 flex justify-center">
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => paginate(1)} 
-                disabled={currentPage === 1}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
-              >
-                «
-              </button>
-              <button 
-                onClick={() => paginate(Math.max(1, currentPage - 1))} 
-                disabled={currentPage === 1}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
-              >
-                ‹
-              </button>
-              
-              {pageNumbers.map(number => (
-                <PageBox 
-                  key={number} 
-                  active={currentPage === number}
-                  onClick={() => paginate(number)}
-                >
-                  {number}
-                </PageBox>
-              ))}
-              
-              <button 
-                onClick={() => paginate(Math.min(totalPages, currentPage + 1))} 
-                disabled={currentPage === totalPages}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
-              >
-                ›
-              </button>
-              <button 
-                onClick={() => paginate(totalPages)} 
-                disabled={currentPage === totalPages}
-                className="h-9 w-9 border border-slate-400 bg-white text-[13px] font-SemiBold text-slate-900 hover:bg-slate-50 disabled:opacity-50"
-              >
-                »
-              </button>
-            </div>
-          </div>
+          <Pagination links={products.links} />
         </div>
       </section>
     </InnerPageLayout>
   );
 }
 
-function ProductCard({ item }) {
+function ProductCard({ product }) {
   return (
-    <div className="relative overflow-hidden">
+    <Link
+      href={route('products.show_detail', product.id)}
+      className="group relative overflow-hidden rounded-2xl bg-gray-100 aspect-square shadow-md transition-all duration-500 hover:shadow-xl flex items-center justify-center"
+    >
       <img
-        src={item.img}
-        alt=""
-        className="h-[300px] w-full object-cover sm:h-[320px] lg:h-[340px]"
+        src={product.image_path}
+        alt={product.title}
+        className="h-[90%] w-full object-contain transition-transform duration-700 group-hover:scale-110"
         onError={(e) => {
-          e.currentTarget.style.display = "none";
+          e.target.src = "/images/placeholder.png";
         }}
       />
 
-      {/* fallback if image missing */}
-      {/* <div className="h-[300px] w-full bg-slate-50 sm:h-[320px] lg:h-[340px]" /> */}
-
-      {/* Top-right tag */}
-      <div className="absolute right-4 top-4 bg-[#185C9B] px-4 py-1 text-[12px] font-SemiBold tracking-[0.2em] text-white">
-        {item.tag}
+      {/* Simple Overlay with Product Name & Desc */}
+      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-black/0 text-white p-5 opacity-80 transition-opacity duration-300 group-hover:opacity-100">
+        <h3 className="text-base font-SemiBold tracking-wider uppercase mb-1">
+          {product.title}
+        </h3>
+        <p className="text-[11px] leading-relaxed text-slate-200 line-clamp-2">
+          {product.description}
+        </p>
       </div>
 
-      {/* Bottom-left label */}
-      <div className="absolute bottom-4 left-4 text-[12px] font-SemiBold tracking-[0.25em] text-white/80">
-        {item.label}
-      </div>
-    </div>
+      <div className="absolute inset-0 ring-1 ring-inset ring-white/10 group-hover:ring-white/20 transition-all duration-300"></div>
+    </Link>
   );
 }
 
-function PageBox({ active, children, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "h-9 w-9 border text-[13px] font-SemiBold",
-        active
-          ? "border-[#1E4F7A] bg-[#1E4F7A] text-white"
-          : "border-slate-400 bg-white text-slate-900 hover:bg-slate-50",
-      ].join(" ")}
-    >
-      {children}
-    </button>
-  );
-}
 
-function SortIcon({ className = "" }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 6h10" />
-      <path d="M3 12h14" />
-      <path d="M3 18h18" />
-      <path d="M17 6l2 2 2-2" />
-    </svg>
-  );
-}

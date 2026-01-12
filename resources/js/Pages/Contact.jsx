@@ -1,5 +1,6 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
+import { Link } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Contact() {
@@ -17,147 +18,156 @@ export default function Contact() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: backend ချိတ်မယ်ဆို inertia post သုံး
+    // TODO: backend connection
     // router.post(route("contact.submit"), form)
     console.log(form);
   };
 
   return (
     <InnerPageLayout titleKey="messages.contact">
-      {/* Page heading */}
-      <section className="py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
+      {/* Page heading + Centered Form Section */}
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-[2px] w-12 bg-[#185C9B]" />
+              <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                Get In Touch
+              </p>
+              <div className="h-[2px] w-12 bg-[#185C9B]" />
+            </div>
+            <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
               CONTACT US
             </h2>
-            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-              Business Insights &amp; Beyond
-            </p>
           </div>
 
-          {/* Form Card */}
-          <div className="mt-14 flex justify-center">
-            <div className="w-full max-w-5xl rounded-md bg-[#F6E1D6] px-8 py-12 sm:px-16">
-              <form onSubmit={onSubmit} className="mx-auto max-w-2xl">
-                {/* Name + Email */}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-                  <div>
-                    <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
-                      Name
+          <div className="flex justify-center">
+            {/* Form container narrowed for better readability and centering */}
+            <div className="w-full max-w-4xl">
+              <div className="bg-white rounded-[3rem] p-8 sm:p-12 shadow-2xl shadow-slate-200 border border-slate-50">
+                <form onSubmit={onSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                        Full Name
+                      </label>
+                      <input
+                        value={form.name}
+                        onChange={onChange("name")}
+                        type="text"
+                        placeholder="Your Name"
+                        className="w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                        Email Address
+                      </label>
+                      <input
+                        value={form.email}
+                        onChange={onChange("email")}
+                        type="email"
+                        placeholder="Your Email"
+                        className="w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                      Message
                     </label>
-                    <input
-                      value={form.name}
-                      onChange={onChange("name")}
-                      type="text"
-                      className="
-                        mt-3 w-full rounded-md border border-[#185C9B]
-                        bg-transparent px-4 py-2 text-[13px] text-[#185C9B]
-                        outline-none focus:ring-0
-                      "
+                    <textarea
+                      value={form.description}
+                      onChange={onChange("description")}
+                      rows={6}
+                      placeholder="How can we help you?"
+                      className="w-full resize-none rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
-                      Email
-                    </label>
-                    <input
-                      value={form.email}
-                      onChange={onChange("email")}
-                      type="email"
-                      className="
-                        mt-3 w-full rounded-md border border-[#185C9B]
-                        bg-transparent px-4 py-2 text-[13px] text-[#185C9B]
-                        outline-none focus:ring-0
-                      "
-                    />
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-4">
+                    {/* Social links */}
+                    <div className="flex items-center gap-6">
+                      <a href="#" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="TikTok">
+                        <TikTokIcon className="h-5 w-5" />
+                      </a>
+                      <a href="#" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="Instagram">
+                        <InstagramIcon className="h-5 w-5" />
+                      </a>
+                      <a href="https://www.facebook.com/DKTD.Genki" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="Facebook">
+                        <FacebookIcon className="h-5 w-5" />
+                      </a>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto px-12 py-4 bg-[#C46A2A] text-white text-[14px] font-Bold uppercase tracking-widest rounded-full shadow-xl shadow-orange-900/20 hover:bg-[#A85924] hover:translate-y-[-2px] transition-all duration-500"
+                    >
+                      Send Message
+                    </button>
                   </div>
-                </div>
-
-                {/* Description */}
-                <div className="mt-6">
-                  <label className="block text-[15px] font-SemiBold tracking-[0.15em] text-[#185C9B]">
-                    Description
-                  </label>
-                  <textarea
-                    value={form.description}
-                    onChange={onChange("description")}
-                    rows={6}
-                    className="
-                      mt-3 w-full resize-none rounded-md border border-[#185C9B]
-                      bg-transparent px-4 py-3 text-[13px] text-[#185C9B]
-                      outline-none focus:ring-0
-                    "
-                  />
-                </div>
-
-                {/* Submit */}
-                <div className="mt-8 flex justify-center">
-                  <button
-                    type="submit"
-                    className="
-                      inline-flex h-[44px] w-[220px] items-center justify-center
-                      border-2 border-[#C46A2A]
-                      text-[15px] font-SemiBold tracking-[0.15em] text-[#C46A2A]
-                      hover:bg-[#C46A2A] hover:text-white transition
-                    "
-                  >
-                    Submit
-                  </button>
-                </div>
-
-                {/* Social icons below button */}
-                <div className="mt-8 flex justify-center gap-6 text-[#185C9B]">
-                  <a href="#" className="hover:opacity-80" aria-label="TikTok">
-                    <TikTokIcon className="h-7 w-7" />
-                  </a>
-                  <a href="#" className="hover:opacity-80" aria-label="Instagram">
-                    <InstagramIcon className="h-7 w-7" />
-                  </a>
-                  <a href="https://www.facebook.com/DKTD.Genki" className="hover:opacity-80" aria-label="Facebook">
-                    <FacebookIcon className="h-7 w-7" />
-                  </a>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* OUR LOCATION */}
-      <section className="pb-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
-            {/* Left text */}
-            <div className="lg:col-span-6">
-              <p className="text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+      {/* Standardized Location Section */}
+      <section className="py-16 bg-slate-50/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
+            {/* Left Info Cards */}
+            <div className="lg:col-span-12 xl:col-span-5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Find Our Store
+                </p>
+              </div>
 
-              <h2 className="mt-1 text-[32px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
+              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
                 OUR LOCATION
               </h2>
 
-              <div className="mt-5 space-y-6 text-[15px]  tracking-[0.12em] text-slate-900">
-                <div>
-                  Opening Hour : <span className="font-SemiBold">9am to 9pm</span>
+              <div className="mt-10 space-y-6">
+                <div className="flex gap-6 p-4 rounded-2xl transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 group">
+                  <div className="h-12 w-12 shrink-0 rounded-2xl bg-white shadow-lg border border-slate-100 flex items-center justify-center text-[#185C9B] transition-transform duration-500 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#185C9B]">Opening Hours</h5>
+                    <p className="text-[16px] font-Bold text-slate-900 tracking-wide">9:00 AM — 9:00 PM</p>
+                  </div>
                 </div>
 
-                <div>
-                  Address : #1065(Ground floor &amp; 1st floor), St. Betong,Phum
-                  Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo,
-                  Phnom Penh.
+                <div className="flex gap-6 p-4 rounded-2xl transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 group">
+                  <div className="h-12 w-12 shrink-0 rounded-2xl bg-white shadow-lg border border-slate-100 flex items-center justify-center text-[#C46A2A] transition-transform duration-500 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]">Headquarters</h5>
+                    <p className="text-[16px] font-Bold text-slate-900 leading-relaxed max-w-sm tracking-wide">
+                      #1065 (Ground & 1st floor), St. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right map */}
-            <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-sm border border-slate-200">
+            {/* Right Map */}
+            <div className="lg:col-span-12 xl:col-span-7">
+              <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-200 ring-4 ring-white">
                 <iframe
                   title="DKTD-Genki Location"
-                  className="h-[180px] w-full sm:h-[220px]"
+                  className="h-[400px] w-full lg:h-[500px]"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps?q=Phnom%20Penh&output=embed"

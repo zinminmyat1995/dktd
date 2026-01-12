@@ -55,6 +55,8 @@ class ProductController extends Controller
             'published_at' => $validated['published_at'] ?? null,
             'start_date'   => $validated['start_date'] ?? null,
             'end_date'     => $validated['end_date'] ?? null,
+            'created_by'   => auth()->id(),
+            'updated_by'   => auth()->id()
         ]);
 
         return response()->json([
@@ -130,6 +132,7 @@ class ProductController extends Controller
             'is_new'       => $validated['is_new'] ?? false,
             'status'       => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
+            'updated_by'   => auth()->id()
         ]);
 
         return response()->json([

@@ -24,12 +24,14 @@ export default function PublicLayout({ children }) {
 
 
   const [openLang, setOpenLang] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const langRef = useRef(null);
 
   const isActive = (path) => url === path || url.startsWith(path + "/");
 
   const changeLanguage = (lang) => {
     setOpenLang(false);
+    setIsMenuOpen(false);
 
     router.visit(route("language.switch", lang), {
       method: "get",
@@ -49,12 +51,17 @@ export default function PublicLayout({ children }) {
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [url]);
+
   return (
     <div className="min-h-screen bg-white">
-      <header className="w-full bg-white">
-        <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-4">
+      <header className="sticky top-0 z-[100] w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-12">
           {/* Left: Logo */}
-          <Link href={route("home")} className="flex items-center gap-2">
+          <Link href={route("home")} className="flex items-center gap-2 relative z-[110]">
             <img
               src="/images/logo.png"
               alt="DKTD-Genki"
@@ -63,8 +70,8 @@ export default function PublicLayout({ children }) {
             />
           </Link>
 
-          {/* Center: Nav */}
-          <nav className="hidden items-center gap-10 md:flex">
+          {/* Center: Desktop Nav (Hidden on < 1024px) */}
+          <nav className="hidden items-center gap-8 lg:flex">
             {navItems.map((item) => {
               const href = route(item.routeName);
               const path = new URL(href, window.location.origin).pathname;
@@ -75,9 +82,10 @@ export default function PublicLayout({ children }) {
                   key={item.routeName}
                   href={href}
                   className={[
-                    "text-[16px] font-SemiBold",
-                    "text-[#0C4A6E] hover:opacity-80",
-                    active ? "opacity-100" : "opacity-90",
+                    "text-[15px] font-Bold uppercase tracking-widest transition-all duration-300",
+                    active
+                      ? "text-[#185C9B] border-b-2 border-[#185C9B] pb-1"
+                      : "text-slate-600 hover:text-[#185C9B] border-b-2 border-transparent pb-1",
                   ].join(" ")}
                 >
                   {/* ✅ translation key မရရင် fallback */}
@@ -87,65 +95,143 @@ export default function PublicLayout({ children }) {
             })}
           </nav>
 
-          {/* Right: Language + Social */}
-          <div className="flex items-center gap-4">
-            {/* Language dropdown */}
-            <div ref={langRef} className="relative">
-              <button
-                type="button"
-                onClick={() => setOpenLang((v) => !v)}
-                className="flex items-center gap-2 rounded-full border border-[#0C4A6E] px-4 py-2 text-sm font-SemiBold text-[#0C4A6E] hover:bg-slate-50"
-              >
-                {locale.toUpperCase()}
-                <ChevronDownIcon className="h-4 w-4" />
-              </button>
-
-              {openLang && (
-                <div className="absolute right-0 mt-2 w-36 overflow-hidden rounded-md border bg-white shadow z-50">
-                  <button
-                    type="button"
-                    onClick={() => changeLanguage("en")}
-                    className={[
-                      "block w-full px-4 py-2 text-left hover:bg-gray-100",
-                      locale === "en" ? "bg-gray-50 font-SemiBold" : "",
-                    ].join(" ")}
-                  >
-                    English
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => changeLanguage("kh")}
-                    className={[
-                      "block w-full px-4 py-2 text-left hover:bg-gray-100",
-                      locale === "th" ? "bg-gray-50 font-SemiBold" : "",
-                    ].join(" ")}
-                  >
-                    ខ្មែរ
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Social icons */}
-            <div className="flex items-center gap-4">
-              {socials.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[#0C4A6E] hover:opacity-75"
-                  aria-label={s.name}
+          {/* Right: Language + Social (Desktop) + Burger (Mobile) */}
+          <div className="flex items-center gap-4 relative z-[110]">
+            {/* Desktop only features */}
+            <div className="hidden lg:flex items-center gap-6">
+              {/* Language dropdown */}
+              <div ref={langRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setOpenLang((v) => !v)}
+                  className="flex items-center gap-2 rounded-full border border-slate-200 px-5 py-2.5 text-[12px] font-Bold uppercase tracking-widest text-[#185C9B] hover:bg-slate-50 transition-all shadow-sm"
                 >
-                  <s.icon className="h-8 w-8" />
-                </a>
-              ))}
+                  {locale.toUpperCase()}
+                  <ChevronDownIcon className={`h-4 w-4 transition-transform duration-300 ${openLang ? 'rotate-180' : ''}`} />
+                </button>
+
+                {openLang && (
+                  <div className="absolute right-0 mt-3 w-40 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-2xl z-50 p-1">
+                    <button
+                      type="button"
+                      onClick={() => changeLanguage("en")}
+                      className={[
+                        "block w-full px-4 py-3 text-left rounded-xl transition-colors text-[13px] font-Bold uppercase tracking-wider",
+                        locale === "en" ? "bg-slate-50 text-[#185C9B]" : "text-slate-600 hover:bg-slate-50",
+                      ].join(" ")}
+                    >
+                      English
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => changeLanguage("kh")}
+                      className={[
+                        "block w-full px-4 py-3 text-left rounded-xl transition-colors text-[13px] font-Bold uppercase tracking-wider",
+                        locale === "kh" ? "bg-slate-50 text-[#185C9B]" : "text-slate-600 hover:bg-slate-50",
+                      ].join(" ")}
+                    >
+                      ខ្មែរ
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Social icons */}
+              <div className="flex items-center gap-3">
+                {socials.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 border border-slate-100"
+                    aria-label={s.name}
+                  >
+                    <s.icon className="h-5 w-5" />
+                  </a>
+                ))}
+              </div>
             </div>
+
+            {/* Hamburger Button (Visible on < 1024px) */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden w-12 h-12 flex flex-col items-center justify-center gap-1.5 rounded-full bg-slate-50 text-[#185C9B] hover:bg-slate-100 transition-all border border-slate-200"
+              aria-label="Toggle Menu"
+            >
+              <div className={`h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+              <div className={`h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+              <div className={`h-0.5 w-6 bg-current rounded-full transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            </button>
           </div>
         </div>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        {/* Mobile Menu Overlay (slide-down) */}
+        <div
+          className={`
+            fixed inset-0 top-0 z-[100] h-screen w-full bg-white transition-all duration-500 ease-in-out lg:hidden
+            ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}
+          `}
+        >
+          <div className="flex flex-col h-full pt-[100px] px-8 pb-12 overflow-y-auto">
+            {/* Mobile Nav Links */}
+            <div className="space-y-6 flex flex-col items-center flex-1 justify-center">
+              {navItems.map((item, idx) => {
+                const href = route(item.routeName);
+                const path = new URL(href, window.location.origin).pathname;
+                const active = isActive(path);
+
+                return (
+                  <Link
+                    key={item.routeName}
+                    href={href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`
+                      text-[24px] font-Bold uppercase tracking-[0.2em] transition-all duration-300
+                      ${active ? 'text-[#185C9B] scale-110' : 'text-slate-400 hover:text-slate-900'}
+                    `}
+                    style={{ transitionDelay: `${idx * 50}ms` }}
+                  >
+                    {t(item.key)}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Mobile Actions Footer */}
+            <div className={`mt-auto pt-12 border-t border-slate-100 flex flex-col items-center gap-8 transition-all duration-700 delay-300 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+              {/* Language Selection */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => changeLanguage("en")}
+                  className={`px-6 py-2 rounded-full border-2 text-[12px] font-Bold uppercase tracking-widest transition-all ${locale === 'en' ? 'bg-[#185C9B] border-[#185C9B] text-white shadow-lg shadow-blue-900/20' : 'border-slate-200 text-slate-400'}`}
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => changeLanguage("kh")}
+                  className={`px-6 py-2 rounded-full border-2 text-[12px] font-Bold uppercase tracking-widest transition-all ${locale === 'kh' ? 'bg-[#185C9B] border-[#185C9B] text-white shadow-lg shadow-blue-900/20' : 'border-slate-200 text-slate-400'}`}
+                >
+                  ខ្មែរ
+                </button>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-6">
+                {socials.map((s) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    className="w-14 h-14 rounded-full flex items-center justify-center text-[#185C9B] bg-slate-50 border border-slate-100 shadow-sm"
+                  >
+                    <s.icon className="h-7 w-7" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
 
       <main>{children}</main>

@@ -2,96 +2,131 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
 import { Link } from "@inertiajs/react";
 
-export default function Home() {
+export default function Home({ products, promotions }) {
   const { t } = useTranslate();
 
   return (
     <InnerPageLayout titleKey="messages.home" isHome>
       {/* ================= HERO SECTION ================= */}
-      <section className="relative">
-       
-
-        {/* overlay text */}
-        {/* <div className="absolute inset-0 flex items-center">
-          <div className="mx-auto max-w-7xl px-4">
-            <h1 className="text-[36px] text-[#7A3B14] font-display font-SemiBold">
-              Lorem Ipsum Is Simply Dummy
+      {/* 
+      <section className="relative h-[400px] sm:h-[500px] lg:h-[650px] overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="/images/banner.png" 
+            alt="Hero Banner" 
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-transparent" />
+        </div>
+        
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 h-full flex items-center">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl sm:text-6xl font-Bold text-[#185C9B] tracking-tight font-display leading-tight uppercase drop-shadow-sm">
+              Premium Snacks <br />
+              <span className="text-[#C46A2A]">For Everyone</span>
             </h1>
-
-            <div className="mt-4 flex items-center gap-4 text-[#2C5A7A]">
-              <span className="h-[1px] w-16 bg-[#2C5A7A]" />
-              <span>★</span>
-              <span className="h-[1px] w-16 bg-[#2C5A7A]" />
-            </div>
-
-            <p className="mt-4 max-w-md text-[14px] tracking-[0.15em] text-[#2C5A7A] font-sans">
-              Lorem Ipsum is simply dummy text of t.
+            <p className="mt-6 text-[18px] font-Medium text-slate-700 tracking-wide max-w-lg leading-relaxed">
+              Discover our wide range of imported snacks and candies. 
+              Quality taste that brings joy to every moment.
             </p>
-
-            <Link
-              href={route("contact")}
-              className="
-                mt-6 inline-flex items-center justify-center
-                border-2 border-[#C46A2A]
-                px-8 py-3 text-[12px]
-                font-SemiBold tracking-[0.18em]
-                text-[#C46A2A]
-                hover:bg-[#C46A2A] hover:text-white transition
-              "
-            >
-              Contact Us
-            </Link>
+            <div className="mt-10 flex gap-4 font-Bold tracking-widest uppercase">
+              <Link 
+                href={route('products')}
+                className="bg-[#185C9B] text-white px-10 py-4 rounded-full shadow-xl shadow-blue-900/20 hover:bg-[#1E4F7A] transition-all hover:translate-y-[-2px]"
+              >
+                Shop Now
+              </Link>
+            </div>
           </div>
-        </div> */}
+        </div>
+      </section>
+      */}
+      <section className="relative">
       </section>
 
       {/* ================= ABOUT SECTION ================= */}
-      <section className="py-10 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+      <section className="py-16 bg-slate-50/30 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
             {/* Left */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Business Insights &amp; Beyond
+                </p>
+              </div>
 
-              <h2 className="mt-3 text-[34px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[40px] font-display">
+              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
                 {t("messages.about", "About Us")}
               </h2>
 
-              <p className="mt-4 max-w-xl text-[15px] font-Medium leading-6 tracking-[0.12em] text-[#185C9B]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. Lorem
-                Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley  
-                of type and scrambled it to make a type specimen book.
-              </p>
+              <div className="mt-8 space-y-6">
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+                  Lorem Ipsum is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy
+                  text ever since the 1500s, when an unknown printer took a galley
+                  of type and scrambled it to make a type specimen book.
+                </p>
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+                  Our commitment to excellence drives us to deliver the highest
+                  quality solutions in the industry. We bridge the gap between
+                  innovation and reliability.
+                </p>
+              </div>
 
-              <button
-                type="button"
-                className="mt-6 inline-flex items-center rounded-3xl border-2 justify-center border border-[#C46A2A] px-8 py-3 text-[15px] font-SemiBold tracking-[0.1em] text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition"
-              >
-                See More
-              </button>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link
+                  href={route('about')}
+                  className="
+                    inline-flex items-center justify-center
+                    bg-[#C46A2A] border-2 border-[#C46A2A]
+                    px-10 py-4 text-[14px]
+                    font-Bold tracking-[0.18em]
+                    text-white
+                    hover:bg-transparent hover:text-[#C46A2A] transition-all duration-500
+                    rounded-full shadow-lg shadow-orange-900/10
+                  "
+                >
+                  View More
+                  <svg className="ml-3 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+
+                <Link
+                  href={route('contact')}
+                  className="
+                    inline-flex items-center justify-center
+                    border-2 border-[#185C9B]
+                    px-10 py-4 text-[14px]
+                    font-Bold tracking-[0.18em]
+                    text-[#185C9B]
+                    hover:bg-[#185C9B] hover:text-white transition-all duration-500
+                    rounded-full
+                  "
+                >
+                  Contact Us
+                </Link>
+              </div>
 
               {/* two small images */}
-              <div className="mt-8 grid grid-cols-2 gap-6">
-                <div className="overflow-hidden rounded-sm rounded-2xl ">
+              <div className="mt-16 grid grid-cols-2 gap-8">
+                <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100">
                   <img
                     src="/images/about/image1.png"
-                    alt=""
-                    className="h-[170px] w-full object-cover sm:h-[190px] hover:scale-105 transition-all duration-300"
+                    alt="About visual 1"
+                    className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
 
-                <div className="overflow-hidden rounded-sm rounded-2xl">
+                <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100">
                   <img
                     src="/images/about/image2.png"
-                    alt=""
-                    className="h-[170px] w-full object-cover sm:h-[190px] hover:scale-105 transition-all duration-300"
+                    alt="About visual 2"
+                    className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
               </div>
@@ -99,12 +134,20 @@ export default function Home() {
 
             {/* Right big image */}
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-sm rounded-2xl">
-                <img
-                  src="/images/about/image3.png"
-                  alt=""
-                  className="h-[360px] w-full object-cover sm:h-[430px] lg:h-[606px] hover:scale-105 transition-all duration-300"
-                />
+              <div className="relative">
+                <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-300 ring-1 ring-slate-100">
+                  <img
+                    src="/images/about/image3.png"
+                    alt="Main about visual"
+                    className="h-[400px] w-full object-cover sm:h-[500px] lg:h-[650px] transition-transform duration-700 hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
+                  />
+                </div>
+                {/* Decorative floating badge */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-50 hidden sm:block">
+                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">25+</p>
+                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">Years of Legacy</p>
+                </div>
               </div>
             </div>
           </div>
@@ -124,66 +167,51 @@ export default function Home() {
           </div>
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                id: 1,
-                name: "SNACKS",
-                description: "Discover our delicious range of healthy and tasty snacks perfect for any time of day. Made with the finest ingredients for maximum flavor and satisfaction.",
-                image: "/images/products/p1.png"
-              },
-              {
-                id: 2,
-                name: "COOKIES",
-                description: "Crunchy, chewy, and full of flavor - our cookies are made with premium ingredients. Perfect for a quick snack or a sweet treat any time of day.",
-                image: "/images/products/p2.png"
-              },
-              {
-                id: 3,
-                name: "CRACKERS",
-                description: "Light, crispy, and perfectly seasoned crackers for your snacking pleasure. Great on their own or paired with your favorite dips and spreads.",
-                image: "/images/products/p3.png"
-              }
-            ].map((product) => (
-              <div key={product.id} className="group relative h-120 overflow-hidden rounded-2xl bg-gray-50 shadow-lg transition-all duration-300 hover:shadow-2xl hover:shadow-amber-100/20">
+            {products.map((product, index) => (
+              <Link
+                key={product.id}
+                href={route('products.show_detail', product.id)}
+                className="group relative h-120 overflow-hidden rounded-2xl bg-gray-50 shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
+              >
                 {/* Product Image */}
-                <div className="h-full w-full overflow-hidden">
+                <div className="sm:h-[350px] h-[500px] lg:h-[500px] w-full overflow-hidden flex items-center justify-center">
                   <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    src={product.image_path}
+                    alt={product.title}
+                    className=" h-[90%] w-full object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
                     onError={(e) => {
                       e.target.src = '/images/placeholder.png';
                     }}
                   />
                 </div>
-                
+
                 {/* Product Info Overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-black/0 to-transparent p-6 text-white transition-all duration-300 group-hover:from-black/70 group-hover:via-black/0">
-                  <div className="mb-2">
-                    <span className="text-xl font-SemiBold text-white font-display">
-                      0{product.id}
+                <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-black/0 to-transparent p-8 text-white transition-all duration-500 group-hover:from-black/90">
+                  <div className="mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
+                    <span className="text-xl font-Bold text-[#D4793F] font-display">
+                      0{index + 1}
                     </span>
                   </div>
-                  
-                  <h3 className="text-xl font-SemiBold tracking-wider text-white mb-2 ">
-                    {product.name}
+
+                  <h3 className="text-xl font-Bold tracking-wider text-white mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
+                    {product.title}
                   </h3>
-                  
-                  <p className="text-sm leading-5 text-white mb-4 line-clamp-2 transition-all duration-300 group-hover:line-clamp-3">
-                    {product.description}
-                  </p>
-                  
-                  <Link
-                    href={route("products")}
-                    className="inline-flex items-center text-sm font-SemiBold text-[#D4793F] hover:text-amber-200 transition-colors"
-                  >
-                    Explore Collection
-                    <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+
+                  {/* Fixed-height description area to keep title/number aligned */}
+                  <div className="min-h-[40px] mb-6">
+                    <p className="text-sm leading-5 text-slate-200 line-clamp-2 transition-all duration-500 group-hover:line-clamp-4 group-hover:text-white group-hover:-translate-y-1">
+                      {product.description}
+                    </p>
+                  </div>
+
+                  <div className="inline-flex items-center text-sm font-Bold text-[#D4793F] group-hover:text-amber-300 transition-all duration-500 transform group-hover:-translate-y-1">
+                    View Details
+                    <svg className="ml-2 h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
-                  </Link>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -193,11 +221,13 @@ export default function Home() {
               className="
                 inline-flex items-center justify-center
                 border-2 border-[#C46A2A]
-                px-8 py-3 text-[12px]
-                font-SemiBold tracking-[0.18em]
+                px-10 py-4 text-[13px]
+                font-Bold tracking-[0.2em]
                 text-[#C46A2A]
-                hover:bg-[#C46A2A] hover:text-white transition
-                rounded-3xl
+                hover:bg-[#C46A2A] hover:text-white transition-all duration-500
+                rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
+                hover:translate-y-[-2px]
+                uppercase
               "
             >
               View All Products
@@ -215,60 +245,80 @@ export default function Home() {
           <p className="text-center text-[15px] tracking-[0.25em] text-[#185C9B]">
             Business Insights & Beyond
           </p>
-          
+
 
           {/* List */}
-          <div className="mt-12 space-y-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-8 border-slate-200 pb-8">
+          <div className="mt-8 space-y-6">
+            {promotions.map((promo) => (
+              <Link
+                key={promo.id}
+                href={route('products.show_detail', promo.id)}
+                className="flex flex-col sm:flex-row gap-6 sm:gap-8 border-b border-slate-100 pb-6 pt-2 hover:bg-slate-50/50 transition-all duration-500 group rounded-xl px-2 sm:px-0"
+              >
                 {/* Left image */}
-                <img
-                  src={`/images/promotion/promo-${i}.png`}
-                  alt=""
-                  className="h-[95px] w-[170px] shrink-0 object-cover"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
-                />
+                <div className="h-[180px] sm:h-[140px] w-full sm:w-[260px] shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                  <img
+                    src={promo.image_path}
+                    alt={promo.title}
+                    className="h-full w-full object-cover transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
+                    onError={(e) => (e.currentTarget.parentElement.style.display = "none")}
+                  />
+                </div>
 
-                {/* Right content */}
-                <div className="min-w-0 flex-1">
-                  {/* Title row + NEW badge */}
-                  <div className="flex items-start justify-between gap-6">
-                    <h3 className="text-[28px] font-regular tracking-[0.12em] text-slate-900">
-                      Title
-                    </h3>
+                <div className="min-w-0 flex-1 flex flex-col justify-between py-1 transform transition-all duration-500 sm:group-hover:translate-x-1">
+                  <div>
+                    {/* Title row + NEW badge */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+                      <h3 className="text-[20px] sm:text-[24px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase truncate">
+                        {promo.title}
+                      </h3>
 
-                    <div className="mt-2 shrink-0 bg-[#1E4F7A] px-6 py-1 text-[12px] font-SemiBold tracking-[0.25em] text-white">
-                      NEW
+                      {promo.is_new && (
+                        <div className="shrink-0 bg-[#1E4F7A] px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
+                          NEW
+                        </div>
+                      )}
                     </div>
+
+                    {/* dotted line under title */}
+                    <div className="h-[1px] w-full border-t border-dotted border-slate-300 mb-3 opacity-50" />
+
+                    {/* description */}
+                    <p className="text-[14px] leading-relaxed tracking-wide text-slate-600 line-clamp-2 transition-colors duration-500 group-hover:text-slate-900">
+                      {promo.description}
+                    </p>
                   </div>
 
-                  {/* dotted line under title */}
-                  <div className=" h-[1px] w-full border-t border-dotted border-slate-300" />
-
-                  {/* description */}
-                  <p className="mt-3 text-[13px] leading-6 tracking-[0.12em] text-slate-700">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting
-                    industry. Lorem Ipsum has been the industry&apos;s standard dummy
-                    text ever since the 1500s, when an unknown printer took a galley of
-                    type and scrambled it to make a type specimen book........
-                  </p>
+                  <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
+                    <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
+                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString() : 'Latest Update'}
+                    </span>
+                    <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
+                      Read More
+                      <svg className="h-4 w-4 transform transition-all duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
 
-          <div className="mt-10 text-center">
+          <div className="mt-6 text-center">
             <Link
               href={route("promotion")}
               className="
                 inline-flex items-center justify-center
                 border-2 border-[#C46A2A]
-                px-8 py-3 text-[12px]
-                font-SemiBold tracking-[0.18em]
+                px-10 py-4 text-[13px]
+                font-Bold tracking-[0.2em]
                 text-[#C46A2A]
-                hover:bg-[#C46A2A] hover:text-white transition
-                rounded-3xl
+                hover:bg-[#C46A2A] hover:text-white transition-all duration-500
+                rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
+                hover:translate-y-[-2px]
+                uppercase
               "
             >
               See More
@@ -277,38 +327,70 @@ export default function Home() {
         </div>
       </section>
 
-       <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
+      <section className="py-16 bg-slate-50/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
             {/* Left text */}
-            <div className="lg:col-span-6">
-              <p className="text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+            <div className="lg:col-span-12 xl:col-span-5">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Find Our Store
+                </p>
+              </div>
 
-              <h2 className="mt-1 text-[32px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
+              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
                 OUR LOCATION
               </h2>
 
-              <div className="mt-5 space-y-6 text-[15px]  tracking-[0.12em] text-slate-900">
-                <div>
-                  Opening Hour : <span className="font-SemiBold">9am to 9pm</span>
+              <div className="mt-10 space-y-6">
+                <div className="flex gap-6 p-4 rounded-2xl transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 group">
+                  <div className="h-12 w-12 shrink-0 rounded-2xl bg-white shadow-lg border border-slate-100 flex items-center justify-center text-[#185C9B] transition-transform duration-500 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#185C9B]">Opening Hours</h5>
+                    <p className="text-[16px] font-Bold text-slate-900 tracking-wide">9:00 AM — 9:00 PM</p>
+                  </div>
                 </div>
 
-                <div>
-                  Address : #1065(Ground floor &amp; 1st floor), St. Betong,Phum
-                  Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo,
-                  Phnom Penh.
+                <div className="flex gap-6 p-4 rounded-2xl transition-all duration-500 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 group">
+                  <div className="h-12 w-12 shrink-0 rounded-2xl bg-white shadow-lg border border-slate-100 flex items-center justify-center text-[#C46A2A] transition-transform duration-500 group-hover:scale-110">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]">Headquarters</h5>
+                    <p className="text-[16px] font-Bold text-slate-900 leading-relaxed max-w-sm tracking-wide">
+                      #1065 (Ground & 1st floor), St. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh.
+                    </p>
+                  </div>
                 </div>
+              </div>
+
+              <div className="mt-12">
+                <Link
+                  href={route('contact')}
+                  className="inline-flex items-center text-[12px] font-Bold text-[#185C9B] border-b-2 border-transparent hover:border-[#185C9B] pb-1 transition-all uppercase tracking-widest"
+                >
+                  Get Directions
+                  <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
               </div>
             </div>
 
             {/* Right map */}
-            <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-sm border border-slate-200">
+            <div className="lg:col-span-12 xl:col-span-7">
+              <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-200 ring-4 ring-white">
                 <iframe
                   title="DKTD-Genki Location"
-                  className="h-[180px] w-full sm:h-[220px]"
+                  className="h-[400px] w-full lg:h-[500px]"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps?q=Phnom%20Penh&output=embed"
@@ -318,6 +400,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </InnerPageLayout>
+    </InnerPageLayout >
   );
 }

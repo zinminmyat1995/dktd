@@ -214,7 +214,7 @@ export default function List({ categories = [] }) {
     open: false,
     title: "",
     message: "",
-    onConfirm: async () => {},
+    onConfirm: async () => { },
   });
 
   /* ===== Filters ===== */
@@ -607,28 +607,28 @@ export default function List({ categories = [] }) {
   }
 
 
- /* =======================
-   ✅ NEW Badge Component (Show only if NEW)
-======================= */
-function NewBadge({ value }) {
-  const isNew = Boolean(value);
+  /* =======================
+    ✅ NEW Badge Component (Show only if NEW)
+ ======================= */
+  function NewBadge({ value }) {
+    const isNew = Boolean(value);
 
-  // ✅ Not NEW => render nothing
-  if (!isNew) return null;
+    // ✅ Not NEW => render nothing
+    if (!isNew) return null;
 
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full px-3 py-1 border",
-        "bg-emerald-50 text-emerald-700 border-emerald-200"
-      )}
-    >
-      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
-      {/* ✅ NEW text smaller */}
-      <span className="text-[11px] font-bold leading-none tracking-wide">NEW</span>
-    </span>
-  );
-}
+    return (
+      <span
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full px-3 py-1 border",
+          "bg-emerald-50 text-emerald-700 border-emerald-200"
+        )}
+      >
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        {/* ✅ NEW text smaller */}
+        <span className="text-[11px] font-bold leading-none tracking-wide">NEW</span>
+      </span>
+    );
+  }
 
 
   /* =======================
@@ -797,8 +797,8 @@ function NewBadge({ value }) {
                             r.status === "published"
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : r.status === "archived"
-                              ? "bg-rose-50 text-rose-700 border border-rose-200"
-                              : "bg-slate-100 text-slate-700 border border-slate-200"
+                                ? "bg-rose-50 text-rose-700 border border-rose-200"
+                                : "bg-slate-100 text-slate-700 border border-slate-200"
                           )}
                         >
                           {r.status}
@@ -844,26 +844,32 @@ function NewBadge({ value }) {
         </div>
 
         {/* Pagination */}
-        <div className="p-4 flex items-center justify-between flex-wrap gap-2">
-          <div className="text-sm text-slate-500">
-            Page {meta.current_page} / {meta.last_page}
+        <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
+          <div className="text-sm font-Medium text-slate-500">
+            Showing page <span className="text-slate-900 font-Bold">{meta.current_page}</span> of <span className="text-slate-900 font-Bold">{meta.last_page}</span>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
-              className="px-3 py-2 rounded-lg border hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               disabled={meta.current_page <= 1 || loading}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
             >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
               Prev
             </button>
 
             <button
-              className="px-3 py-2 rounded-lg border hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               disabled={meta.current_page >= meta.last_page || loading}
               onClick={() => setPage((p) => p + 1)}
             >
               Next
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>

@@ -7,52 +7,60 @@ export default function About() {
   return (
     <InnerPageLayout titleKey="messages.about">
       {/* Section 1: About Us (left text + right big image + 2 small images) */}
-      <section className="py-10 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+      <section className="py-16 bg-white overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
             {/* Left */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Our Mission & Vision
+                </p>
+              </div>
 
-              <h2 className="mt-3 text-[34px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[40px]">
+              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
                 {t("messages.about", "About Us")}
               </h2>
 
-              <p className="mt-4 max-w-xl text-[15px] leading-6 tracking-[0.12em] text-[#185C9B]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. Lorem
-                Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.
-              </p>
-
-              <button
-                type="button"
-                className="mt-6 inline-flex items-center border-2 justify-center border border-[#C46A2A] px-8 py-3 text-[15px] font-SemiBold tracking-[0.1em] text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition"
-              >
-                Contact US
-              </button>
+              <div className="mt-8 space-y-6">
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+                  Lorem Ipsum is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy
+                  text ever since the 1500s, when an unknown printer took a galley
+                  of type and scrambled it to make a type specimen book.
+                </p>
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+                  Our commitment to excellence drives us to deliver the highest
+                  quality solutions in the industry. We bridge the gap between
+                  innovation and reliability, ensuring that every product we
+                  bring to market meets our rigorous standards of quality.
+                </p>
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+                  As we look to the future, we continue to expand our reach and
+                  deepen our expertise, always keeping our customers' needs at
+                  the forefront of everything we do. Thank you for being part of
+                  our journey.
+                </p>
+              </div>
 
               {/* two small images */}
-              <div className="mt-8 grid grid-cols-2 gap-6">
-                <div className="overflow-hidden rounded-sm">
+              <div className="mt-16 grid grid-cols-2 gap-8">
+                <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100 group">
                   <img
                     src="/images/about/image1.png"
-                    alt=""
-                    className="h-[170px] w-full object-cover sm:h-[190px]"
+                    alt="About visual 1"
+                    className="h-[200px] w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
 
-                <div className="overflow-hidden rounded-sm">
+                <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100 group">
                   <img
                     src="/images/about/image2.png"
-                    alt=""
-                    className="h-[170px] w-full object-cover sm:h-[190px]"
+                    alt="About visual 2"
+                    className="h-[200px] w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
               </div>
@@ -60,12 +68,20 @@ export default function About() {
 
             {/* Right big image */}
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-sm">
-                <img
-                  src="/images/about/image3.png"
-                  alt=""
-                  className="h-[360px] w-full object-cover sm:h-[430px] lg:h-[606px]"
-                />
+              <div className="relative group">
+                <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-300 ring-1 ring-slate-100">
+                  <img
+                    src="/images/about/image3.png"
+                    alt="Main about visual"
+                    className="h-[400px] w-full object-cover sm:h-[500px] lg:h-[650px] transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => (e.target.src = "/images/placeholder.png")}
+                  />
+                </div>
+                {/* Decorative floating badge */}
+                <div className="absolute -bottom-6 -left-6 bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-50 hidden sm:block">
+                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">25+</p>
+                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">Years of Legacy</p>
+                </div>
               </div>
             </div>
           </div>
@@ -73,41 +89,41 @@ export default function About() {
       </section>
 
       {/* Section 2: Our Leader (left image + right text) */}
-      <section className="py-10 sm:py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-center">
+      <section className="py-16 bg-slate-50/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
             {/* Left image */}
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-sm bg-slate-50">
+              <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-200 ring-4 ring-white group">
                 <img
                   src="/images/about/image4.png"
-                  alt=""
-                  className="h-[260px] w-full object-cover sm:h-[320px]"
+                  alt="Our Leader"
+                  className="h-[400px] w-full object-cover sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => (e.target.src = "/images/placeholder.png")}
                 />
               </div>
             </div>
 
             {/* Right text */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-SemiBold tracking-[0.35em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Leadership & Excellence
+                </p>
+              </div>
 
-              <h2 className="mt-3 text-[32px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
+              <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
                 Our Leader
               </h2>
 
-              <p className="mt-4 text-[15px] font-Medium leading-6 tracking-[0.12em] text-[#185C9B]">
+              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.Lorem
-                Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.standard
-                dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book.
+                of type and scrambled it to make a type specimen book. Our leaders
+                are dedicated to steering the company towards new heights of success,
+                fostering a culture of innovation and integrity.
               </p>
             </div>
           </div>
@@ -115,40 +131,40 @@ export default function About() {
       </section>
 
       {/* Section 3: Our Factory (left text + right image) */}
-      <section className="py-10 sm:py-14 pb-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-center">
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 items-center">
             {/* Left text */}
             <div className="lg:col-span-7">
-              <p className="text-[20px] font-SemiBold tracking-[0.35em] text-[#185C9B]">
-                Business Insights &amp; Beyond
-              </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-[2px] w-12 bg-[#185C9B]" />
+                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                  Production & Quality
+                </p>
+              </div>
 
-              <h2 className="mt-3 text-[32px] font-SemiBold tracking-[0.25em] text-[#C46A2A] sm:text-[38px]">
+              <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
                 Our Factory
               </h2>
 
-              <p className="mt-4 text-[15px] font-Medium leading-6 tracking-[0.12em] text-[#185C9B]">
+              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.Lorem
-                Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.standard
-                dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book.
+                of type and scrambled it to make a type specimen book. Our factory
+                maintains the highest standards of safety and efficiency, utilizing
+                state-of-the-art technology to ensure precision.
               </p>
             </div>
 
             {/* Right image */}
             <div className="lg:col-span-5">
-              <div className="overflow-hidden rounded-sm bg-slate-50">
+              <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-200 ring-4 ring-white group">
                 <img
                   src="/images/about/image5.png"
-                  alt=""
-                  className="h-[260px] w-full object-cover sm:h-[320px]"
+                  alt="Our Factory"
+                  className="h-[400px] w-full object-cover sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => (e.target.src = "/images/placeholder.png")}
                 />
               </div>
             </div>

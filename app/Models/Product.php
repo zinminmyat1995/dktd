@@ -18,7 +18,9 @@ class Product extends Model
         'status',
         'published_at',
         'start_date',
-        'end_date'
+        'end_date',
+        'created_by',
+        'updated_by'
     ];
 
     protected $casts = [
@@ -31,5 +33,15 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
