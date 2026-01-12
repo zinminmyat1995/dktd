@@ -94,20 +94,6 @@ export default function Home({ products, promotions }) {
                   </svg>
                 </Link>
 
-                <Link
-                  href={route('contact')}
-                  className="
-                    inline-flex items-center justify-center
-                    border-2 border-[#185C9B]
-                    px-10 py-4 text-[14px]
-                    font-Bold tracking-[0.18em]
-                    text-[#185C9B]
-                    hover:bg-[#185C9B] hover:text-white transition-all duration-500
-                    rounded-full
-                  "
-                >
-                  Contact Us
-                </Link>
               </div>
 
               {/* two small images */}
