@@ -13,11 +13,12 @@ export default function InnerPageLayout({
     <PublicLayout>
       <InnerBanner
         title={t(titleKey)}
+        titleClassName="font-display text-4xl"  // Apply display font with bold weight and larger size
         image={isHome ? "/images/banner1.png" : "/images/banner.png"}
         objectPosition="center"
       />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 font">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         {children}
       </div>
     </PublicLayout>

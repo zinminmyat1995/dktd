@@ -100,7 +100,7 @@ export default function Home({ products, promotions }) {
               <div className="mt-16 grid grid-cols-2 gap-8">
                 <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100">
                   <img
-                    src="/images/about/image1.png"
+                    src="/images/about/image1.jpg"
                     alt="About visual 1"
                     className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
@@ -109,7 +109,7 @@ export default function Home({ products, promotions }) {
 
                 <div className="overflow-hidden rounded-[2rem] shadow-2xl shadow-slate-200/50 ring-1 ring-slate-100">
                   <img
-                    src="/images/about/image2.png"
+                    src="/images/about/image2.jpg"
                     alt="About visual 2"
                     className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
@@ -123,7 +123,7 @@ export default function Home({ products, promotions }) {
               <div className="relative">
                 <div className="overflow-hidden rounded-[3rem] shadow-2xl shadow-slate-300 ring-1 ring-slate-100">
                   <img
-                    src="/images/about/image3.png"
+                    src="/images/about/image3.jpg"
                     alt="Main about visual"
                     className="h-[400px] w-full object-cover sm:h-[500px] lg:h-[650px] transition-transform duration-700 hover:scale-110"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
@@ -164,7 +164,7 @@ export default function Home({ products, promotions }) {
                   <img
                     src={product.image_path}
                     alt={product.title}
-                    className=" h-[90%] w-full object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                    className=" h-[90%] w-[90%] object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
                     onError={(e) => {
                       e.target.src = '/images/placeholder.png';
                     }}

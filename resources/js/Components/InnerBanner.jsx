@@ -2,6 +2,7 @@ import { usePage } from "@inertiajs/react";
 
 export default function InnerBanner({
   title,
+  titleClassName = "",
   image = "/images/banner.png",
   // banner image ရဲ့ focus ကိုညှိချင်ရင် override လုပ်လို့ရ
   objectPosition = "center",
@@ -41,7 +42,8 @@ export default function InnerBanner({
               "text-[28px] sm:text-[34px] md:text-[40px] lg:text-[44px]",
               "leading-none text-[#7A3B14] drop-shadow-sm",
               titleClass,
-            ].join(" ")}
+              titleClassName, // Add the titleClassName prop here
+            ].filter(Boolean).join(" ")}
           >
             {title}
           </h1>
