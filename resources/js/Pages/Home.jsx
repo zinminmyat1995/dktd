@@ -62,17 +62,9 @@ export default function Home({ products, promotions }) {
               </h2>
 
               <div className="mt-8 space-y-6">
-                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting
-                  industry. Lorem Ipsum has been the industry's standard dummy
-                  text ever since the 1500s, when an unknown printer took a galley
-                  of type and scrambled it to make a type specimen book.
-                </p>
-                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                  Our commitment to excellence drives us to deliver the highest
-                  quality solutions in the industry. We bridge the gap between
-                  innovation and reliability.
-                </p>
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600 whitespace-pre-line">
+               {t("messages.short_Desc")}
+              </p>
               </div>
 
               <div className="mt-10 flex flex-wrap gap-4">

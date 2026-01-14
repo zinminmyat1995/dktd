@@ -20,27 +20,12 @@ export default function About() {
               </div>
 
               <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
-                {t("messages.about", "About Us")}
+                {t("messages.about")}
               </h2>
 
               <div className="mt-8 space-y-6">
-                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting
-                  industry. Lorem Ipsum has been the industry's standard dummy
-                  text ever since the 1500s, when an unknown printer took a galley
-                  of type and scrambled it to make a type specimen book.
-                </p>
-                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                  Our commitment to excellence drives us to deliver the highest
-                  quality solutions in the industry. We bridge the gap between
-                  innovation and reliability, ensuring that every product we
-                  bring to market meets our rigorous standards of quality.
-                </p>
-                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                  As we look to the future, we continue to expand our reach and
-                  deepen our expertise, always keeping our customers' needs at
-                  the forefront of everything we do. Thank you for being part of
-                  our journey.
+                <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600 whitespace-pre-line">
+                  {t("messages.full_Desc")}
                 </p>
               </div>
 
