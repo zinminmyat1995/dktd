@@ -9,6 +9,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $with = ['creator:id,name', 'updater:id,name'];
+
     protected $fillable = [
         'name',
         'is_active',

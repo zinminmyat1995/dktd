@@ -123,6 +123,16 @@ function normalizeArray(res) {
   return Array.isArray(res) ? res : res?.data ?? [];
 }
 
+function formatDateShort(dateStr) {
+  if (!dateStr) return "-";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return "-";
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}-${mm}-${yyyy}`;
+}
+
 function extract422Errors(err) {
   const errors = err?.data?.errors;
   if (!errors) return {};
@@ -913,6 +923,8 @@ export default function ProductCreate() {
               <thead className="sticky top-0 z-10 bg-slate-50 text-slate-600">
                 <tr>
                   <th className="px-4 py-3">Name</th>
+                  <th className="px-4 py-3">Created By</th>
+                  <th className="px-4 py-3">Updated By</th>
                   <th className="w-56 px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -948,6 +960,22 @@ export default function ProductCreate() {
                           <span className="font-medium text-slate-900">
                             {c.name}
                           </span>
+                        )}
+                      </td>
+
+                      <td className="px-4 py-3">
+                        <div className="text-xs font-Medium text-slate-900">{c.creator?.name ?? "—"}</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(c.created_at)}</div>
+                      </td>
+
+                      <td className="px-4 py-3">
+                        {c.updated_at !== c.created_at ? (
+                          <>
+                            <div className="text-xs font-Medium text-slate-900">{c.updater?.name ?? "—"}</div>
+                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(c.updated_at)}</div>
+                          </>
+                        ) : (
+                          <span className="text-xs text-slate-400">—</span>
                         )}
                       </td>
 

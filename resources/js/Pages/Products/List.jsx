@@ -739,6 +739,8 @@ export default function List({ categories = [] }) {
                 <th className="px-3 py-3 text-left w-[110px]">New</th>
                 <th className="px-3 py-3 text-left w-[120px]">Status</th>
                 <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
+                <th className="px-3 py-3 text-left w-[180px]">Created By</th>
+                <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
                 <th className="px-3 py-3 text-center w-[200px]">Action</th>
               </tr>
             </thead>
@@ -807,6 +809,22 @@ export default function List({ categories = [] }) {
 
                       <td className="px-3 py-3">
                         <PromotionCell start={r.start_date} end={r.end_date} />
+                      </td>
+
+                      <td className="px-3 py-3">
+                        <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
+                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
+                      </td>
+
+                      <td className="px-3 py-3">
+                        {r.updated_at !== r.created_at ? (
+                          <>
+                            <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
+                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
+                          </>
+                        ) : (
+                          <span className="text-xs text-slate-400">—</span>
+                        )}
                       </td>
 
                       <td className="px-3 py-3 text-right">
@@ -1061,6 +1079,22 @@ export default function List({ categories = [] }) {
               className={editErrors.published_at ? "border-rose-500" : ""}
             />
             {editErrors.published_at && <div className="mt-1 text-xs text-rose-600">{editErrors.published_at}</div>}
+            {editRow && (
+              <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-wrap gap-x-8 gap-y-3">
+                <div className="space-y-1">
+                  <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Created By</div>
+                  <div className="text-sm font-SemiBold text-slate-700">{editRow.creator?.name ?? "—"}</div>
+                  <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.created_at)}</div>
+                </div>
+                {editRow.updated_at !== editRow.created_at && (
+                  <div className="space-y-1">
+                    <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Last Updated</div>
+                    <div className="text-sm font-SemiBold text-slate-700">{editRow.updater?.name ?? "—"}</div>
+                    <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.updated_at)}</div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-2">

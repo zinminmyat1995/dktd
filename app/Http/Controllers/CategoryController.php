@@ -12,7 +12,7 @@ class CategoryController extends Controller
     public function index()
     {
         return response()->json([
-            'data' => Category::orderBy('name')->get()
+            'data' => Category::with(['creator:id,name', 'updater:id,name'])->orderBy('name')->get()
         ]);
     }
 

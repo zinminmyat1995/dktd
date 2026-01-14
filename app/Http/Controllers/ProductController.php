@@ -63,7 +63,7 @@ class ProductController extends Controller
         return response()->json([
             'ok' => true,
             'message' => 'Product created successfully.',
-            'data' => $product,
+            'data' => $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
         ], 201);
     }
 
@@ -77,7 +77,7 @@ class ProductController extends Controller
         $perPage  = $req->per_page ?? 10;
 
         $query = Product::query()
-            ->with('category:id,name');
+            ->with(['category:id,name', 'creator:id,name', 'updater:id,name']);
 
         if ($q) {
             $query->where(function ($qq) use ($q) {
@@ -97,7 +97,7 @@ class ProductController extends Controller
     // ✅ Product detail for modal edit
     public function show(Product $product)
     {
-        $product->load('category:id,name');
+        $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']);
 
         return response()->json([
             'ok' => true,
@@ -142,7 +142,7 @@ class ProductController extends Controller
         return response()->json([
             'ok' => true,
             'message' => "Product updated successfully.",
-            'data' => $product->fresh()->load('category:id,name'),
+            'data' => $product->fresh()->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
         ]);
     }
 
