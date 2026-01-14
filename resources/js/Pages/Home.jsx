@@ -159,6 +159,13 @@ export default function Home({ products, promotions }) {
                 href={route('products.show_detail', product.id)}
                 className="group relative h-120 overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
               >
+                {product.is_new && (
+                  <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
+                    <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
+                      NEW
+                    </span>
+                  </div>
+                )}
                 {/* Product Image */}
                 <div className="sm:h-[350px] h-[500px] lg:h-[500px] w-full overflow-hidden flex items-center justify-center">
                   <img

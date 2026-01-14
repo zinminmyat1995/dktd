@@ -58,11 +58,18 @@ export default function ProductDetail({ product }) {
                                 </ol>
                             </nav>
 
-                            {product.category && (
-                                <span className="inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-[#185C9B] uppercase">
-                                    {product.category.name}
-                                </span>
-                            )}
+                            <div className="flex flex-wrap items-center gap-2">
+                                {product.category && (
+                                    <span className="inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-[#185C9B] uppercase">
+                                        {product.category.name}
+                                    </span>
+                                )}
+                                {product.is_new && (
+                                    <span className="inline-flex items-center rounded-full bg-[#1E4F7A] px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-white uppercase shadow-sm">
+                                        NEW
+                                    </span>
+                                )}
+                            </div>
 
                             <h1 className="mt-4 text-[28px] sm:text-4xl lg:text-5xl font-Bold tracking-tight text-slate-900 font-display uppercase leading-tight">
                                 {product.title}

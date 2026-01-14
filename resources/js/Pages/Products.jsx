@@ -75,6 +75,13 @@ function ProductCard({ product }) {
       href={route('products.show_detail', product.id)}
       className="group relative overflow-hidden rounded-2xl aspect-square shadow-md transition-all duration-500 hover:shadow-xl flex items-center justify-center"
     >
+      {product.is_new && (
+        <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
+          <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
+            NEW
+          </span>
+        </div>
+      )}
       <img
         src={product.image_path}
         alt={product.title}
