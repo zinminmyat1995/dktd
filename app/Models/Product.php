@@ -15,6 +15,7 @@ class Product extends Model
         'description',
         'image_path',
         'is_new',
+        'show_on_home',
         'status',
         'published_at',
         'start_date',
