@@ -200,6 +200,33 @@ function Modal({ open, title, subtitle, children, onClose, maxWidth = "max-w-xl"
 }
 
 /* =======================
+   Badges
+======================= */
+function NewBadge({ value }) {
+  const isNew = Boolean(value);
+  if (!isNew) return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full px-3 py-1 border bg-emerald-50 text-emerald-700 border-emerald-200">
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
+      <span className="text-[11px] font-bold leading-none tracking-wide">NEW</span>
+    </span>
+  );
+}
+
+function HomeBadge({ value }) {
+  const onHome = Boolean(value);
+  if (!onHome) return <span className="text-xs text-slate-400">—</span>;
+
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 border bg-amber-50 text-amber-800 border-amber-200">
+      <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
+      <span className="text-[11px] font-extrabold tracking-wide">HOME</span>
+    </span>
+  );
+}
+
+/* =======================
    Main Component
 ======================= */
 export default function List({ categories = [] }) {
@@ -214,7 +241,7 @@ export default function List({ categories = [] }) {
     open: false,
     title: "",
     message: "",
-    onConfirm: async () => { },
+    onConfirm: async () => {},
   });
 
   /* ===== Filters ===== */
@@ -229,8 +256,6 @@ export default function List({ categories = [] }) {
   /* ===== Selection ===== */
   const [selected, setSelected] = useState({});
   const selectedItems = useMemo(() => Object.values(selected), [selected]);
-
-  // ✅ For Select All pages
   const [isAllSelected, setIsAllSelected] = useState(false);
 
   /* ===== Promotion modal ===== */
@@ -238,6 +263,11 @@ export default function List({ categories = [] }) {
   const [promoStart, setPromoStart] = useState("");
   const [promoEnd, setPromoEnd] = useState("");
   const [promoError, setPromoError] = useState("");
+
+  /* ===== Home modal (NEW) ===== */
+  const [homeOpen, setHomeOpen] = useState(false);
+  const [homeError, setHomeError] = useState("");
+  const [homeSelectedIds, setHomeSelectedIds] = useState([]); // from backend
 
   /* ===== Edit modal ===== */
   const [editOpen, setEditOpen] = useState(false);
@@ -287,7 +317,7 @@ export default function List({ categories = [] }) {
         last_page: json.last_page ?? 1,
       });
 
-      // ✅ If user changed filter / paging -> reset selection state
+      // reset selection when paging/filter changes
       setSelected({});
       setIsAllSelected(false);
     } catch {
@@ -315,12 +345,10 @@ export default function List({ categories = [] }) {
     });
   }
 
-  // ✅ Select ALL across all pages (not current page)
   async function toggleSelectAll() {
     try {
       setLoading(true);
 
-      // ✅ Filter params same as data query (but NO pagination)
       const query = buildQuery({
         q,
         category_id: categoryId,
@@ -329,21 +357,15 @@ export default function List({ categories = [] }) {
         sort_dir: sortDir,
       });
 
-      // ✅ MUST create this endpoint in backend:
-      // GET /admin/products/all-ids?{filters}
-      // response: { ids: [1,2,3...] }
       const json = await apiFetch(`/admin/products/all-ids?${query}`, { method: "GET" });
-
       const ids = json?.ids ?? [];
 
       if (isAllSelected) {
-        // ✅ unselect all
         setSelected({});
         setIsAllSelected(false);
         return;
       }
 
-      // ✅ Fill selected by id only (mock row object)
       const map = {};
       ids.forEach((id) => {
         map[id] = { id };
@@ -366,10 +388,8 @@ export default function List({ categories = [] }) {
 
   /* =======================
      Delete ✅
-     ✅ Fix: if last item on current page deleted => auto go prev page
   ======================= */
   async function deleteOne(row) {
-    // ✅ snapshot before delete
     const isLastItemOnPage = rows.length === 1;
     const canGoPrev = page > 1;
 
@@ -383,10 +403,9 @@ export default function List({ categories = [] }) {
 
       showToast("success", "Deleted", json?.message || "Product deleted successfully.");
 
-      // ✅ if last row on page, go prev page
       if (isLastItemOnPage && canGoPrev) {
         setPage((p) => Math.max(1, p - 1));
-        return; // fetchData will auto run due to page change
+        return;
       }
 
       fetchData();
@@ -502,6 +521,107 @@ export default function List({ categories = [] }) {
   }
 
   /* =======================
+     Home Products ✅ (NEW)
+  ======================= */
+  async function loadHomeSelected() {
+    try {
+      const json = await apiFetch(`/admin/products/home-selected`, { method: "GET" });
+      const ids = (json?.ids ?? []).map((x) => Number(x));
+      setHomeSelectedIds(ids);
+      return ids;
+    } catch {
+      return [];
+    }
+  }
+
+  async function openHomeModal() {
+
+    if (selectedItems.length === 0) {
+      showToast("warning", "Warning", "Please select at least 1 product before home setting.");
+      return;
+    }
+
+    // load current home selected (for info)
+    const currentIds = await loadHomeSelected();
+
+    // precheck: if nothing selected in table, still allow clear
+    setHomeError("");
+
+    // If user selected > 3 -> block
+    if (selectedItems.length > 3) {
+      showToast("warning", "Warning", "You can select maximum 3 products for Home page.");
+      return;
+    }
+
+    setHomeOpen(true);
+  }
+
+  async function submitHomeProducts() {
+    setHomeError("");
+
+    if (selectedItems.length > 3) {
+      setHomeError("You can select maximum 3 products for Home page.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const json = await apiFetch(`/admin/products/home`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_ids: selectedItems.map((x) => x.id),
+        }),
+      });
+
+      if (json?.ok === false) {
+        setHomeError(json?.message || "Failed to update home products.");
+        return;
+      }
+
+      showToast("success", "Success", json?.message || "Home products updated.");
+      setHomeOpen(false);
+      await loadHomeSelected();
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      setHomeError(err?.data?.message || "Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function clearHomeProducts() {
+    try {
+      setLoading(true);
+
+      const json = await apiFetch(`/admin/products/home`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_ids: [],
+        }),
+      });
+
+      if (json?.ok === false) {
+        showToast("error", "Failed", json?.message || "Failed to clear home products.");
+        return;
+      }
+
+      showToast("success", "Cleared", json?.message || "Home products cleared.");
+      setHomeOpen(false);
+      await loadHomeSelected();
+      fetchData();
+    } catch (err) {
+      console.error(err);
+      showToast("error", "Error", err?.data?.message || "Failed to clear home products.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* =======================
      Edit Modal (Fetch + Open) ✅
   ======================= */
   async function openEditModal(row) {
@@ -606,34 +726,16 @@ export default function List({ categories = [] }) {
     }
   }
 
-
-  /* =======================
-    ✅ NEW Badge Component (Show only if NEW)
- ======================= */
-  function NewBadge({ value }) {
-    const isNew = Boolean(value);
-
-    // ✅ Not NEW => render nothing
-    if (!isNew) return null;
-
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center gap-1 rounded-full px-3 py-1 border",
-          "bg-emerald-50 text-emerald-700 border-emerald-200"
-        )}
-      >
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
-        {/* ✅ NEW text smaller */}
-        <span className="text-[11px] font-bold leading-none tracking-wide">NEW</span>
-      </span>
-    );
-  }
-
-
   /* =======================
      Render
   ======================= */
+  const selectedPreview = selectedItems
+    .slice(0, 3)
+    .map((x) => {
+      const full = rows.find((r) => r.id === x.id) || x;
+      return full;
+    });
+
   return (
     <AuthenticatedLayout header="Product List" subtitle="View & manage products with promotion">
       {/* Filters */}
@@ -695,10 +797,11 @@ export default function List({ categories = [] }) {
             <div className="text-slate-400">|</div>
             <div>
               Selected: <span className="font-semibold text-indigo-600">{selectedItems.length}</span>
+              <span className="ml-2 text-xs text-slate-400">(Home max 3)</span>
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
             <button
               onClick={toggleSelectAll}
               className="h-10 px-4 rounded-full border text-sm font-semibold hover:bg-slate-50 disabled:opacity-50"
@@ -708,10 +811,23 @@ export default function List({ categories = [] }) {
               {isAllSelected ? "Unselect All" : "Select All"}
             </button>
 
+            {/* ✅ NEW Home button */}
+            <button
+              onClick={openHomeModal}
+              className={cn(
+                "h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700"
+              )}
+              type="button"
+              disabled={loading}
+            >
+              Home Products
+            </button>
+
             <button
               onClick={openPromotionModal}
               className="h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700"
               type="button"
+              disabled={loading}
             >
               Promotion
             </button>
@@ -722,7 +838,7 @@ export default function List({ categories = [] }) {
       {/* Table */}
       <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-[1200px] w-full text-sm">
+          <table className="min-w-[1350px] w-full text-sm">
             <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
               <tr>
                 <th className="px-3 py-3 text-left w-[44px]">
@@ -737,6 +853,10 @@ export default function List({ categories = [] }) {
                 <th className="px-3 py-3 text-left">Title</th>
                 <th className="px-3 py-3 text-left w-[180px]">Category</th>
                 <th className="px-3 py-3 text-left w-[110px]">New</th>
+
+                {/* ✅ NEW column */}
+                <th className="px-3 py-3 text-left w-[120px]">Home</th>
+
                 <th className="px-3 py-3 text-left w-[120px]">Status</th>
                 <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
                 <th className="px-3 py-3 text-left w-[180px]">Created By</th>
@@ -748,7 +868,7 @@ export default function List({ categories = [] }) {
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-10 text-center text-slate-500">
+                  <td colSpan={9} className="px-3 py-10 text-center text-slate-500">
                     Loading...
                   </td>
                 </tr>
@@ -756,7 +876,7 @@ export default function List({ categories = [] }) {
 
               {!loading && rows.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-10 text-center text-slate-500">
+                  <td colSpan={9} className="px-3 py-10 text-center text-slate-500">
                     No data
                   </td>
                 </tr>
@@ -792,6 +912,12 @@ export default function List({ categories = [] }) {
                       <td className="px-3 py-3">
                         <NewBadge value={r.is_new} />
                       </td>
+
+                      {/* ✅ HOME badge */}
+                      <td className="px-3 py-3">
+                        <HomeBadge value={r.show_on_home} />
+                      </td>
+
                       <td className="px-3 py-3">
                         <span
                           className={cn(
@@ -799,8 +925,8 @@ export default function List({ categories = [] }) {
                             r.status === "published"
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : r.status === "archived"
-                                ? "bg-rose-50 text-rose-700 border border-rose-200"
-                                : "bg-slate-100 text-slate-700 border border-slate-200"
+                              ? "bg-rose-50 text-rose-700 border border-rose-200"
+                              : "bg-slate-100 text-slate-700 border border-slate-200"
                           )}
                         >
                           {r.status}
@@ -864,7 +990,8 @@ export default function List({ categories = [] }) {
         {/* Pagination */}
         <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
           <div className="text-sm font-Medium text-slate-500">
-            Showing page <span className="text-slate-900 font-Bold">{meta.current_page}</span> of <span className="text-slate-900 font-Bold">{meta.last_page}</span>
+            Showing page <span className="text-slate-900 font-Bold">{meta.current_page}</span> of{" "}
+            <span className="text-slate-900 font-Bold">{meta.last_page}</span>
           </div>
 
           <div className="flex gap-3">
@@ -892,6 +1019,140 @@ export default function List({ categories = [] }) {
           </div>
         </div>
       </div>
+
+      {/* ✅ Home Modal */}
+      <Modal
+        open={homeOpen}
+        title="Home Page Products"
+        subtitle={
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500">Pick maximum</span>
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 border border-amber-200">
+              3
+            </span>
+            <span className="text-xs text-slate-400">products to show on Home page</span>
+          </div>
+        }
+        onClose={() => setHomeOpen(false)}
+        maxWidth="max-w-3xl"
+      >
+        <div className="space-y-4">
+          {/* current home selected info */}
+          <div className="rounded-2xl border bg-slate-50 p-4">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <div className="text-sm font-semibold text-slate-900">Current Home products</div>
+                <div className="text-xs text-slate-500">
+                  Currently selected: <span className="font-semibold">{homeSelectedIds.length}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="px-4 py-2 rounded-xl border border-rose-200 bg-white text-sm font-semibold text-rose-600 hover:bg-rose-50"
+                onClick={() =>
+                  setConfirm({
+                    open: true,
+                    title: "Clear Home Products",
+                    message: "Are you sure you want to clear Home products?",
+                    onConfirm: async () => {
+                      setConfirm((p) => ({ ...p, open: false }));
+                      await clearHomeProducts();
+                    },
+                  })
+                }
+                disabled={loading}
+              >
+                Clear Home
+              </button>
+            </div>
+          </div>
+
+          {/* selected preview */}
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-semibold text-slate-900">
+                Selected for Home (from checkbox):{" "}
+                <span className={cn("font-extrabold", selectedItems.length > 3 ? "text-rose-600" : "text-amber-700")}>
+                  {selectedItems.length}
+                </span>
+                <span className="text-xs text-slate-400 ml-2">(max 3)</span>
+              </div>
+            </div>
+
+            {selectedItems.length === 0 ? (
+              <div className="mt-3 text-sm text-slate-500 rounded-xl border bg-white p-4">
+                Please select products from the table first, then click <b>Home Products</b>.
+                <div className="text-xs text-slate-400 mt-1">
+                  (You can also use this modal to clear Home products.)
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+                {selectedPreview.map((p) => {
+                  const img = toPublicUrl(p.image_path);
+                  return (
+                    <div key={p.id} className="rounded-2xl border bg-white overflow-hidden shadow-sm">
+                      <div className="h-36 bg-slate-50 flex items-center justify-center overflow-hidden">
+                        {img ? (
+                          <img src={img} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="text-slate-400 text-sm">No image</div>
+                        )}
+                      </div>
+                      <div className="p-3">
+                        <div className="text-sm font-semibold text-slate-900 line-clamp-1">{p.title ?? `#${p.id}`}</div>
+                        <div className="text-xs text-slate-500 line-clamp-2 mt-1">{p.description ?? ""}</div>
+                        <div className="mt-2 flex items-center justify-between">
+                          <span className="text-[11px] text-slate-400">ID: {p.id}</span>
+                          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                            HOME
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {homeError ? (
+            <div className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              <span className="mt-0.5">⚠️</span>
+              <div className="font-medium">{homeError}</div>
+            </div>
+          ) : null}
+
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              onClick={() => setHomeOpen(false)}
+              className="px-4 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              type="button"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={() =>
+                setConfirm({
+                  open: true,
+                  title: "Save Home Products",
+                  message: `Set selected products (${selectedItems.length}) to show on Home page? (max 3)`,
+                  onConfirm: async () => {
+                    setConfirm((p) => ({ ...p, open: false }));
+                    await submitHomeProducts();
+                  },
+                })
+              }
+              disabled={loading || selectedItems.length === 0 || selectedItems.length > 3}
+              className={"px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm font-semibold shadow-sm hover:from-indigo-700 hover:to-indigo-600 disabled:opacity-50"}
+              type="button"
+            >
+              {loading ? "Saving..." : "Save Home"}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* ✅ Promotion Modal */}
       <Modal

@@ -54,7 +54,8 @@ Route::middleware(['auth', 'verified'])
             Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
             Route::post('/products/promotion', [ProductController::class, 'promotion'])->name('products.promotion');
             Route::get('/products/all-ids', [ProductController::class, 'allIds']);
-
+            Route::get('/products/home-selected', [ProductController::class, 'homeSelected']);        
+            Route::post('/products/home', [ProductController::class, 'home']);
 
             // ✅ Categories Admin Only
             Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');

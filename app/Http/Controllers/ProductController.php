@@ -55,9 +55,7 @@ class ProductController extends Controller
             'status'       => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
             'start_date'   => $validated['start_date'] ?? null,
-            'end_date'     => $validated['end_date'] ?? null,
-            'created_by'   => auth()->id(),
-            'updated_by'   => auth()->id()
+            'end_date'     => $validated['end_date'] ?? null
         ]);
 
         return response()->json([
@@ -136,7 +134,6 @@ class ProductController extends Controller
             'is_new'       => $validated['is_new'] ?? false,
             'status'       => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
-            'updated_by'   => auth()->id()
         ]);
 
         return response()->json([
@@ -226,6 +223,53 @@ class ProductController extends Controller
 
         return response()->json([
             'ids' => $ids,
+        ]);
+    }
+
+
+    public function homeSelected()
+    {
+        $ids = \App\Models\Product::query()
+            ->where('show_on_home', 1)
+            ->orderBy('updated_at', 'desc')
+            ->limit(3)
+            ->pluck('id');
+
+        return response()->json([
+            'ids' => $ids,
+        ]);
+    }
+
+    public function home(Request $request)
+    {
+        $data = $request->validate([
+            'product_ids' => ['nullable', 'array'],
+            'product_ids.*' => ['integer', 'exists:products,id'],
+        ]);
+
+        $ids = $data['product_ids'] ?? [];
+
+        // ✅ enforce max 3 (backend safeguard)
+        if (count($ids) > 3) {
+            return response()->json([
+                'ok' => false,
+                'message' => 'You can select maximum 3 products for Home page.',
+            ], 422);
+        }
+
+        // ✅ Reset all first
+        \App\Models\Product::query()->where('show_on_home', 1)->update(['show_on_home' => 0]);
+
+        // ✅ Set selected
+        if (!empty($ids)) {
+            \App\Models\Product::query()->whereIn('id', $ids)->update(['show_on_home' => 1]);
+        }
+
+        return response()->json([
+            'ok' => true,
+            'message' => empty($ids)
+                ? 'Home products cleared successfully.'
+                : 'Home products updated successfully.',
         ]);
     }
 
