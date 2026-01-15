@@ -29,7 +29,19 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $now = now();
+    return Inertia::render('Dashboard', [
+        'stats' => [
+            'products' => \App\Models\Product::count(),
+            'categories' => \App\Models\Category::count(),
+            'users' => \App\Models\User::count(),
+            'promotions' => \App\Models\Product::whereNotNull('start_date')
+                ->whereNotNull('end_date')
+                ->where('start_date', '<=', $now)
+                ->where('end_date', '>=', $now)
+                ->count(),
+        ]
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 /*
