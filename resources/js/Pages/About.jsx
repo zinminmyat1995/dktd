@@ -15,7 +15,7 @@ export default function About() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  Our Mission & Vision
+                  {t("messages.about_mission_vision")}
                 </p>
               </div>
 
@@ -64,8 +64,8 @@ export default function About() {
                 </div>
                 {/* Decorative floating badge */}
                 <div className="absolute -bottom-6 -left-6 bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-50 hidden sm:block">
-                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">25+</p>
-                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">Years of Legacy</p>
+                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">{t("messages.years_legacy_number")}</p>
+                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">{t("messages.years_legacy_text")}</p>
                 </div>
               </div>
             </div>
@@ -94,15 +94,15 @@ export default function About() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  Leadership & Excellence
+                  {t("messages.about_leadership_excellence")}
                 </p>
               </div>
 
               <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
-                Our Leader
+                {t("messages.about_our_leader")}
               </h2>
 
-              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600 whitespace-pre-line">
                 {t("messages.leader")}
               </p>
             </div>
@@ -119,15 +119,15 @@ export default function About() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  Production & Quality
+                  {t("messages.about_production_quality")}
                 </p>
               </div>
 
               <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
-                Our Factory
+                {t("messages.about_our_factory")}
               </h2>
 
-              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
+              <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600 whitespace-pre-line">
                 {t("messages.factory")}
               </p>
             </div>

@@ -43,7 +43,7 @@ export default function ProductDetail({ product }) {
                                     <li>
                                         <div>
                                             <Link href={route('products')} className="text-[12px] sm:text-sm font-Bold text-slate-400 hover:text-[#185C9B] uppercase tracking-wider">
-                                                {t('messages.products', 'Products')}
+                                                {t('messages.products')}
                                             </Link>
                                         </div>
                                     </li>
@@ -66,7 +66,7 @@ export default function ProductDetail({ product }) {
                                 )}
                                 {product.is_new && (
                                     <span className="inline-flex items-center rounded-full bg-[#1E4F7A] px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-white uppercase shadow-sm">
-                                        NEW
+                                        {t("messages.new_badge")}
                                     </span>
                                 )}
                             </div>
@@ -78,8 +78,8 @@ export default function ProductDetail({ product }) {
 
                         {/* Middle Content (Description - Fixed height dev) */}
                         <div className="mt-8 mb-6 flex-1 flex flex-col min-h-0">
-                            <h3 className="text-sm font-SemiBold text-[#D4793F] tracking-[0.2em] uppercase mb-4">
-                                Description
+                            <h3 className="text-sm font-SemiBold text-[#D4793F] tracking-[0.2em] uppercase mb-4 font-display">
+                                {t("messages.product_description_heading")}
                             </h3>
 
                             {/* This DIV is capped to ensure it never pushes the buttons down */}
@@ -89,7 +89,7 @@ export default function ProductDetail({ product }) {
                                     className={`text-base leading-relaxed text-slate-600 whitespace-pre-line custom-scrollbar
                     ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'max-h-[200px] overflow-hidden'}`}
                                 >
-                                    {product.description || "No description available for this product."}
+                                    {product.description || t("messages.no_description_available")}
                                 </div>
 
                                 {/* Gradient fade when collapsed */}
@@ -103,7 +103,7 @@ export default function ProductDetail({ product }) {
                                     onClick={() => setIsExpanded(!isExpanded)}
                                     className="mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1"
                                 >
-                                    {isExpanded ? "View Less" : "View More"}
+                                    {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
                                         className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -120,13 +120,13 @@ export default function ProductDetail({ product }) {
                                 href={route('contact')}
                                 className="flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
                             >
-                                Contact Us
+                                {t("messages.contact")}
                             </Link>
                             <button
                                 onClick={() => window.history.back()}
                                 className="flex flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-slate-700 shadow-sm hover:bg-slate-50 hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
                             >
-                                Back
+                                {t("messages.back")}
                             </button>
                         </div>
                     </div>

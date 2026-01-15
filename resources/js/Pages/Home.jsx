@@ -53,7 +53,7 @@ export default function Home({ products, promotions }) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  Business Insights &amp; Beyond
+                  {t("messages.business_insights")}
                 </p>
               </div>
 
@@ -123,8 +123,8 @@ export default function Home({ products, promotions }) {
                 </div>
                 {/* Decorative floating badge */}
                 <div className="absolute -bottom-6 -left-6 bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-50 hidden sm:block">
-                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">25+</p>
-                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">Years of Legacy</p>
+                  <p className="text-[32px] font-Bold text-[#185C9B] leading-none">{t("messages.years_legacy_number")}</p>
+                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">{t("messages.years_legacy_text")}</p>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function Home({ products, promotions }) {
               {t("messages.our_products")}
             </h2>
             <p className="text-[15px] tracking-[0.25em] text-[#185C9B]">
-              Business Insights & Beyond
+              {t("messages.business_insights")}
             </p>
           </div>
 
@@ -154,7 +154,7 @@ export default function Home({ products, promotions }) {
                 {product.is_new && (
                   <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
                     <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
-                      NEW
+                      {t("messages.new_badge")}
                     </span>
                   </div>
                 )}
@@ -224,11 +224,11 @@ export default function Home({ products, promotions }) {
       {/* ================= PROMOTION ================= */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="mt-3 text-center text-[35px] tracking-[0.25em] text-[#D4793F]">
+          <h2 className="mt-3 text-center text-[35px] tracking-[0.25em] text-[#D4793F] font-display">
             {t("messages.promotion")}
           </h2>
           <p className="text-center text-[15px] tracking-[0.25em] text-[#185C9B]">
-            Business Insights & Beyond
+            {t("messages.business_insights")}
           </p>
 
 
@@ -260,7 +260,7 @@ export default function Home({ products, promotions }) {
 
                       {promo.is_new && (
                         <div className="shrink-0 bg-[#1E4F7A] px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
-                          NEW
+                          {t("messages.new_badge")}
                         </div>
                       )}
                     </div>
@@ -276,7 +276,7 @@ export default function Home({ products, promotions }) {
 
                   <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
                     <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
-                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString() : 'Latest Update'}
+                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString() : t("messages.latest_update")}
                     </span>
                     <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
                       {t("messages.read_more")}
@@ -320,12 +320,12 @@ export default function Home({ products, promotions }) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  Find Our Store
+                  {t("messages.find_our_store")}
                 </p>
               </div>
 
               <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
-                OUR LOCATION
+                {t("messages.locations")}
               </h2>
 
               <div className="mt-10 space-y-6">
@@ -336,8 +336,8 @@ export default function Home({ products, promotions }) {
                     </svg>
                   </div>
                   <div>
-                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#185C9B]">Opening Hours</h5>
-                    <p className="text-[16px] font-Bold text-slate-900 tracking-wide">9:00 AM — 9:00 PM</p>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#185C9B]">{t("messages.opening_hours")}</h5>
+                    <p className="text-[16px] font-Bold text-slate-900 tracking-wide">{t("messages.opening_hours_time")}</p>
                   </div>
                 </div>
 
@@ -349,9 +349,9 @@ export default function Home({ products, promotions }) {
                     </svg>
                   </div>
                   <div>
-                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]">Headquarters</h5>
+                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]">{t("messages.headquarters")}</h5>
                     <p className="text-[16px] font-Bold text-slate-900 leading-relaxed max-w-sm tracking-wide">
-                      #1065 (Ground & 1st floor), St. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh.
+                      {t("messages.headquarters_address")}
                     </p>
                   </div>
                 </div>
@@ -362,7 +362,7 @@ export default function Home({ products, promotions }) {
                   href={route('contact')}
                   className="inline-flex items-center text-[12px] font-Bold text-[#185C9B] border-b-2 border-transparent hover:border-[#185C9B] pb-1 transition-all uppercase tracking-widest"
                 >
-                  Get Directions
+                  {t("messages.get_directions")}
                   <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>

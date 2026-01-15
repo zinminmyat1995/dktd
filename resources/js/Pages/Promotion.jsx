@@ -12,11 +12,11 @@ export default function Promotion({ promotions = { data: [] } }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
-            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
-              PROMOTIONS
+            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F] font-display">
+              {t("messages.promotion_heading")}
             </h2>
             <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-              Business Insights &amp; Beyond
+              {t("messages.business_insights")}
             </p>
           </div>
 
@@ -24,10 +24,10 @@ export default function Promotion({ promotions = { data: [] } }) {
           <div className="mt-12 space-y-6">
             {promotions.data && promotions.data.length > 0 ? (
               promotions.data.map((promo) => (
-                <PromoRow key={promo.id} promo={promo} />
+                <PromoRow key={promo.id} promo={promo} t={t} /> // Pass t to PromoRow
               ))
             ) : (
-              <p className="text-center text-slate-500 py-20">No active promotions at the moment.</p>
+              <p className="text-center text-slate-500 py-20">{t("messages.no_promotions")}</p>
             )}
           </div>
 
@@ -39,7 +39,7 @@ export default function Promotion({ promotions = { data: [] } }) {
   );
 }
 
-function PromoRow({ promo }) {
+function PromoRow({ promo, t }) { // Receive t as prop
   return (
     <Link
       href={route('products.show_detail', promo.id)}
@@ -67,7 +67,7 @@ function PromoRow({ promo }) {
           </h3>
           {promo.is_new && (
             <div className="shrink-0 bg-[#1E4F7A] px-5 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
-              NEW
+              {t("messages.new_badge")}
             </div>
           )}
         </div>
@@ -80,10 +80,10 @@ function PromoRow({ promo }) {
 
         <div className="mt-6 flex items-center justify-between">
           <div className="text-[12px] font-Bold text-slate-400 tracking-widest uppercase">
-            {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Latest Update'}
+            {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : t("messages.latest_update")}
           </div>
           <div className="text-[#D4793F] font-Bold text-[13px] tracking-[0.2em] uppercase flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
-            Read More
+            {t("messages.read_more")}
             <svg className="h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>

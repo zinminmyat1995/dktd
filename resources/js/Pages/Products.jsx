@@ -1,8 +1,11 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import { Link, router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
+import useTranslate from "@/hooks/useTranslate"; // Added useTranslate import
 
 export default function Products({ products, categories, filters }) {
+  const { t } = useTranslate(); // Initialize useTranslate
+
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
     router.get(route('products'), { category: categoryId }, {
@@ -18,10 +21,10 @@ export default function Products({ products, categories, filters }) {
           {/* Page Heading */}
           <div className="text-center">
             <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
-              OUR PRODUCTS
+              {t("messages.our_products")}
             </h2>
             <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-              Business Insights &amp; Beyond
+              {t("messages.business_insights")}
             </p>
           </div>
 
@@ -33,7 +36,7 @@ export default function Products({ products, categories, filters }) {
                 onChange={handleCategoryChange}
                 className="block w-full appearance-none rounded-xl border border-slate-200 bg-white px-6 py-3 pr-10 text-xs font-Bold tracking-widest text-slate-700 uppercase focus:border-[#185C9B] focus:outline-none focus:ring-1 focus:ring-[#185C9B] transition-all cursor-pointer"
               >
-                <option value="">All Categories</option>
+                <option value="">{t("messages.all_categories")}</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
@@ -52,11 +55,11 @@ export default function Products({ products, categories, filters }) {
           <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {products.data.length > 0 ? (
               products.data.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} t={t} />
               ))
             ) : (
               <div className="col-span-full py-20 text-center">
-                <p className="text-slate-500 font-Medium italic">No products found in this category.</p>
+                <p className="text-slate-500 font-Medium italic">{t("messages.no_products_found")}</p>
               </div>
             )}
           </div>
@@ -69,7 +72,7 @@ export default function Products({ products, categories, filters }) {
   );
 }
 
-function ProductCard({ product }) {
+function ProductCard({ product, t }) { // Added t prop
   return (
     <Link
       href={route('products.show_detail', product.id)}
@@ -78,7 +81,7 @@ function ProductCard({ product }) {
       {product.is_new && (
         <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
           <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
-            NEW
+            {t("messages.new_badge")}
           </span>
         </div>
       )}
