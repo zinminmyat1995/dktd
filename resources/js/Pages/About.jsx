@@ -103,12 +103,7 @@ export default function About() {
               </h2>
 
               <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. Our leaders
-                are dedicated to steering the company towards new heights of success,
-                fostering a culture of innovation and integrity.
+                {t("messages.leader")}
               </p>
             </div>
           </div>
@@ -133,12 +128,7 @@ export default function About() {
               </h2>
 
               <p className="mt-8 max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. Our factory
-                maintains the highest standards of safety and efficiency, utilizing
-                state-of-the-art technology to ensure precision.
+                {t("messages.factory")}
               </p>
             </div>
 

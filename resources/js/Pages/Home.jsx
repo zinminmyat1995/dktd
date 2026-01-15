@@ -80,7 +80,7 @@ export default function Home({ products, promotions }) {
                     rounded-full shadow-lg shadow-orange-900/10
                   "
                 >
-                  View More
+                  {t("messages.read_more")}
                   <svg className="ml-3 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -137,7 +137,7 @@ export default function Home({ products, promotions }) {
         <div className="mx-auto max-w-7xl px-4">
           <div className="text-center">
             <h2 className="mt-3 text-[35px] tracking-[0.25em] text-[#D4793F] font-display font-SemiBold">
-              OUR PRODUCTS
+              {t("messages.our_products")}
             </h2>
             <p className="text-[15px] tracking-[0.25em] text-[#185C9B]">
               Business Insights & Beyond
@@ -190,7 +190,7 @@ export default function Home({ products, promotions }) {
                   </div>
 
                   <div className="inline-flex items-center text-sm font-Bold text-[#D4793F] group-hover:text-amber-300 transition-all duration-500 transform group-hover:-translate-y-1">
-                    View Details
+                    {t("messages.read_more")}
                     <svg className="ml-2 h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
@@ -215,7 +215,7 @@ export default function Home({ products, promotions }) {
                 uppercase
               "
             >
-              View All Products
+              {t("messages.view_more")}
             </Link>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function Home({ products, promotions }) {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="mt-3 text-center text-[35px] tracking-[0.25em] text-[#D4793F]">
-            PROMOTIONS OR NEWS
+            {t("messages.promotion")}
           </h2>
           <p className="text-center text-[15px] tracking-[0.25em] text-[#185C9B]">
             Business Insights & Beyond
@@ -279,7 +279,7 @@ export default function Home({ products, promotions }) {
                       {promo.start_date ? new Date(promo.start_date).toLocaleDateString() : 'Latest Update'}
                     </span>
                     <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
-                      Read More
+                      {t("messages.read_more")}
                       <svg className="h-4 w-4 transform transition-all duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
@@ -306,7 +306,7 @@ export default function Home({ products, promotions }) {
                 uppercase
               "
             >
-              See More
+              {t("messages.view_more")}
             </Link>
           </div>
         </div>

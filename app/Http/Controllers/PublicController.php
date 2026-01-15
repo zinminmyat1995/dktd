@@ -10,7 +10,8 @@ class PublicController extends Controller
     public function home()
     {
         $products = Product::where('status', 'published')
-            ->latest()
+            ->where('show_on_home', 1)
+            ->orderByDesc('updated_at')
             ->take(3)
             ->get();
 
