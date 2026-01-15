@@ -850,7 +850,7 @@ export default function List({ categories = [] }) {
                   />
                 </th>
                 <th className="px-3 py-3 text-left w-[90px]">Image</th>
-                <th className="px-3 py-3 text-left">Title</th>
+                <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
                 <th className="px-3 py-3 text-left w-[180px]">Category</th>
                 <th className="px-3 py-3 text-left w-[110px]">New</th>
 
@@ -861,7 +861,7 @@ export default function List({ categories = [] }) {
                 <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
                 <th className="px-3 py-3 text-left w-[180px]">Created By</th>
                 <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
-                <th className="px-3 py-3 text-center w-[200px]">Action</th>
+                <th className="px-3 py-3 text-center w-[250px]">Action</th>
               </tr>
             </thead>
 

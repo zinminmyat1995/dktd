@@ -12,7 +12,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@300;400;500;600;700&family=Content&family=Fredoka+One&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         
         <!-- Scripts -->
         @routes
