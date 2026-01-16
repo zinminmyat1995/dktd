@@ -532,22 +532,17 @@ export default function List({ categories = [] }) {
   }
 
   async function openHomeModal() {
-
-    if (selectedItems.length === 0) {
-      showToast("warning", "Warning", "Please select at least 1 product before home setting.");
-      return;
-    }
-
-    // load current home selected (for info)
+    // Always load current home selected
     const currentIds = await loadHomeSelected();
-
-    // precheck: if nothing selected in table, still allow clear
     setHomeError("");
-
-    // If user selected > 3 -> block
-    if (selectedItems.length > 3) {
-      showToast("warning", "Warning", "You can select maximum 3 products for Home page.");
-      return;
+    
+    // If user has selected items, validate the count
+    if (selectedItems.length > 0) {
+      // If user selected > 3 -> block
+      if (selectedItems.length > 3) {
+        showToast("warning", "Warning", "You can select maximum 3 products for Home page.");
+        return;
+      }
     }
 
     setHomeOpen(true);
@@ -726,13 +721,29 @@ export default function List({ categories = [] }) {
   /* =======================
      Render
   ======================= */
-  const selectedPreview = [...selectedItems]
-    .reverse() // Show newest first
-    .slice(0, 3) // Take first 3 (newest)
-    .map((x) => {
-      const full = rows.find((r) => r.id === x.id) || x;
-      return full;
-    });
+  const selectedPreview = useMemo(() => {
+    // Get the currently selected home products in the correct order (1=right, 2=middle, 3=left)
+    const homeProducts = rows
+      .filter(row => homeSelectedIds.includes(row.id))
+      .sort((a, b) => (a.show_on_home || 0) - (b.show_on_home || 0));
+
+    // If we have selected items, they should replace the existing home products
+    if (selectedItems.length > 0) {
+      // For new selections, the order is: [newest, middle, oldest] = [left, middle, right]
+      return selectedItems
+        .slice(0, 3) // Take first 3
+        .map((x, index) => {
+          const full = rows.find((r) => r.id === x.id) || x;
+          // Assign show_on_home in order (first selected = position 3 = left)
+          // This makes newest (first selected) appear on the left
+          return { ...full, show_on_home: 3 - index };
+        })
+        // Sort by show_on_home to ensure consistent display (1=right, 2=middle, 3=left)
+        .sort((a, b) => (a.show_on_home || 0) - (b.show_on_home || 0));
+    }
+
+    return homeProducts;
+  }, [selectedItems, rows, homeSelectedIds]);
 
   return (
     <AuthenticatedLayout header="Product List" subtitle="View & manage products with promotion">
@@ -1081,16 +1092,9 @@ export default function List({ categories = [] }) {
               </div>
             </div>
 
-            {selectedItems.length === 0 ? (
-              <div className="mt-3 text-sm text-slate-500 rounded-xl border bg-white p-4">
-                Please select products from the table first, then click <b>Home Products</b>.
-                <div className="text-xs text-slate-400 mt-1">
-                  (You can also use this modal to clear Home products.)
-                </div>
-              </div>
-            ) : (
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-                {selectedPreview.map((p) => {
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 min-h-[200px]">
+              {selectedPreview.length > 0 ? (
+                selectedPreview.map((p) => {
                   const img = toPublicUrl(p.image_path);
                   return (
                     <div key={p.id} className="rounded-2xl border bg-white overflow-hidden shadow-sm">
@@ -1113,7 +1117,22 @@ export default function List({ categories = [] }) {
                       </div>
                     </div>
                   );
-                })}
+                })
+              ) : (
+                <div className="col-span-3 flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
+                  <svg className="w-12 h-12 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <div className="text-center">
+                    <p className="text-sm font-medium text-slate-600">No products selected</p>
+                    <p className="text-xs text-slate-400 mt-1">Select products from the table to preview them here</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            {selectedItems.length === 0 && homeSelectedIds.length > 0 && (
+              <div className="text-xs text-slate-500 text-center mt-2">
+                Currently showing {homeSelectedIds.length} home product{homeSelectedIds.length !== 1 ? 's' : ''}. Select new products to update.
               </div>
             )}
           </div>

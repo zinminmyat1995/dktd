@@ -265,7 +265,7 @@ class ProductController extends Controller
     {
         $ids = \App\Models\Product::query()
             ->where('show_on_home', '>', 0)
-            ->orderBy('show_on_home', 'desc')
+            ->orderBy('show_on_home', 'asc') // Changed from 'desc' to 'asc' to match the desired order
             ->pluck('id');
 
         return response()->json([
@@ -292,12 +292,11 @@ class ProductController extends Controller
         // Reset all
         \App\Models\Product::query()->where('show_on_home', '>', 0)->update(['show_on_home' => 0]);
 
-        // Save in reverse order so the first item in the array gets the highest number (appears on the right)
-        // This way, when we order by show_on_home ASC, the oldest will be on the right
-        $count = count($ids);
+        // Save in the same order as the array (first item gets position 1, second gets 2, etc.)
+        // This way, when we order by show_on_home ASC, the first item will be on the left (newest)
         foreach ($ids as $index => $id) {
-            // Assign position in reverse order (first item in array gets highest number)
-            $position = $count - $index;
+            // Assign position in order (first item in array gets position 1)
+            $position = $index + 1;
             \App\Models\Product::where('id', $id)->update(['show_on_home' => $position]);
         }
 
