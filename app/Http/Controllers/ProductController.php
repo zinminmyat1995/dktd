@@ -230,9 +230,8 @@ class ProductController extends Controller
     public function homeSelected()
     {
         $ids = \App\Models\Product::query()
-            ->where('show_on_home', 1)
-            ->orderBy('updated_at', 'desc')
-            ->limit(3)
+            ->where('show_on_home', '>', 0)
+            ->orderBy('show_on_home', 'asc')
             ->pluck('id');
 
         return response()->json([
@@ -249,7 +248,6 @@ class ProductController extends Controller
 
         $ids = $data['product_ids'] ?? [];
 
-        // ✅ enforce max 3 (backend safeguard)
         if (count($ids) > 3) {
             return response()->json([
                 'ok' => false,
@@ -257,12 +255,12 @@ class ProductController extends Controller
             ], 422);
         }
 
-        // ✅ Reset all first
-        \App\Models\Product::query()->where('show_on_home', 1)->update(['show_on_home' => 0]);
+        // Reset all
+        \App\Models\Product::query()->where('show_on_home', '>', 0)->update(['show_on_home' => 0]);
 
-        // ✅ Set selected
-        if (!empty($ids)) {
-            \App\Models\Product::query()->whereIn('id', $ids)->update(['show_on_home' => 1]);
+        // Save in pick order
+        foreach ($ids as $index => $id) {
+            \App\Models\Product::where('id', $id)->update(['show_on_home' => $index + 1]);
         }
 
         return response()->json([

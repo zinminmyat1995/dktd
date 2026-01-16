@@ -241,7 +241,7 @@ export default function List({ categories = [] }) {
     open: false,
     title: "",
     message: "",
-    onConfirm: async () => {},
+    onConfirm: async () => { },
   });
 
   /* ===== Filters ===== */
@@ -254,8 +254,8 @@ export default function List({ categories = [] }) {
   const [page, setPage] = useState(1);
 
   /* ===== Selection ===== */
-  const [selected, setSelected] = useState({});
-  const selectedItems = useMemo(() => Object.values(selected), [selected]);
+  const [selected, setSelected] = useState([]); // Array of objects to keep pick order
+  const selectedItems = selected;
   const [isAllSelected, setIsAllSelected] = useState(false);
 
   /* ===== Promotion modal ===== */
@@ -318,7 +318,7 @@ export default function List({ categories = [] }) {
       });
 
       // reset selection when paging/filter changes
-      setSelected({});
+      setSelected([]);
       setIsAllSelected(false);
     } catch {
       showToast("error", "Error", "Failed to load products.");
@@ -336,12 +336,12 @@ export default function List({ categories = [] }) {
      Selection Handlers
   ======================= */
   function toggleSelect(row) {
-    const key = row.id;
     setSelected((prev) => {
-      const next = { ...prev };
-      if (next[key]) delete next[key];
-      else next[key] = row;
-      return next;
+      const exists = prev.find((x) => x.id === row.id);
+      if (exists) {
+        return prev.filter((x) => x.id !== row.id);
+      }
+      return [...prev, row];
     });
   }
 
@@ -361,17 +361,14 @@ export default function List({ categories = [] }) {
       const ids = json?.ids ?? [];
 
       if (isAllSelected) {
-        setSelected({});
+        setSelected([]);
         setIsAllSelected(false);
         return;
       }
 
-      const map = {};
-      ids.forEach((id) => {
-        map[id] = { id };
-      });
+      const newList = ids.map((id) => ({ id }));
 
-      setSelected(map);
+      setSelected(newList);
       setIsAllSelected(true);
 
       showToast("success", "Selected", `Selected ${ids.length} products (All pages).`);
@@ -889,7 +886,11 @@ export default function List({ categories = [] }) {
                   return (
                     <tr key={r.id} className="border-t">
                       <td className="px-3 py-3">
-                        <input type="checkbox" checked={!!selected[r.id]} onChange={() => toggleSelect(r)} />
+                        <input
+                          type="checkbox"
+                          checked={selected.some((x) => x.id === r.id)}
+                          onChange={() => toggleSelect(r)}
+                        />
                       </td>
 
                       <td className="px-3 py-3">
@@ -925,8 +926,8 @@ export default function List({ categories = [] }) {
                             r.status === "published"
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : r.status === "archived"
-                              ? "bg-rose-50 text-rose-700 border border-rose-200"
-                              : "bg-slate-100 text-slate-700 border border-slate-200"
+                                ? "bg-rose-50 text-rose-700 border border-rose-200"
+                                : "bg-slate-100 text-slate-700 border border-slate-200"
                           )}
                         >
                           {r.status}
