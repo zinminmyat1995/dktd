@@ -726,8 +726,9 @@ export default function List({ categories = [] }) {
   /* =======================
      Render
   ======================= */
-  const selectedPreview = selectedItems
-    .slice(0, 3)
+  const selectedPreview = [...selectedItems]
+    .reverse() // Show newest first
+    .slice(0, 3) // Take first 3 (newest)
     .map((x) => {
       const full = rows.find((r) => r.id === x.id) || x;
       return full;

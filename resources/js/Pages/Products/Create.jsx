@@ -156,6 +156,7 @@ export default function ProductCreate() {
 
   const [status, setStatus] = useState("draft");
   const [isNew, setIsNew] = useState(false);
+  const [showOnHome, setShowOnHome] = useState(false);
   const [publishedAt, setPublishedAt] = useState("");
 
   const [imageFile, setImageFile] = useState(null);
@@ -429,6 +430,7 @@ export default function ProductCreate() {
     fd.append("description", description.trim());
     fd.append("status", status);
     fd.append("is_new", isNew ? "1" : "0");
+    fd.append("show_on_home", showOnHome ? "1" : "0");
     fd.append("published_at", publishedAt);
     fd.append("image", imageFile);
 
@@ -449,6 +451,7 @@ export default function ProductCreate() {
       setDescription("");
       setStatus("draft");
       setIsNew(false);
+      setShowOnHome(false);
       setPublishedAt("");
       setImageFile(null);
 
@@ -708,7 +711,7 @@ export default function ProductCreate() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-semibold text-slate-900">
+                      <div className="text-sm font-semibold text-slate-700">
                         Mark as NEW
                       </div>
                       <div className="text-xs text-slate-600">
@@ -716,6 +719,18 @@ export default function ProductCreate() {
                       </div>
                     </div>
                     <Toggle value={isNew} onChange={setIsNew} />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-sm font-semibold text-slate-700">
+                        Show on Homepage
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        Display this product on the homepage carousel.
+                      </div>
+                    </div>
+                    <Toggle value={showOnHome} onChange={setShowOnHome} />
                   </div>
                 </div>
 

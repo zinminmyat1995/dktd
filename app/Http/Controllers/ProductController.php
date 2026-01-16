@@ -35,6 +35,7 @@ class ProductController extends Controller
             'description'   => ['nullable', 'string'],
             'image'         => ['nullable', 'image', 'max:5120'],
             'is_new'        => ['boolean'],
+            'show_on_home'  => ['boolean'],
             'status'        => ['required', 'in:draft,published,archived'],
             'published_at'  => ['nullable', 'date'],
             'start_date'    => ['nullable', 'date'],
@@ -46,23 +47,56 @@ class ProductController extends Controller
             $imagePath = $imgService->store($request->file('image'), 'products');
         }
 
-        $product = Product::create([
-            'category_id'  => $validated['category_id'] ?? null,
-            'title'        => $validated['title'],
-            'description'  => $validated['description'] ?? null,
-            'image_path'   => $imagePath,
-            'is_new'       => $validated['is_new'] ?? false,
-            'status'       => $validated['status'],
-            'published_at' => $validated['published_at'] ?? null,
-            'start_date'   => $validated['start_date'] ?? null,
-            'end_date'     => $validated['end_date'] ?? null
-        ]);
+        // Start a database transaction to ensure data consistency
+        return \DB::transaction(function () use ($validated, $imagePath) {
+            // If show_on_home is true, we need to update the existing home page products
+            $showOnHome = $validated['show_on_home'] ?? false;
+            
+            // If we're showing on home and there are already 3 products, remove the oldest one
+            if ($showOnHome) {
+                // Get the current home page products ordered by show_on_home (ascending)
+                $currentHomeProducts = Product::where('show_on_home', '>', 0)
+                    ->orderBy('show_on_home')
+                    ->get();
+                
+                // If we already have 3 products, remove the last one (oldest)
+                if ($currentHomeProducts->count() >= 3) {
+                    $currentHomeProducts->last()->update(['show_on_home' => 0]);
+                    
+                    // Remove the last item from the collection since we've unset it
+                    $currentHomeProducts->pop();
+                }
+                
+                // Shift all existing products up by 1 to make room for the new one
+                foreach ($currentHomeProducts as $product) {
+                    $product->update(['show_on_home' => $product->show_on_home + 1]);
+                }
+                
+                // The new product will be at position 1 (leftmost)
+                $showOnHomeValue = 1;
+            }
+            
+            // Create the new product
+            $product = Product::create([
+                'category_id'  => $validated['category_id'] ?? null,
+                'title'        => $validated['title'],
+                'description'  => $validated['description'] ?? null,
+                'image_path'   => $imagePath,
+                'is_new'       => $validated['is_new'] ?? false,
+                'show_on_home' => $showOnHome ? $showOnHomeValue : 0,
+                'status'       => $validated['status'],
+                'published_at' => $validated['published_at'] ?? null,
+                'start_date'   => $validated['start_date'] ?? null,
+                'end_date'     => $validated['end_date'] ?? null
+            ]);
+            
+            return response()->json([
+                'ok' => true,
+                'message' => 'Product created successfully.',
+                'data' => $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+            ], 201);
+        });
 
-        return response()->json([
-            'ok' => true,
-            'message' => 'Product created successfully.',
-            'data' => $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
-        ], 201);
     }
 
     public function data(Request $req)
@@ -231,7 +265,7 @@ class ProductController extends Controller
     {
         $ids = \App\Models\Product::query()
             ->where('show_on_home', '>', 0)
-            ->orderBy('show_on_home', 'asc')
+            ->orderBy('show_on_home', 'desc')
             ->pluck('id');
 
         return response()->json([
@@ -258,9 +292,13 @@ class ProductController extends Controller
         // Reset all
         \App\Models\Product::query()->where('show_on_home', '>', 0)->update(['show_on_home' => 0]);
 
-        // Save in pick order
+        // Save in reverse order so the first item in the array gets the highest number (appears on the right)
+        // This way, when we order by show_on_home ASC, the oldest will be on the right
+        $count = count($ids);
         foreach ($ids as $index => $id) {
-            \App\Models\Product::where('id', $id)->update(['show_on_home' => $index + 1]);
+            // Assign position in reverse order (first item in array gets highest number)
+            $position = $count - $index;
+            \App\Models\Product::where('id', $id)->update(['show_on_home' => $position]);
         }
 
         return response()->json([
