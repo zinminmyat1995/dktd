@@ -4,29 +4,29 @@ export default function InnerBanner({
   title,
   titleClassName = "",
   image = "/images/banner.png",
-  // banner image ရဲ့ focus ကိုညှိချင်ရင် override လုပ်လို့ရ
   objectPosition = "center",
+  subtitle = "", // optional: small line under title
+  compact = false, // optional: smaller banner for some pages
 }) {
   const { props } = usePage();
   const locale = props.locale ?? "en";
 
-  // Title font style (optional)
+  // Title font style
   const titleClass = locale === "en" ? "font-[cursive]" : "font-SemiBold";
 
+  // Responsive heights
+  const h = compact
+    ? "h-[170px] sm:h-[210px] md:h-[240px] lg:h-[280px]"
+    : "h-[210px] sm:h-[260px] md:h-[320px] lg:h-[380px] xl:h-[420px]";
+
   return (
-    <section className="relative w-full overflow-hidden">
-      {/* Responsive heights:
-          mobile: 140px
-          sm: 170px
-          md: 200px
-          lg: 230px
-      */}
-      <div className="relative w-full border-b border-slate-100 h-[140px] sm:h-[170px] md:h-[200px] lg:h-[230px]">
-        {/* Banner image */}
+    <section className="relative w-full overflow-hidden bg-white">
+      <div className={`relative w-full ${h}`}>
+        {/* Background image */}
         <img
           src={image}
           alt="Page banner"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
           style={{ objectPosition }}
           draggable={false}
         />
@@ -42,8 +42,7 @@ export default function InnerBanner({
               "text-[28px] sm:text-[34px] md:text-[40px] lg:text-[44px]",
               "leading-none text-[#7A3B14] drop-shadow-sm",
               titleClass,
-              titleClassName, // Add the titleClassName prop here
-            ].filter(Boolean).join(" ")}
+            ].join(" ")}
           >
             {title}
           </h1>
