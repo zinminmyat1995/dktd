@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -53,6 +54,10 @@ Route::middleware(['auth', 'verified'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        // Redirect /admin to /admin/products
+        Route::get('/', function () {
+            return redirect()->route('admin.products.index');
+        });
 
         // ✅ Product view/list (staff also can view)
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -68,6 +73,14 @@ Route::middleware(['auth', 'verified'])
             Route::get('/products/all-ids', [ProductController::class, 'allIds']);
             Route::get('/products/home-selected', [ProductController::class, 'homeSelected']);        
             Route::post('/products/home', [ProductController::class, 'home']);
+
+            // ✅ PROMOTIONS & NEWS
+            Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
+            Route::get('/promotions/data', [PromotionController::class, 'data'])->name('promotions.data');
+            Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
+            Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
+            Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+            Route::get('/promotions/{promotion}', [PromotionController::class, 'show'])->name('promotions.show');
 
             // ✅ Categories Admin Only
             Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -111,6 +124,7 @@ Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/products', [PublicController::class, 'products'])->name('products');     
 Route::get('/products/{product}', [PublicController::class, 'show'])->name('products.show_detail');
 Route::get('/promotion', [PublicController::class, 'promotion'])->name('promotion');
+Route::get('/promotion/{promotion}', [PublicController::class, 'promotionDetail'])->name('promotions.show_detail');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
 
 Route::get('/language/{locale}', function ($locale) {

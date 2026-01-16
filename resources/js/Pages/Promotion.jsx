@@ -6,6 +6,13 @@ import Pagination from "@/Components/Pagination";
 export default function Promotion({ promotions = { data: [] } }) {
   const { t } = useTranslate();
 
+  const toPublicUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return path;
+    return `/storage/${path}`;
+  };
+
   return (
     <InnerPageLayout titleKey="messages.promotion">
       <section className="py-14">
@@ -24,7 +31,7 @@ export default function Promotion({ promotions = { data: [] } }) {
           <div className="mt-12 space-y-6">
             {promotions.data && promotions.data.length > 0 ? (
               promotions.data.map((promo) => (
-                <PromoRow key={promo.id} promo={promo} t={t} /> // Pass t to PromoRow
+                <PromoRow key={promo.id} promo={promo} t={t} toPublicUrl={toPublicUrl} />
               ))
             ) : (
               <p className="text-center text-slate-500 py-20">{t("messages.no_promotions")}</p>
@@ -39,19 +46,19 @@ export default function Promotion({ promotions = { data: [] } }) {
   );
 }
 
-function PromoRow({ promo, t }) { // Receive t as prop
+function PromoRow({ promo, t, toPublicUrl }) {
   return (
     <Link
-      href={route('products.show_detail', promo.id)}
+      href={route('promotions.show_detail', promo.id)}
       className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8 group bg-white border border-slate-100 p-5 transition-all duration-500 rounded-[2rem] hover:shadow-2xl hover:shadow-slate-200/50 hover:translate-y-[-4px]"
     >
       {/* Left image */}
       <div className="md:col-span-4">
         <div className="relative overflow-hidden rounded-2xl bg-slate-100 aspect-[16/10] ring-1 ring-slate-100">
           <img
-            src={promo.image_path}
+            src={toPublicUrl(promo.image_path)}
             alt={promo.title}
-            className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+            className="h-full w-full object-fit transition-transform duration-500 ease-in-out group-hover:scale-110"
             onError={(e) => {
               e.currentTarget.style.display = "none";
             }}
@@ -65,11 +72,9 @@ function PromoRow({ promo, t }) { // Receive t as prop
           <h3 className="text-[26px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase">
             {promo.title}
           </h3>
-          {promo.is_new && (
-            <div className="shrink-0 bg-[#1E4F7A] px-5 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
-              {t("messages.new_badge")}
-            </div>
-          )}
+          <div className="shrink-0 bg-[#D4793F]/10 px-5 py-1 text-[10px] font-Bold tracking-[0.2em] text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase">
+            {promo.type}
+          </div>
         </div>
 
         <div className="h-[1px] w-full border-t border-dotted border-slate-200 mb-4 opacity-60" />

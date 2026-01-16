@@ -15,8 +15,7 @@ class PublicController extends Controller
             ->take(3)
             ->get();
 
-        $promotions = Product::where('status', 'published')
-            ->whereNotNull('start_date')
+        $promotions = \App\Models\Promotion::where('status', 'published')
             ->latest()
             ->take(3)
             ->get();
@@ -68,8 +67,7 @@ class PublicController extends Controller
 
     public function promotion()
     {
-        $promotions = Product::where('status', 'published')
-            ->whereNotNull('start_date')
+        $promotions = \App\Models\Promotion::where('status', 'published')
             ->latest()
             ->paginate(10);
 
@@ -81,5 +79,16 @@ class PublicController extends Controller
     public function contact()
     {
         return Inertia::render('Contact');
+    }
+
+    public function promotionDetail(\App\Models\Promotion $promotion)
+    {
+        if ($promotion->status !== 'published') {
+            abort(404);
+        }
+
+        return Inertia::render('PromotionDetail', [
+            'promotion' => $promotion->load('category:id,name')
+        ]);
     }
 }

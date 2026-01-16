@@ -5,6 +5,13 @@ import { Link } from "@inertiajs/react";
 export default function Home({ products, promotions }) {
   const { t } = useTranslate();
 
+  const toPublicUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return path;
+    return `/storage/${path}`;
+  };
+
   return (
     <InnerPageLayout titleKey="messages.home" isHome>
       {/* ================= HERO SECTION ================= */}
@@ -63,8 +70,8 @@ export default function Home({ products, promotions }) {
 
               <div className="mt-8 space-y-6">
                 <p className="max-w-xl text-[16px] font-Medium leading-relaxed tracking-wide text-slate-600 whitespace-pre-line">
-               {t("messages.short_Desc")}
-              </p>
+                  {t("messages.short_Desc")}
+                </p>
               </div>
 
               <div className="mt-10 flex flex-wrap gap-4">
@@ -237,32 +244,30 @@ export default function Home({ products, promotions }) {
             {promotions.map((promo) => (
               <Link
                 key={promo.id}
-                href={route('products.show_detail', promo.id)}
+                href={route('promotions.show_detail', promo.id)}
                 className="flex flex-col sm:flex-row gap-6 sm:gap-8 border-b border-slate-100 pb-6 pt-2 hover:bg-slate-50/50 transition-all duration-500 group rounded-xl px-2 sm:px-0"
               >
                 {/* Left image */}
                 <div className="h-[180px] sm:h-[140px] w-full sm:w-[260px] shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
                   <img
-                    src={promo.image_path}
+                    src={toPublicUrl(promo.image_path)}
                     alt={promo.title}
-                    className="h-full w-full object-cover transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
+                    className="h-full w-full object-fit transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
                     onError={(e) => (e.currentTarget.parentElement.style.display = "none")}
                   />
                 </div>
 
                 <div className="min-w-0 flex-1 flex flex-col justify-between py-1 transform transition-all duration-500 sm:group-hover:translate-x-1">
                   <div>
-                    {/* Title row + NEW badge */}
+                    {/* Title row + Type badge */}
                     <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
                       <h3 className="text-[20px] sm:text-[24px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase truncate">
                         {promo.title}
                       </h3>
 
-                      {promo.is_new && (
-                        <div className="shrink-0 bg-[#1E4F7A] px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-white rounded-full shadow-lg shadow-blue-900/10 transform transition-transform duration-500 group-hover:scale-110">
-                          {t("messages.new_badge")}
-                        </div>
-                      )}
+                      <div className="shrink-0 bg-[#D4793F]/10 px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase">
+                        {promo.type}
+                      </div>
                     </div>
 
                     {/* dotted line under title */}
