@@ -535,7 +535,7 @@ export default function List({ categories = [] }) {
     // Always load current home selected
     const currentIds = await loadHomeSelected();
     setHomeError("");
-    
+
     // If user has selected items, validate the count
     if (selectedItems.length > 0) {
       // If user selected > 3 -> block
@@ -722,23 +722,23 @@ export default function List({ categories = [] }) {
      Render
   ======================= */
   const selectedPreview = useMemo(() => {
-    // Get the currently selected home products in the correct order (1=right, 2=middle, 3=left)
+    // Get currently saved home products (ordered ASC: 1=left, 2=middle, 3=right)
     const homeProducts = rows
       .filter(row => homeSelectedIds.includes(row.id))
       .sort((a, b) => (a.show_on_home || 0) - (b.show_on_home || 0));
 
-    // If we have selected items, they should replace the existing home products
+    // If we have selected items, replace preview with them
     if (selectedItems.length > 0) {
-      // For new selections, the order is: [newest, middle, oldest] = [left, middle, right]
+      // Input selectedItems is in pick order [Oldest, Middle, Newest]
+      // We want to map it so the Newest (last item) gets Position 1 (left)
       return selectedItems
-        .slice(0, 3) // Take first 3
+        .slice(0, 3)
         .map((x, index) => {
           const full = rows.find((r) => r.id === x.id) || x;
-          // Assign show_on_home in order (first selected = position 3 = left)
-          // This makes newest (first selected) appear on the left
+          // Assign show_on_home (if 3 items: index 0 (oldest) gets 3, index 2 (newest) gets 1)
           return { ...full, show_on_home: 3 - index };
         })
-        // Sort by show_on_home to ensure consistent display (1=right, 2=middle, 3=left)
+        // Sort ASC: [1:Newest, 2:Middle, 3:Oldest]
         .sort((a, b) => (a.show_on_home || 0) - (b.show_on_home || 0));
     }
 
