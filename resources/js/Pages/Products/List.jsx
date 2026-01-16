@@ -1094,25 +1094,53 @@ export default function List({ categories = [] }) {
 
             <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 min-h-[200px]">
               {selectedPreview.length > 0 ? (
-                selectedPreview.map((p) => {
+                selectedPreview.map((p, index) => {
                   const img = toPublicUrl(p.image_path);
                   return (
-                    <div key={p.id} className="rounded-2xl border bg-white overflow-hidden shadow-sm">
-                      <div className="h-36 bg-slate-50 flex items-center justify-center overflow-hidden">
+                    <div key={p.id} className="group relative h-80 overflow-hidden rounded-2xl bg-white shadow-md border border-slate-100">
+                      {p.is_new && (
+                        <div className="absolute top-3 right-3 z-10 transition-transform duration-500 group-hover:scale-110">
+                          <span className="bg-[#1E4F7A] text-white text-[8px] font-Bold px-3 py-1 rounded-full tracking-widest shadow-lg">
+                            NEW
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Product Image */}
+                      <div className="h-full w-full overflow-hidden flex items-center justify-center bg-slate-50">
                         {img ? (
-                          <img src={img} alt="" className="w-full h-full object-cover" />
+                          <img
+                            src={img}
+                            alt={p.title}
+                            className="h-[85%] w-[85%] object-contain transition-transform duration-700 group-hover:scale-110"
+                            onError={(e) => { e.target.src = '/images/placeholder.png'; }}
+                          />
                         ) : (
-                          <div className="text-slate-400 text-sm">No image</div>
+                          <div className="text-slate-400 text-xs">No Image</div>
                         )}
                       </div>
-                      <div className="p-3">
-                        <div className="text-sm font-semibold text-slate-900 line-clamp-1">{p.title ?? `#${p.id}`}</div>
-                        <div className="text-xs text-slate-500 line-clamp-2 mt-1">{p.description ?? ""}</div>
-                        <div className="mt-2 flex items-center justify-between">
-                          <span className="text-[11px] text-slate-400">ID: {p.id}</span>
-                          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                            HOME
+
+                      {/* Product Info Overlay */}
+                      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 text-white transition-all duration-500 group-hover:via-black/40">
+                        <div className="mb-1 transform transition-all duration-500 group-hover:-translate-y-1">
+                          <span className="text-lg font-Bold text-[#D4793F] font-display">
+                            0{index + 1}
                           </span>
+                        </div>
+
+                        <h3 className="text-sm font-Bold tracking-wider text-white mb-1 transform transition-all duration-500 group-hover:-translate-y-1 line-clamp-1">
+                          {p.title}
+                        </h3>
+
+                        <p className="text-[10px] leading-tight text-slate-200 line-clamp-2 mb-3 transition-all duration-500 group-hover:text-white group-hover:-translate-y-1">
+                          {p.description}
+                        </p>
+
+                        <div className="inline-flex items-center text-[10px] font-Bold text-[#D4793F] group-hover:text-amber-300 transition-all duration-500 transform group-hover:-translate-y-1">
+                          READ MORE
+                          <svg className="ml-1.5 h-3 w-3 transform transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                          </svg>
                         </div>
                       </div>
                     </div>
