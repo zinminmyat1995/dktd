@@ -83,7 +83,7 @@ export default function PromotionDetail({ promotion }) {
 
                             <div className="flex flex-wrap items-center gap-2 mb-4">
                                 <span className="inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-[#185C9B] uppercase">
-                                    {promotion.type === 'promotion' ? 'Promotion' : 'News'}
+                                    {t(promotion.type === 'promotion' ? 'messages.promotion_label' : 'messages.news_label')}
                                 </span>
                                 {promotion.category && (
                                     <span className="inline-flex items-center rounded-full bg-[#D4793F]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-[#D4793F] uppercase">

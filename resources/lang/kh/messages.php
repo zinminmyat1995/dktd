@@ -63,5 +63,9 @@ return [
     'contact_message' => 'សារ',
     'contact_help_placeholder' => 'តើ​យើង​អាច​ជួយ​អ្នក​បាន​ដោយ​របៀប​ណា?',
     'contact_send_message' => 'ផ្ញើរសារ',
+
+    // Promotion/News Labels
+    'promotion_label' => 'ប្រូម៉ូសិន',
+    'news_label' => 'ព័ត៌មាន',
     // Note: 'contact' key is already defined in navigation
 ];

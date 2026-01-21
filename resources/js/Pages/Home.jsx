@@ -266,7 +266,7 @@ export default function Home({ products, promotions }) {
                       </h3>
 
                       <div className="shrink-0 bg-[#D4793F]/10 px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase">
-                        {promo.type}
+                        {t(promo.type === 'promotion' ? 'messages.promotion_label' : 'messages.news_label')}
                       </div>
                     </div>
 

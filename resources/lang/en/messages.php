@@ -65,5 +65,9 @@ return [
     'contact_message' => 'Message',
     'contact_help_placeholder' => 'How can we help you?',
     'contact_send_message' => 'Send Message',
+
+    // Promotion/News Labels
+    'promotion_label' => 'Promotion',
+    'news_label' => 'News',
     // Note: 'contact' key is already defined in navigation
 ];
