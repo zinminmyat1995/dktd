@@ -4,7 +4,7 @@ import useTranslate from "@/hooks/useTranslate";
 import Pagination from "@/Components/Pagination";
 
 export default function Promotion({ promotions = { data: [] } }) {
-  const { t } = useTranslate();
+  const { t, locale } = useTranslate();
 
   const toPublicUrl = (path) => {
     if (!path) return null;
@@ -22,7 +22,7 @@ export default function Promotion({ promotions = { data: [] } }) {
             <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F] font-display">
               {t("messages.promotion_heading")}
             </h2>
-            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
+            <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
               {t("messages.promotion_intro_subtitle")}
             </p>
           </div>
@@ -31,7 +31,7 @@ export default function Promotion({ promotions = { data: [] } }) {
           <div className="mt-12 space-y-6">
             {promotions.data && promotions.data.length > 0 ? (
               promotions.data.map((promo) => (
-                <PromoRow key={promo.id} promo={promo} t={t} toPublicUrl={toPublicUrl} />
+                <PromoRow key={promo.id} promo={promo} t={t} locale={locale} toPublicUrl={toPublicUrl} />
               ))
             ) : (
               <p className="text-center text-slate-500 py-20">{t("messages.no_promotions")}</p>
@@ -46,7 +46,7 @@ export default function Promotion({ promotions = { data: [] } }) {
   );
 }
 
-function PromoRow({ promo, t, toPublicUrl }) {
+function PromoRow({ promo, t, locale, toPublicUrl }) {
   return (
     <Link
       href={route('promotions.show_detail', promo.id)}
@@ -72,7 +72,7 @@ function PromoRow({ promo, t, toPublicUrl }) {
           <h3 className="text-[26px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase">
             {promo.title}
           </h3>
-          <div className="shrink-0 bg-[#D4793F]/10 px-5 py-1 text-[10px] font-Bold tracking-[0.2em] text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase">
+          <div className={`shrink-0 bg-[#D4793F]/10 px-5 py-1 text-[10px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.2em]'} text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase`}>
             {t(promo.type === 'promotion' ? 'messages.promotion_label' : 'messages.news_label')}
           </div>
         </div>
@@ -84,10 +84,10 @@ function PromoRow({ promo, t, toPublicUrl }) {
         </p>
 
         <div className="mt-6 flex items-center justify-between">
-          <div className="text-[12px] font-Bold text-slate-400 tracking-widest uppercase">
+          <div className={`text-[12px] font-Bold text-slate-400 ${locale === 'kh' ? '' : 'tracking-widest'} uppercase`}>
             {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : t("messages.latest_update")}
           </div>
-          <div className="text-[#D4793F] font-Bold text-[13px] tracking-[0.2em] uppercase flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
+          <div className={`text-[#D4793F] font-Bold text-[13px] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase flex items-center gap-2 group-hover:gap-4 transition-all duration-500`}>
             {t("messages.read_more")}
             <svg className="h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />

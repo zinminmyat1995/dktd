@@ -4,7 +4,7 @@ import useTranslate from "@/hooks/useTranslate";
 import { useState, useRef, useLayoutEffect } from "react";
 
 export default function ProductDetail({ product }) {
-    const { t } = useTranslate();
+    const { t, locale } = useTranslate();
     const [isExpanded, setIsExpanded] = useState(false);
     const [showViewMore, setShowViewMore] = useState(false);
     const descriptionRef = useRef(null);
@@ -58,7 +58,7 @@ export default function ProductDetail({ product }) {
                                 <ol className="flex items-center space-x-2 sm:space-x-4 whitespace-nowrap">
                                     <li>
                                         <div>
-                                            <Link href={route('products')} className="text-[12px] sm:text-sm font-Bold text-slate-400 hover:text-[#185C9B] uppercase tracking-wider">
+                                            <Link href={route('products')} className={`text-[12px] sm:text-sm font-Bold text-slate-400 hover:text-[#185C9B] uppercase ${locale === 'kh' ? '' : 'tracking-wider'}`}>
                                                 {t('messages.products')}
                                             </Link>
                                         </div>
@@ -68,7 +68,7 @@ export default function ProductDetail({ product }) {
                                             <svg className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-slate-300" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                                             </svg>
-                                            <span className="ml-2 sm:ml-4 text-[12px] sm:text-sm font-Bold text-slate-900 uppercase tracking-wider truncate max-w-[150px] sm:max-w-none">{product.title}</span>
+                                            <span className={`ml-2 sm:ml-4 text-[12px] sm:text-sm font-Bold text-slate-900 uppercase ${locale === 'kh' ? '' : 'tracking-wider'} truncate max-w-[150px] sm:max-w-none`}>{product.title}</span>
                                         </div>
                                     </li>
                                 </ol>
@@ -76,12 +76,12 @@ export default function ProductDetail({ product }) {
 
                             <div className="flex flex-wrap items-center gap-2">
                                 {product.category && (
-                                    <span className="inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-[#185C9B] uppercase">
+                                    <span className={`inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-[#185C9B] uppercase`}>
                                         {product.category.name}
                                     </span>
                                 )}
                                 {product.is_new && (
-                                    <span className="inline-flex items-center rounded-full bg-[#1E4F7A] px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-white uppercase shadow-sm">
+                                    <span className={`inline-flex items-center rounded-full bg-[#1E4F7A] px-4 py-1.5 text-[10px] sm:text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-white uppercase shadow-sm`}>
                                         {t("messages.new_badge")}
                                     </span>
                                 )}
@@ -94,7 +94,7 @@ export default function ProductDetail({ product }) {
 
                         {/* Middle Content */}
                         <div className="mt-8 mb-6 flex-1 flex flex-col min-h-0">
-                            <h3 className="text-sm font-SemiBold text-[#D4793F] tracking-[0.2em] uppercase mb-4 font-display">
+                            <h3 className={`text-sm font-SemiBold text-[#D4793F] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase mb-4 font-display`}>
                                 {t("messages.product_description_heading")}
                             </h3>
 
@@ -115,7 +115,7 @@ export default function ProductDetail({ product }) {
                             {showViewMore && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
+                                    className={`mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase ${locale === 'kh' ? '' : 'tracking-widest'} flex items-center gap-1 group w-fit`}
                                 >
                                     {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
@@ -132,13 +132,13 @@ export default function ProductDetail({ product }) {
                         <div className="mt-auto pt-6 sm:pt-8 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
                             <Link
                                 href={route('contact')}
-                                className="flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
+                                className={`flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase ${locale === 'kh' ? '' : 'tracking-widest'}`}
                             >
                                 {t("messages.contact")}
                             </Link>
                             <button
                                 onClick={() => window.history.back()}
-                                className="flex flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-slate-700 shadow-sm hover:bg-slate-50 hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
+                                className={`flex flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-slate-700 shadow-sm hover:bg-slate-50 hover:translate-y-[-1px] transition-all focus:outline-none uppercase ${locale === 'kh' ? '' : 'tracking-widest'}`}
                             >
                                 {t("messages.back")}
                             </button>

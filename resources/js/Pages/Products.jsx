@@ -4,7 +4,7 @@ import Pagination from "@/Components/Pagination";
 import useTranslate from "@/hooks/useTranslate"; // Added useTranslate import
 
 export default function Products({ products, categories, filters }) {
-  const { t } = useTranslate(); // Initialize useTranslate
+  const { t, locale } = useTranslate(); // Initialize useTranslate
 
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
@@ -20,11 +20,11 @@ export default function Products({ products, categories, filters }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
-            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F]">
+            <h2 className={`text-[35px] font-SemiBold font-display ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F]`}>
               {t("messages.our_products")}
             </h2>
-            <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-              {t("messages.products_intro_subtitle")}
+            <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
+              {t("messages.business_insights")}
             </p>
           </div>
 
@@ -34,7 +34,7 @@ export default function Products({ products, categories, filters }) {
               <select
                 value={filters.category || ""}
                 onChange={handleCategoryChange}
-                className="block w-full appearance-none rounded-xl border border-slate-200 bg-white px-6 py-3 pr-10 text-xs font-Bold tracking-widest text-slate-700 uppercase focus:border-[#185C9B] focus:outline-none focus:ring-1 focus:ring-[#185C9B] transition-all cursor-pointer"
+                className={`block w-full appearance-none rounded-xl border border-slate-200 bg-white px-6 py-3 pr-10 text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-slate-700 uppercase focus:border-[#185C9B] focus:outline-none focus:ring-1 focus:ring-[#185C9B] transition-all cursor-pointer`}
               >
                 <option value="">{t("messages.all_categories")}</option>
                 {categories.map((cat) => (
@@ -55,7 +55,7 @@ export default function Products({ products, categories, filters }) {
           <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {products.data.length > 0 ? (
               products.data.map((product) => (
-                <ProductCard key={product.id} product={product} t={t} />
+                <ProductCard key={product.id} product={product} t={t} locale={locale} />
               ))
             ) : (
               <div className="col-span-full py-20 text-center">
@@ -72,7 +72,7 @@ export default function Products({ products, categories, filters }) {
   );
 }
 
-function ProductCard({ product, t }) { // Added t prop
+function ProductCard({ product, t, locale }) { // Added t prop
   return (
     <Link
       href={route('products.show_detail', product.id)}
@@ -80,7 +80,7 @@ function ProductCard({ product, t }) { // Added t prop
     >
       {product.is_new && (
         <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
-          <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
+          <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl`}>
             {t("messages.new_badge")}
           </span>
         </div>
@@ -96,7 +96,7 @@ function ProductCard({ product, t }) { // Added t prop
 
       {/* Simple Overlay with Product Name & Desc */}
       <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/0 text-white p-5 opacity-80 transition-opacity duration-300 group-hover:opacity-100">
-        <h3 className="text-base font-SemiBold tracking-wider uppercase mb-1">
+        <h3 className={`text-base font-SemiBold ${locale === 'kh' ? '' : 'tracking-wider'} uppercase mb-1`}>
           {product.title}
         </h3>
         <p className="text-[11px] leading-relaxed text-slate-200 line-clamp-2">

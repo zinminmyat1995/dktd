@@ -4,7 +4,7 @@ import { Link } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Contact() {
-  const { t } = useTranslate();
+  const { t, locale } = useTranslate();
 
   const [form, setForm] = useState({
     name: "",
@@ -31,12 +31,12 @@ export default function Contact() {
           <div className="text-center mb-12">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="h-[2px] w-12 bg-[#185C9B]" />
-              <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+              <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                 {t("messages.contact_get_in_touch")}
               </p>
               <div className="h-[2px] w-12 bg-[#185C9B]" />
             </div>
-            <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
+            <h2 className={`text-[40px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight`}>
               {t("messages.contact_heading")}
             </h2>
           </div>
@@ -48,7 +48,7 @@ export default function Contact() {
                 <form onSubmit={onSubmit} className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                      <label className={`text-[13px] font-Bold text-[#185C9B] uppercase ${locale === 'kh' ? '' : 'tracking-widest'} ml-1`}>
                         {t("messages.contact_full_name")}
                       </label>
                       <input
@@ -61,7 +61,7 @@ export default function Contact() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                      <label className={`text-[13px] font-Bold text-[#185C9B] uppercase ${locale === 'kh' ? '' : 'tracking-widest'} ml-1`}>
                         {t("messages.contact_email_address")}
                       </label>
                       <input
@@ -75,7 +75,7 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[13px] font-Bold text-[#185C9B] uppercase tracking-widest ml-1">
+                    <label className={`text-[13px] font-Bold text-[#185C9B] uppercase ${locale === 'kh' ? '' : 'tracking-widest'} ml-1`}>
                       {t("messages.contact_message")}
                     </label>
                     <textarea
@@ -103,7 +103,7 @@ export default function Contact() {
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-12 py-4 bg-[#C46A2A] text-white text-[14px] font-Bold uppercase tracking-widest rounded-full shadow-xl shadow-orange-900/20 hover:bg-[#A85924] hover:translate-y-[-2px] transition-all duration-500"
+                      className={`w-full sm:w-auto px-12 py-4 bg-[#C46A2A] text-white text-[14px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-widest'} rounded-full shadow-xl shadow-orange-900/20 hover:bg-[#A85924] hover:translate-y-[-2px] transition-all duration-500`}
                     >
                       {t("messages.contact_send_message")}
                     </button>
@@ -123,12 +123,12 @@ export default function Contact() {
             <div className="lg:col-span-12 xl:col-span-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.find_our_store")}
                 </p>
               </div>
 
-              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
+              <h2 className={`text-[40px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight`}>
                 {t("messages.locations")}
               </h2>
 
@@ -140,7 +140,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#185C9B]">{t("messages.opening_hours")}</h5>
+                    <h5 className={`text-[12px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mb-1 transition-colors duration-500 group-hover:text-[#185C9B]`}>{t("messages.opening_hours")}</h5>
                     <p className="text-[16px] font-Bold text-slate-900 tracking-wide">{t("messages.opening_hours_time")}</p>
                   </div>
                 </div>
@@ -153,7 +153,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <h5 className="text-[12px] font-Bold text-slate-400 uppercase tracking-widest mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]">{t("messages.headquarters")}</h5>
+                    <h5 className={`text-[12px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mb-1 transition-colors duration-500 group-hover:text-[#C46A2A]`}>{t("messages.headquarters")}</h5>
                     <p className="text-[16px] font-Bold text-slate-900 leading-relaxed max-w-sm tracking-wide">
                       {t("messages.headquarters_address")}
                     </p>

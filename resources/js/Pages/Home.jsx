@@ -3,7 +3,7 @@ import useTranslate from "@/hooks/useTranslate";
 import { Link } from "@inertiajs/react";
 
 export default function Home({ products, promotions }) {
-  const { t } = useTranslate();
+  const { t, locale } = useTranslate();
 
   const toPublicUrl = (path) => {
     if (!path) return null;
@@ -59,12 +59,12 @@ export default function Home({ products, promotions }) {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.about_intro_subtitle")}
                 </p>
               </div>
 
-              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
+              <h2 className={`text-[40px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight`}>
                 {t("messages.about", "About Us")}
               </h2>
 
@@ -143,10 +143,10 @@ export default function Home({ products, promotions }) {
       <section className="py-16 bg-white">
         <div className="mx-auto max-w-7xl px-4">
           <div className="text-center">
-            <h2 className="mt-3 text-[35px] tracking-[0.25em] text-[#D4793F] font-display font-SemiBold">
+            <h2 className={`mt-3 text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display font-SemiBold`}>
               {t("messages.our_products")}
             </h2>
-            <p className="text-[15px] tracking-[0.25em] text-[#185C9B]">
+            <p className={`text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
               {t("messages.products_intro_subtitle")}
             </p>
           </div>
@@ -231,10 +231,10 @@ export default function Home({ products, promotions }) {
       {/* ================= PROMOTION ================= */}
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4">
-          <h2 className="mt-3 text-center text-[35px] tracking-[0.25em] text-[#D4793F] font-display">
+          <h2 className={`mt-3 text-center text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display`}>
             {t("messages.promotion")}
           </h2>
-          <p className="text-center text-[15px] tracking-[0.25em] text-[#185C9B]">
+          <p className={`text-center text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
             {t("messages.promotion_intro_subtitle")}
           </p>
 
@@ -324,7 +324,7 @@ export default function Home({ products, promotions }) {
             <div className="lg:col-span-12 xl:col-span-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.find_our_store")}
                 </p>
               </div>
@@ -365,7 +365,7 @@ export default function Home({ products, promotions }) {
               <div className="mt-12">
                 <Link
                   href={route('contact')}
-                  className="inline-flex items-center text-[12px] font-Bold text-[#185C9B] border-b-2 border-transparent hover:border-[#185C9B] pb-1 transition-all uppercase tracking-widest"
+                  className={`inline-flex items-center text-[12px] font-Bold text-[#185C9B] border-b-2 border-transparent hover:border-[#185C9B] pb-1 transition-all uppercase ${locale === 'kh' ? '' : 'tracking-widest'}`}
                 >
                   {t("messages.get_directions")}
                   <svg className="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

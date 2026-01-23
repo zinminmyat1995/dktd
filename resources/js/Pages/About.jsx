@@ -2,7 +2,7 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
 
 export default function About() {
-  const { t } = useTranslate();
+  const { t, locale } = useTranslate();
 
   return (
     <InnerPageLayout titleKey="messages.about">
@@ -14,12 +14,12 @@ export default function About() {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.about_mission_vision")}
                 </p>
               </div>
 
-              <h2 className="text-[40px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight">
+              <h2 className={`text-[40px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight`}>
                 {t("messages.about")}
               </h2>
 
@@ -65,7 +65,7 @@ export default function About() {
                 {/* Decorative floating badge */}
                 <div className="absolute -bottom-6 -left-6 bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-50 hidden sm:block">
                   <p className="text-[32px] font-Bold text-[#185C9B] leading-none">{t("messages.years_legacy_number")}</p>
-                  <p className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mt-2">{t("messages.years_legacy_text")}</p>
+                  <p className={`text-[10px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mt-2`}>{t("messages.years_legacy_text")}</p>
                 </div>
               </div>
             </div>
@@ -93,12 +93,12 @@ export default function About() {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.about_leadership_excellence")}
                 </p>
               </div>
 
-              <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
+              <h2 className={`text-[36px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight`}>
                 {t("messages.about_our_leader")}
               </h2>
 
@@ -118,12 +118,12 @@ export default function About() {
             <div className="lg:col-span-7">
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
-                <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
+                <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
                   {t("messages.about_production_quality")}
                 </p>
               </div>
 
-              <h2 className="text-[36px] font-Bold tracking-[0.1em] text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight">
+              <h2 className={`text-[36px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[44px] font-display uppercase leading-tight`}>
                 {t("messages.about_our_factory")}
               </h2>
 
