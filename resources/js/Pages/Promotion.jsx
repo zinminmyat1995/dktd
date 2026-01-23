@@ -23,7 +23,7 @@ export default function Promotion({ promotions = { data: [] } }) {
               {t("messages.promotion_heading")}
             </h2>
             <p className="mt-3 text-[15px] font-SemiBold tracking-[0.25em] text-[#185C9B]">
-              {t("messages.business_insights")}
+              {t("messages.promotion_intro_subtitle")}
             </p>
           </div>
 

@@ -3,7 +3,7 @@ import { usePage } from "@inertiajs/react";
 export default function InnerBanner({
   title,
   titleClassName = "",
-  image = "/images/banner.png",
+  image = "/images/banner3.png",
   objectPosition = "center",
   subtitle = "", // optional: small line under title
   compact = false, // optional: smaller banner for some pages
@@ -16,8 +16,8 @@ export default function InnerBanner({
 
   // Responsive heights
   const h = compact
-    ? "h-[170px] sm:h-[210px] md:h-[240px] lg:h-[280px]"
-    : "h-[210px] sm:h-[260px] md:h-[320px] lg:h-[380px] xl:h-[420px]";
+    ? "h-[100px] sm:h-[150px] md:h-[200px] lg:h-[250px]"
+    : "h-[100px] sm:h-[150px] md:h-[200px] lg:h-[250px] xl:h-[300px]";
 
   return (
     <section className="relative w-full overflow-hidden bg-white">
@@ -40,7 +40,7 @@ export default function InnerBanner({
             className={[
               // responsive title size
               "text-[28px] sm:text-[34px] md:text-[40px] lg:text-[44px]",
-              "leading-none text-[#7A3B14] drop-shadow-sm",
+              "leading-none text-[#7A3B14] drop-shadow-sm font-display",
               titleClass,
             ].join(" ")}
           >

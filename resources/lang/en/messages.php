@@ -19,6 +19,9 @@ return [
 
     // Home Page Specific
     'business_insights' => 'Business Insights & Beyond',
+    'about_intro_subtitle' => 'Who We Are',
+    'products_intro_subtitle' => 'Explore Our Flavors',
+    'promotion_intro_subtitle' => 'Latest Deals & News',
     'short_Desc' => "DKTD Genki specializes in perfectly crispy chips designed to match every flavor mood. The brand prioritizes fun, smile-inducing snacks that delight kids and families in Cambodia, particularly around Phnom Penh.\n\n Quality ingredients and playful varieties drive its mission to spread happiness through every bite.",
     'years_legacy_number' => '25+',
     'years_legacy_text' => 'Years of Legacy',

@@ -60,7 +60,7 @@ export default function Home({ products, promotions }) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className="text-[14px] font-Bold tracking-[0.3em] text-[#185C9B] uppercase">
-                  {t("messages.business_insights")}
+                  {t("messages.about_intro_subtitle")}
                 </p>
               </div>
 
@@ -147,7 +147,7 @@ export default function Home({ products, promotions }) {
               {t("messages.our_products")}
             </h2>
             <p className="text-[15px] tracking-[0.25em] text-[#185C9B]">
-              {t("messages.business_insights")}
+              {t("messages.products_intro_subtitle")}
             </p>
           </div>
 
@@ -235,7 +235,7 @@ export default function Home({ products, promotions }) {
             {t("messages.promotion")}
           </h2>
           <p className="text-center text-[15px] tracking-[0.25em] text-[#185C9B]">
-            {t("messages.business_insights")}
+            {t("messages.promotion_intro_subtitle")}
           </p>
 
 
