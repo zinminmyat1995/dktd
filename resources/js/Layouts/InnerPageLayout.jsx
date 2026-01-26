@@ -34,10 +34,8 @@ function HomeHero({ image = "/images/banner1.png" }) {
                 <span className="block drop-shadow-sm">Premium Snacks</span>
                 <span className="block text-[#C46A2A] relative w-fit mt-1">
                   For Everyone
-                  {/* Decorative Smile Underline */}
-                  <svg className="absolute -bottom-2 sm:-bottom-4 left-0 w-full h-3 sm:h-5 text-[#185C9B]" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" />
-                  </svg>
+                  {/* Decorative Straight Underline */}
+                  <div className="absolute -bottom-1 sm:-bottom-2 left-0 w-[50%] h-[3px] sm:h-[4px] bg-[#185C9B] rounded-full shadow-sm" />
                 </span>
               </h1>
 

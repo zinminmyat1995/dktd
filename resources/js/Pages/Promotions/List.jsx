@@ -269,13 +269,15 @@ export default function List({ categories = [] }) {
             <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
                 <table className="w-full text-sm">
                     <thead className="bg-slate-50 text-slate-600">
-                        <tr>
+                        <tr className="sticky top-0 z-10">
                             <th className="px-4 py-3 text-left">Content</th>
                             <th className="px-4 py-3 text-left">Type</th>
                             <th className="px-4 py-3 text-left">Category</th>
                             <th className="px-4 py-3 text-left">Dates</th>
                             <th className="px-4 py-3 text-left">Status</th>
-                            <th className="px-4 py-3 text-right">Actions</th>
+                            <th className="px-4 py-3 text-left">Created By</th>
+                            <th className="px-4 py-3 text-left">Updated By</th>
+                            <th className="px-4 py-3 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -301,7 +303,21 @@ export default function List({ categories = [] }) {
                                         {r.status}
                                     </span>
                                 </td>
-                                <td className="px-4 py-3 text-right space-x-2">
+                                <td className="px-4 py-3">
+                                    <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
+                                    <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
+                                </td>
+                                <td className="px-4 py-3">
+                                    {r.updated_at !== r.created_at ? (
+                                        <>
+                                            <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
+                                        </>
+                                    ) : (
+                                        <span className="text-xs text-slate-400">—</span>
+                                    )}
+                                </td>
+                                <td className="px-4 py-3 text-center space-x-2 whitespace-nowrap">
                                     <button onClick={() => openEdit(r)} className="text-indigo-600 font-semibold">Edit</button>
                                     <button onClick={() => setConfirm({
                                         open: true,
@@ -381,6 +397,24 @@ export default function List({ categories = [] }) {
                         </div>
                     </div>
                     {form.imagePreview && <img src={form.imagePreview} className="h-32 rounded object-cover" alt="Preview" />}
+
+                    {editRow && (
+                        <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-wrap gap-x-8 gap-y-3">
+                            <div className="space-y-1">
+                                <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Created By</div>
+                                <div className="text-sm font-SemiBold text-slate-700">{editRow.creator?.name ?? "—"}</div>
+                                <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.created_at)}</div>
+                            </div>
+                            {editRow.updated_at !== editRow.created_at && (
+                                <div className="space-y-1">
+                                    <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Last Updated</div>
+                                    <div className="text-sm font-SemiBold text-slate-700">{editRow.updater?.name ?? "—"}</div>
+                                    <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.updated_at)}</div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     <div className="flex justify-end gap-2 pt-4">
                         <button onClick={() => setModalOpen(false)} className="px-4 py-2 border rounded-xl">Cancel</button>
                         <button onClick={handleSubmit} disabled={loading} className="px-4 py-2 bg-indigo-600 text-white rounded-xl">{loading ? "Saving..." : "Save"}</button>

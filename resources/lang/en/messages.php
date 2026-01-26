@@ -27,9 +27,9 @@ return [
     'years_legacy_text' => 'Japanese Quality',
     'find_our_store' => 'Find Our Store',
     'opening_hours' => 'Opening Hours',
-    'opening_hours_time' => '9:00 AM — 9:00 PM',
+    'opening_hours_time' => '7:00am to 3:30pm',
     'headquarters' => 'Headquarters',
-    'headquarters_address' => '#1065 (Ground & 1st floor), St. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh.',
+    'headquarters_address' => '#1065 Floor 2nd , st. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh',
 
     // About Page Specific
     'about_mission_vision' => 'Our Mission & Vision',
