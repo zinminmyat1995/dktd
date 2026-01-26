@@ -87,7 +87,9 @@ class ProductController extends Controller
                 'status'       => $validated['status'],
                 'published_at' => $validated['published_at'] ?? null,
                 'start_date'   => $validated['start_date'] ?? null,
-                'end_date'     => $validated['end_date'] ?? null
+                'end_date'     => $validated['end_date'] ?? null,
+                'created_by'   => auth()->id(),
+                'updated_by'   => auth()->id(),
             ]);
             
             return response()->json([
@@ -168,6 +170,7 @@ class ProductController extends Controller
             'is_new'       => $validated['is_new'] ?? false,
             'status'       => $validated['status'],
             'published_at' => $validated['published_at'] ?? null,
+            'updated_by'   => auth()->id(),
         ]);
 
         return response()->json([
@@ -225,6 +228,7 @@ class ProductController extends Controller
         \App\Models\Product::whereIn('id', $data['product_ids'])->update([
             'start_date' => $data['start_date'] ?? null,
             'end_date'   => $data['end_date'] ?? null,
+            'updated_by' => auth()->id(),
         ]);
 
         return response()->json([
@@ -293,7 +297,10 @@ class ProductController extends Controller
         }
 
         // Reset all
-        \App\Models\Product::query()->where('show_on_home', '>', 0)->update(['show_on_home' => 0]);
+        \App\Models\Product::query()->where('show_on_home', '>', 0)->update([
+            'show_on_home' => 0,
+            'updated_by'   => auth()->id(),
+        ]);
 
         // Reverse the array so the newest selection (at the end of the input array) 
         // gets position 1 (leftmost when ordered ASC)
@@ -302,7 +309,10 @@ class ProductController extends Controller
         foreach ($ids as $index => $id) {
             // Assign position in order (first item in reversed array gets position 1)
             $position = $index + 1;
-            \App\Models\Product::where('id', $id)->update(['show_on_home' => $position]);
+            \App\Models\Product::where('id', $id)->update([
+                'show_on_home' => $position,
+                'updated_by'   => auth()->id(),
+            ]);
         }
 
         return response()->json([

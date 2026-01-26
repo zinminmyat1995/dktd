@@ -9,6 +9,18 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected static function booted()
+    {
+        static::creating(function ($product) {
+            if (!$product->created_by) $product->created_by = auth()->id();
+            if (!$product->updated_by) $product->updated_by = auth()->id();
+        });
+
+        static::updating(function ($product) {
+            if (!$product->updated_by) $product->updated_by = auth()->id();
+        });
+    }
+
     protected $with = ['creator:id,name', 'updater:id,name'];
 
     protected $fillable = [

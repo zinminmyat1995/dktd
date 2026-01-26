@@ -44,7 +44,7 @@ export default function SiteFooter() {
             </div>
 
             <p className="mt-4 text-[15px] text-slate-700">
-              Perfectly crispy chips made to match every flavor mood you’re in.
+              Genki snack will make Cambodia people happy and smile.
             </p>
 
             <div className="mt-4 flex items-center gap-4">

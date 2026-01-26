@@ -22,9 +22,9 @@ return [
     'about_intro_subtitle' => 'Who We Are',
     'products_intro_subtitle' => 'Explore Our Flavors',
     'promotion_intro_subtitle' => 'Latest Deals & News',
-    'short_Desc' => "DKTD Genki specializes in perfectly crispy chips designed to match every flavor mood. The brand prioritizes fun, smile-inducing snacks that delight kids and families in Cambodia, particularly around Phnom Penh.\n\n Quality ingredients and playful varieties drive its mission to spread happiness through every bite.",
-    'years_legacy_number' => '25+',
-    'years_legacy_text' => 'Years of Legacy',
+    'short_Desc' => "DKTD Genki is a prestigious joint venture bridging Cambodian culinary traditions with Japanese precision. We are committed to delivering world-class snacks crafted with Japanese technology and a passion for excellence. By combining authentic local flavors with global standards, we aim to inspire smiles and create joyful moments for families across the kingdom.",
+    'years_legacy_number' => '100%',
+    'years_legacy_text' => 'Japanese Quality',
     'find_our_store' => 'Find Our Store',
     'opening_hours' => 'Opening Hours',
     'opening_hours_time' => '9:00 AM — 9:00 PM',
@@ -37,10 +37,9 @@ return [
     'about_our_leader' => 'Our Leader',
     'about_production_quality' => 'Production & Quality',
     'about_our_factory' => 'Our Factory',
-    'full_Desc' => "DKTD Genki stands as a vibrant Cambodian snack innovator, crafting ultra-crispy chips that capture the essence of fun and flavor for kids and families across Phnom Penh and beyond.\n\n Rooted in the 'Make kids happy and smile—our snacks make people happy and smile' philosophy, the company blends local tastes with playful varieties, ensuring every bite sparks delight and satisfies cravings.
-    From zesty seasonings to classic crunch, DKTD Genki prioritizes quality ingredients, rigorous hygiene, and innovative production to match any mood. \n\nOperations focus on fresh, accessible distribution while scaling up to bring more smiles through community-oriented, kid-approved treats that celebrate Cambodian vibrancy.",
-    'leader' => "The leader behind DKTD Genki embodies innovation in Cambodia's snack scene, steering the company toward joyful, kid-friendly products. With a vision to make everyday snacking a happy ritual, this figure champions local flavors while ensuring top-notch crispiness and safety. No public name like Terasaka links directly, but leadership focuses on customer smiles and growth.",
-    'factory' => "DKTD Genki's factory embodies innovation and quality in Cambodia's snack industry, producing perfectly crispy chips that delight kids and families across Phnom Penh and beyond. Rooted in the 'Make kids happy and smile—our snacks make people happy and smile' philosophy, the company blends local tastes with playful varieties, ensuring every bite sparks delight and satisfies cravings. From zesty seasonings to classic crunch, DKTD Genki prioritizes quality ingredients, rigorous hygiene, and innovative production to match any mood. Operations focus on fresh, accessible distribution while scaling up to bring more smiles through community-oriented, kid-approved treats that celebrate Cambodian vibrancy.",
+    'full_Desc' => "DKTD Genki is a prestigious joint venture that bridges the rich culinary traditions of Cambodia with the precision and innovation of Japan. Our foundation is built on deep-rooted expertise: our Cambodian partner brings decades of experience in the food industry, while our three Japanese partners contribute a global perspective, having led major trading entities (Sogo-Shosha), established Japanese sweets wholesalers, and managed official dealerships in Southeast Asia.\n\nTogether, we are committed to delivering reliable, world-class snacks crafted with Japanese technology and a passion for excellence.",
+    'leader' => "Under the dedicated leadership of Tetsuro Terasaka, DKTD Genki is driven by a heartfelt mission: to infuse every corner of Cambodia with joy through premium, safe, and delicious snacks. Mr. Terasaka views food not merely as a product, but as a bridge to create happiness and foster meaningful connections within the community. His leadership prioritizes uncompromising quality and collaborative growth, ensuring that every bite shared is a moment of trust and celebration.",
+    'factory' => "Strategically located in Northern Cambodia with seamless access to the heart of the capital, our state-of-the-art facility is where the magic happens. Our advanced production line—featuring precision raw material mixers, high-efficiency extruders, industrial dryers, and modern packaging equipment—is designed for absolute reliability. Every stage of our process is strictly governed by rigorous Japanese standards, ensuring that every snack that leaves our factory meets the highest benchmarks for safety and quality.",
 
     // Products Page
     'our_products' => 'Our Products',
