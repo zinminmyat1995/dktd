@@ -3,6 +3,15 @@ import InnerBanner from "@/Components/InnerBanner";
 import useTranslate from "@/hooks/useTranslate";
 
 function HomeHero({ image = "/images/banner1.png" }) {
+  const { t, locale } = useTranslate();
+
+  // Condition for Khmer font sizing (adjusting for larger Khmer script)
+  const titleSizing = locale === 'kh'
+    ? "text-[18px] xs:text-[22px] sm:text-[32px] md:text-[42px] lg:text-[52px]"
+    : "text-[28px] xs:text-[32px] sm:text-[45px] md:text-[55px] lg:text-[65px]";
+
+  const leadingSizing = locale === 'kh' ? "leading-relaxed" : "leading-tight";
+
   return (
     <section className="relative w-full overflow-hidden">
       <div className="relative w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-[800px] xl:h-[900px]">
@@ -25,22 +34,22 @@ function HomeHero({ image = "/images/banner1.png" }) {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-10 bg-[#C46A2A] shadow-md" />
                 <p className="text-[13px] sm:text-[14px] font-Bold uppercase tracking-[0.3em] text-white/90 drop-shadow-md">
-                  DKTD-Genki
+                  {t("messages.hero_kicker")}
                 </p>
               </div>
 
               {/* Main Title - White + Orange Accent */}
-              <h1 className="text-[32px] sm:text-[45px] md:text-[55px] lg:text-[65px] font-Bold leading-tight text-white drop-shadow-2xl font-display">
-                <span className="block drop-shadow-sm">Premium Snacks</span>
+              <h1 className={`${titleSizing} ${leadingSizing} font-Bold text-white drop-shadow-2xl font-display`}>
+                <span className="block drop-shadow-sm">{t("messages.hero_title_1")}</span>
                 <span className="block text-[#C46A2A] relative w-fit mt-1">
-                  For Everyone
+                  {t("messages.hero_title_2")}
                   {/* Decorative Straight Underline */}
                   <div className="absolute -bottom-1 sm:-bottom-2 left-0 w-[50%] h-[3px] sm:h-[4px] bg-[#185C9B] rounded-full shadow-sm" />
                 </span>
               </h1>
 
               <p className="mt-6 text-[16px] sm:text-[18px] md:text-[20px] font-Medium text-white/95 leading-relaxed max-w-xl drop-shadow-lg tracking-wide">
-                Tasty Japanese snacks that bring joy to every moment.
+                {t("messages.hero_description")}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
@@ -57,7 +66,7 @@ function HomeHero({ image = "/images/banner1.png" }) {
                   "
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    Contact Us
+                    {t("messages.contact")}
                     <svg className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>

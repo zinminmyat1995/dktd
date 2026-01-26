@@ -82,7 +82,7 @@ export default function SiteFooter() {
 
       {/* Bottom black bar */}
       <div className="bg-black">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 text-[13px] text-white sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between px-4 py-4 sm:py-3 text-[13px] text-white sm:px-6 lg:px-8 gap-2 sm:gap-0 text-center sm:text-left">
           <div className="tracking-[0.15em]">
             Copyright © 2025 DKTD-Genki. All rights reserved.
           </div>

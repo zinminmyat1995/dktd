@@ -166,7 +166,7 @@ export default function Home({ products, promotions }) {
                   </div>
                 )}
                 {/* Product Image */}
-                <div className="sm:h-[350px] h-[500px] lg:h-[500px] w-full overflow-hidden flex items-center justify-center">
+                <div className="h-[300px] sm:h-[350px] lg:h-[450px] xl:h-[500px] w-full overflow-hidden flex items-center justify-center">
                   <img
                     src={product.image_path}
                     alt={product.title}

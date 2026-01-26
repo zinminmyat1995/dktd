@@ -30,6 +30,11 @@ return [
     'opening_hours_time' => '7:00am to 3:30pm',
     'headquarters' => 'Headquarters',
     'headquarters_address' => '#1065 Floor 2nd , st. Betong, Phum Speankpos, Sangkat Kilomaetr Lekh Prammnuy, Khan Russey Keo, Phnom Penh',
+    'hero_kicker' => 'DKTD-Genki',
+    'hero_title_1' => 'Premium Snacks',
+    'hero_title_2' => 'For Everyone',
+    'hero_description' => 'Tasty Japanese snacks that bring joy to every moment.',
+
 
     // About Page Specific
     'about_mission_vision' => 'Our Mission & Vision',
@@ -39,7 +44,7 @@ return [
     'about_our_factory' => 'Our Factory',
     'full_Desc' => "DKTD Genki is a prestigious joint venture that bridges the rich culinary traditions of Cambodia with the precision and innovation of Japan. Our foundation is built on deep-rooted expertise: our Cambodian partner brings decades of experience in the food industry, while our three Japanese partners contribute a global perspective, having led major trading entities (Sogo-Shosha), established Japanese sweets wholesalers, and managed official dealerships in Southeast Asia.\n\nTogether, we are committed to delivering reliable, world-class snacks crafted with Japanese technology and a passion for excellence.",
     'leader' => "Under the dedicated leadership of Tetsuro Terasaka, DKTD Genki is driven by a heartfelt mission: to infuse every corner of Cambodia with joy through premium, safe, and delicious snacks. Mr. Terasaka views food not merely as a product, but as a bridge to create happiness and foster meaningful connections within the community. His leadership prioritizes uncompromising quality and collaborative growth, ensuring that every bite shared is a moment of trust and celebration.",
-    'factory' => "Strategically located in Northern Cambodia with seamless access to the heart of the capital, our state-of-the-art facility is where the magic happens. Our advanced production line—featuring precision raw material mixers, high-efficiency extruders, industrial dryers, and modern packaging equipment—is designed for absolute reliability. Every stage of our process is strictly governed by rigorous Japanese standards, ensuring that every snack that leaves our factory meets the highest benchmarks for safety and quality.",
+    'factory' => "Strategically located in Northern Cambodia with seamless access to the heart of the capital, our state of the art facility is where the magic happens. Our advanced production line featuring precision raw material mixers, high-efficiency extruders, industrial dryers, and modern packaging equipment is designed for absolute reliability. Every stage of our process is strictly governed by rigorous Japanese standards, ensuring that every snack that leaves our factory meets the highest benchmarks for safety and quality.",
 
     // Products Page
     'our_products' => 'Our Products',

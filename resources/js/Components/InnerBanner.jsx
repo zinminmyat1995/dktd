@@ -16,8 +16,8 @@ export default function InnerBanner({
 
   // Responsive heights
   const h = compact
-    ? "h-[100px] sm:h-[150px] md:h-[200px] lg:h-[250px]"
-    : "h-[100px] sm:h-[150px] md:h-[200px] lg:h-[250px] xl:h-[300px]";
+    ? "h-[120px] sm:h-[180px] md:h-[220px] lg:h-[250px]"
+    : "h-[150px] sm:h-[200px] md:h-[250px] lg:h-[280px] xl:h-[320px]";
 
   return (
     <section className="relative w-full overflow-hidden bg-white">
