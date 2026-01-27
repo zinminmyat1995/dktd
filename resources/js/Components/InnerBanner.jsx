@@ -20,7 +20,7 @@ export default function InnerBanner({
     : "h-[150px] sm:h-[200px] md:h-[250px] lg:h-[280px] xl:h-[320px]";
 
   return (
-    <section className="relative w-full overflow-hidden bg-white">
+    <section className="relative w-full overflow-hidden bg-white hidden">
       <div className={`relative w-full ${h}`}>
         {/* Background image */}
         <img

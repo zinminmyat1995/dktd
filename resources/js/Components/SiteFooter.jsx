@@ -9,13 +9,13 @@ const footerLinksCol1 = [
 
 const footerLinksCol2 = [
   { key: "messages.promotion", label: "Promotions", routeName: "promotion" },
-  { key: "messages.locations", label: "Locations", routeName: "contact" }, // route မရှိသေးရင် contact ကိုချိတ်ထား
+  // { key: "messages.locations", label: "Locations", routeName: "contact" }, // route မရှိသေးရင် contact ကိုချိတ်ထား
   { key: "messages.contact", label: "Contact Us", routeName: "contact" },
 ];
 
-const footerLinksCol3 = [
-  { key: "messages.terms", label: "Terms & Conditions", href: "#" },
-];
+// const footerLinksCol3 = [
+//   { key: "messages.terms", label: "Terms & Conditions", href: "#" },
+// ];
 
 // simple social icons (same style as header)
 const socials = [
@@ -73,7 +73,7 @@ export default function SiteFooter() {
               <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
                 <FooterCol items={footerLinksCol1} t={t} />
                 <FooterCol items={footerLinksCol2} t={t} />
-                <FooterCol items={footerLinksCol3} t={t} />
+                {/* <FooterCol items={footerLinksCol3} t={t} /> */}
               </div>
             </div>
           </div>
@@ -87,9 +87,9 @@ export default function SiteFooter() {
             Copyright © 2025 DKTD-Genki. All rights reserved.
           </div>
 
-          <a href="#" className="tracking-[0.15em] hover:opacity-80">
+          {/* <a href="#" className="tracking-[0.15em] hover:opacity-80">
             {t("messages.terms", "Terms & Conditions")}
-          </a>
+          </a> */}
         </div>
       </div>
     </footer>

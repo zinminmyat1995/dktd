@@ -170,7 +170,7 @@ export default function Contact() {
                   className="h-[400px] w-full lg:h-[500px]"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=Phnom%20Penh&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.00956484519!2d104.90178491094844!3d11.622668388534658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310953ee88ca943b%3A0x71ff8ccd1a7bc3a9!2sThe%20Auckland%20Boulangerie!5e0!3m2!1sen!2sus!4v1769486487704!5m2!1sen!2sus"
                 />
               </div>
             </div>

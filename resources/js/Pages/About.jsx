@@ -15,7 +15,7 @@ export default function About() {
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-12 bg-[#185C9B]" />
                 <p className={`text-[14px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-[#185C9B] uppercase`}>
-                  {t("messages.about_mission_vision")}
+                  {t("messages.about_intro_subtitle")}
                 </p>
               </div>
 

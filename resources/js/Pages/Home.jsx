@@ -281,7 +281,7 @@ export default function Home({ products, promotions }) {
 
                   <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
                     <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
-                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString() : t("messages.latest_update")}
+                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : t("messages.latest_update")}
                     </span>
                     <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
                       {t("messages.read_more")}
@@ -383,7 +383,7 @@ export default function Home({ products, promotions }) {
                   className="h-[400px] w-full lg:h-[500px]"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=Phnom%20Penh&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.00956484519!2d104.90178491094844!3d11.622668388534658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310953ee88ca943b%3A0x71ff8ccd1a7bc3a9!2sThe%20Auckland%20Boulangerie!5e0!3m2!1sen!2sus!4v1769486487704!5m2!1sen!2sus"
                 />
               </div>
             </div>
