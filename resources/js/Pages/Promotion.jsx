@@ -3,7 +3,7 @@ import { Link, router } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
 import Pagination from "@/Components/Pagination";
 
-export default function Promotion({ promotions = { data: [] }, filters = {} }) {
+export default function Promotion({ promotions = { data: [] }, filters = {}, latestNewsId }) {
   const { t, locale } = useTranslate();
 
   const handleTypeChange = (e) => {
@@ -19,6 +19,16 @@ export default function Promotion({ promotions = { data: [] }, filters = {} }) {
     if (path.startsWith("http")) return path;
     if (path.startsWith("/storage/")) return path;
     return `/storage/${path}`;
+  };
+
+  const formatDate = (promo) => {
+    if (promo.type === 'news') {
+        if (promo.id === latestNewsId) {
+            return t("messages.latest_update");
+        }
+        return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (
@@ -59,7 +69,7 @@ export default function Promotion({ promotions = { data: [] }, filters = {} }) {
           <div className="mt-12 space-y-6">
             {promotions.data && promotions.data.length > 0 ? (
               promotions.data.map((promo) => (
-                <PromoRow key={promo.id} promo={promo} t={t} locale={locale} toPublicUrl={toPublicUrl} />
+                <PromoRow key={promo.id} promo={promo} t={t} locale={locale} toPublicUrl={toPublicUrl} formatDate={formatDate} />
               ))
             ) : (
               <p className="text-center text-slate-500 py-20">{t("messages.no_promotions")}</p>
@@ -74,7 +84,7 @@ export default function Promotion({ promotions = { data: [] }, filters = {} }) {
   );
 }
 
-function PromoRow({ promo, t, locale, toPublicUrl }) {
+function PromoRow({ promo, t, locale, toPublicUrl, formatDate }) {
   return (
     <Link
       href={route('promotions.show_detail', promo.id)}
@@ -113,7 +123,7 @@ function PromoRow({ promo, t, locale, toPublicUrl }) {
 
         <div className="mt-6 flex items-center justify-between">
           <div className={`text-[12px] font-Bold text-slate-400 ${locale === 'kh' ? '' : 'tracking-widest'} uppercase`}>
-            {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : t("messages.latest_update")}
+            {formatDate(promo)}
           </div>
           <div className={`text-[#D4793F] font-Bold text-[13px] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase flex items-center gap-2 group-hover:gap-4 transition-all duration-500`}>
             {t("messages.read_more")}

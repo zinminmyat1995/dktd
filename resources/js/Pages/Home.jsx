@@ -2,16 +2,25 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
 import { Link } from "@inertiajs/react";
 
-export default function Home({ products, promotions }) {
-  const { t, locale } = useTranslate();
+export default function Home({ products, promotions, latestNewsId }) {
+    const { t, locale } = useTranslate();
 
-  const toPublicUrl = (path) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    if (path.startsWith("/storage/")) return path;
-    return `/storage/${path}`;
-  };
+    const toPublicUrl = (path) => {
+        if (!path) return null;
+        if (path.startsWith("http")) return path;
+        if (path.startsWith("/storage/")) return path;
+        return `/storage/${path}`;
+    };
 
+    const formatDate = (promo) => {
+        if (promo.type === 'news') {
+            if (promo.id === latestNewsId) {
+                return t("messages.latest_update");
+            }
+            return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    };
   return (
     <InnerPageLayout titleKey="messages.home" isHome>
       {/* ================= HERO SECTION ================= */}
@@ -281,7 +290,7 @@ export default function Home({ products, promotions }) {
 
                   <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
                     <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
-                      {promo.start_date ? new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : t("messages.latest_update")}
+                      {formatDate(promo)}
                     </span>
                     <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
                       {t("messages.read_more")}

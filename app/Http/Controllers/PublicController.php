@@ -20,9 +20,12 @@ class PublicController extends Controller
             ->take(3)
             ->get();
 
+        $latestNewsId = \App\Models\Promotion::where('type', 'news')->latest()->value('id');
+
         return Inertia::render('Home', [
             'products' => $products,
-            'promotions' => $promotions
+            'promotions' => $promotions,
+            'latestNewsId' => $latestNewsId
         ]);
     }
 
@@ -76,12 +79,15 @@ class PublicController extends Controller
             ->latest()
             ->paginate(10)
             ->withQueryString();
+        
+        $latestNewsId = \App\Models\Promotion::where('type', 'news')->latest()->value('id');
 
         return Inertia::render('Promotion', [
             'promotions' => $promotions,
             'filters' => [
                 'type' => $type
-            ]
+            ],
+            'latestNewsId' => $latestNewsId
         ]);
     }
 

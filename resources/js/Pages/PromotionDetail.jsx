@@ -147,12 +147,14 @@ export default function PromotionDetail({ promotion }) {
 
                         {/* Bottom Buttons - Strictly level with image bottom */}
                         <div className="mt-auto pt-6 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
-                            {/* <Link
-                                href={route('contact')}
-                                className="flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
-                            >
-                                {t("messages.contact")}
-                            </Link> */}
+                        {promotion.type === 'promotion' && (
+                                <Link
+                                    href={route('contact')}
+                                    className="flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
+                                >
+                                    {t("messages.contact")}
+                                </Link>
+                            )}
                             <button
                                 onClick={() => window.history.back()}
                                 className="flex flex-1 items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-slate-700 shadow-sm hover:bg-slate-50 hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
