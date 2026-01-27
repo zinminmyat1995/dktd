@@ -28,7 +28,7 @@ class CategoryController extends Controller
             'is_active' => $validated['is_active'] ?? true,
             'created_by' => auth()->id(),
             'updated_by' => auth()->id(),
-        ]);
+        ])->load(['creator:id,name', 'updater:id,name']);
 
         return response()->json([
             'message' => 'Category created.',
@@ -51,6 +51,8 @@ class CategoryController extends Controller
             'is_active' => $validated['is_active'] ?? $category->is_active,
             'updated_by' => auth()->id(),
         ]);
+
+        $category->load(['creator:id,name', 'updater:id,name']);
 
         return response()->json([
             'message' => 'Category updated.',

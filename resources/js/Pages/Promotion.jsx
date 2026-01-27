@@ -1,10 +1,18 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
 import Pagination from "@/Components/Pagination";
 
-export default function Promotion({ promotions = { data: [] } }) {
+export default function Promotion({ promotions = { data: [] }, filters = {} }) {
   const { t, locale } = useTranslate();
+
+  const handleTypeChange = (e) => {
+    const type = e.target.value;
+    router.get(route('promotion'), { type }, {
+      preserveState: true,
+      replace: true
+    });
+  };
 
   const toPublicUrl = (path) => {
     if (!path) return null;
@@ -25,6 +33,26 @@ export default function Promotion({ promotions = { data: [] } }) {
             <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
               {t("messages.promotion_intro_subtitle")}
             </p>
+          </div>
+
+          {/* Sort Dropdown (Type Filter) */}
+          <div className="mt-12 flex justify-end">
+            <div className="relative inline-block w-64">
+              <select
+                value={filters.type || ""}
+                onChange={handleTypeChange}
+                className={`block w-full appearance-none rounded-xl border border-slate-200 bg-white px-6 py-3 pr-10 text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-slate-700 uppercase focus:border-[#185C9B] focus:outline-none focus:ring-1 focus:ring-[#185C9B] transition-all cursor-pointer`}
+              >
+                <option value="">{t("messages.all_types")}</option>
+                <option value="promotion">{t("messages.promotion_label")}</option>
+                <option value="news">{t("messages.news_label")}</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* List */}

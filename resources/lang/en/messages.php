@@ -24,7 +24,7 @@ return [
     'promotion_intro_subtitle' => 'Latest Deals & News',
     'short_Desc' => "DKTD Genki is a prestigious joint venture bridging Cambodian culinary traditions with Japanese precision. We are committed to delivering world-class snacks crafted with Japanese technology and a passion for excellence. By combining authentic local flavors with global standards, we aim to inspire smiles and create joyful moments for families across the kingdom.",
     'years_legacy_number' => '100%',
-    'years_legacy_text' => 'Japanese Quality',
+    'years_legacy_text' => 'Quality Guaranteed',
     'find_our_store' => 'Find Our Store',
     'opening_hours' => 'Opening Hours',
     'opening_hours_time' => '7:00am to 3:30pm',
@@ -34,6 +34,8 @@ return [
     'hero_title_1' => 'Premium Snacks',
     'hero_title_2' => 'For Everyone',
     'hero_description' => 'Tasty Japanese snacks that bring joy to every moment.',
+
+    'slogan' => 'Genki snack will make Cambodia people happy and smile.',
 
 
     // About Page Specific
@@ -53,6 +55,7 @@ return [
 
     // Promotion Page
     'promotion_heading' => 'PROMOTIONS',
+    'all_types' => 'All Types',
     'no_promotions' => 'No active promotions at the moment.',
 
     // Product Detail Page

@@ -67,12 +67,21 @@ class PublicController extends Controller
 
     public function promotion()
     {
+        $type = request()->query('type');
+
         $promotions = \App\Models\Promotion::where('status', 'published')
+            ->when($type, function($query, $type) {
+                return $query->where('type', $type);
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Promotion', [
-            'promotions' => $promotions
+            'promotions' => $promotions,
+            'filters' => [
+                'type' => $type
+            ]
         ]);
     }
 
