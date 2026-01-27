@@ -24,7 +24,7 @@ export default function Products({ products, categories, filters }) {
               {t("messages.our_products")}
             </h2>
             <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
-              {t("messages.business_insights")}
+              {t("messages.products_intro_subtitle")}
             </p>
           </div>
 

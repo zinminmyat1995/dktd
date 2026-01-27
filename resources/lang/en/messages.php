@@ -79,5 +79,13 @@ return [
     // Promotion/News Labels
     'promotion_label' => 'Promotion',
     'news_label' => 'News',
-    // Note: 'contact' key is already defined in navigation
+
+    // Error Pages
+    'error_404_title' => 'Page Not Found',
+    'error_404_desc' => 'Sorry, the page you are looking for could not be found.',
+    'error_500_title' => 'Server Error',
+    'error_500_desc' => 'Whoops, something went wrong on our servers.',
+    'error_generic_title' => 'Error',
+    'error_back_home' => 'Go Home',
+    'error_page_subtitle' => 'Oops!',
 ];

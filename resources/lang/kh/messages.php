@@ -78,5 +78,14 @@ return [
     // Promotion/News Labels
     'promotion_label' => 'ប្រូម៉ូសិន',
     'news_label' => 'ព័ត៌មាន',
+
+    // Error Pages
+    'error_404_title' => 'រកមិនឃើញទំព័រ',
+    'error_404_desc' => 'សូមអភ័យទោស ទំព័រដែលអ្នកកំពុងស្វែងរកមិនអាចរកឃើញទេ។',
+    'error_500_title' => 'កំហុសម៉ាស៊ីនបម្រើ',
+    'error_500_desc' => 'សូមអភ័យទោស មានអ្វីមួយខុសប្រក្រតីនៅលើម៉ាស៊ីនបម្រើរបស់យើង។',
+    'error_generic_title' => 'កំហុស',
+    'error_back_home' => 'ត្រលប់ទៅទំព័រដើម',
+    'error_page_subtitle' => 'អូហូ!',
     // Note: 'contact' key is already defined in navigation
 ];
