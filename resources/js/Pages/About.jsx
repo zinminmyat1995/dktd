@@ -36,6 +36,7 @@ export default function About() {
                     src="/images/about/image1.jpg"
                     alt="About visual 1"
                     className="h-[200px] w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -45,6 +46,7 @@ export default function About() {
                     src="/images/about/image2.jpg"
                     alt="About visual 2"
                     className="h-[200px] w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -59,6 +61,7 @@ export default function About() {
                     src="/images/about/image3.jpg"
                     alt="Main about visual"
                     className="h-[400px] w-full object-cover sm:h-[500px] lg:h-[650px] transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -84,6 +87,7 @@ export default function About() {
                   src="/images/about/image4.png"
                   alt="Our Leader"
                   className="h-[400px] w-full object-cover sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
                   onError={(e) => (e.target.src = "/images/placeholder.png")}
                 />
               </div>
@@ -139,6 +143,7 @@ export default function About() {
                   src="/images/about/image5.png"
                   alt="Our Factory"
                   className="h-[400px] w-full object-cover sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
                   onError={(e) => (e.target.src = "/images/placeholder.png")}
                 />
               </div>

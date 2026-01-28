@@ -3,24 +3,24 @@ import useTranslate from "@/hooks/useTranslate";
 import { Link } from "@inertiajs/react";
 
 export default function Home({ products, promotions, latestNewsId }) {
-    const { t, locale } = useTranslate();
+  const { t, locale } = useTranslate();
 
-    const toPublicUrl = (path) => {
-        if (!path) return null;
-        if (path.startsWith("http")) return path;
-        if (path.startsWith("/storage/")) return path;
-        return `/storage/${path}`;
-    };
+  const toPublicUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    if (path.startsWith("/storage/")) return path;
+    return `/storage/${path}`;
+  };
 
-    const formatDate = (promo) => {
-        if (promo.type === 'news') {
-            if (promo.id === latestNewsId) {
-                return t("messages.latest_update");
-            }
-            return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-        return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-    };
+  const formatDate = (promo) => {
+    if (promo.type === 'news') {
+      if (promo.id === latestNewsId) {
+        return t("messages.latest_update");
+      }
+      return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  };
   return (
     <InnerPageLayout titleKey="messages.home" isHome>
       {/* ================= HERO SECTION ================= */}
@@ -111,6 +111,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                     src="/images/about/image1.jpg"
                     alt="About visual 1"
                     className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -120,6 +121,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                     src="/images/about/image2.jpg"
                     alt="About visual 2"
                     className="h-[200px] w-full object-cover transition-transform duration-700 hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -134,6 +136,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                     src="/images/about/image3.jpg"
                     alt="Main about visual"
                     className="h-[400px] w-full object-cover sm:h-[500px] lg:h-[650px] transition-transform duration-700 hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.target.src = "/images/placeholder.png")}
                   />
                 </div>
@@ -180,6 +183,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                     src={product.image_path}
                     alt={product.title}
                     className=" h-[90%] w-[90%] object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                    loading="lazy"
                     onError={(e) => {
                       e.target.src = '/images/placeholder.png';
                     }}
@@ -262,6 +266,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                     src={toPublicUrl(promo.image_path)}
                     alt={promo.title}
                     className="h-full w-full object-fit transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
+                    loading="lazy"
                     onError={(e) => (e.currentTarget.parentElement.style.display = "none")}
                   />
                 </div>

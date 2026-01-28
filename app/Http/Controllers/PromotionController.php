@@ -130,17 +130,10 @@ class PromotionController extends Controller
         ]);
     }
 
-    public function destroy(Promotion $promotion)
+    public function destroy(Promotion $promotion, ImageStorageService $imgService)
     {
-        if ($promotion->image_path) {
-            $path = $promotion->image_path;
-            if (str_starts_with($path, '/storage/')) {
-                $path = str_replace('/storage/', '', $path);
-            }
-            if (Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
-            }
-        }
+        // Delete the image using the centralized service
+        $imgService->deleteOld($promotion->image_path);
 
         $promotion->delete();
 

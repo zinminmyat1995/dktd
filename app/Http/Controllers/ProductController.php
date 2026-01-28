@@ -180,32 +180,10 @@ class ProductController extends Controller
         ]);
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product, ImageStorageService $imgService)
     {
-        if ($product->image_path) {
-
-            $path = $product->image_path;
-
-            // ✅ If stored as "/storage/xxx", convert to "xxx"
-            if (str_starts_with($path, '/storage/')) {
-                $path = str_replace('/storage/', '', $path);
-            }
-
-            // ✅ If stored as full URL, extract only relative part
-            if (str_starts_with($path, 'http')) {
-                $parsed = parse_url($path);
-                $path = $parsed['path'] ?? $path;
-
-                if (str_starts_with($path, '/storage/')) {
-                    $path = str_replace('/storage/', '', $path);
-                }
-            }
-
-            // ✅ check file exists + delete
-            if (Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
-            }
-        }
+        // Delete the image using the centralized service
+        $imgService->deleteOld($product->image_path);
 
         $product->delete();
 
@@ -296,31 +274,33 @@ class ProductController extends Controller
             ], 422);
         }
 
-        // Reset all
-        \App\Models\Product::query()->where('show_on_home', '>', 0)->update([
-            'show_on_home' => 0,
-            'updated_by'   => auth()->id(),
-        ]);
-
-        // Reverse the array so the newest selection (at the end of the input array) 
-        // gets position 1 (leftmost when ordered ASC)
-        $ids = array_reverse($ids);
-
-        foreach ($ids as $index => $id) {
-            // Assign position in order (first item in reversed array gets position 1)
-            $position = $index + 1;
-            \App\Models\Product::where('id', $id)->update([
-                'show_on_home' => $position,
+        return \DB::transaction(function () use ($ids) {
+            // Reset all
+            \App\Models\Product::query()->where('show_on_home', '>', 0)->update([
+                'show_on_home' => 0,
                 'updated_by'   => auth()->id(),
             ]);
-        }
 
-        return response()->json([
-            'ok' => true,
-            'message' => empty($ids)
-                ? 'Home products cleared successfully.'
-                : 'Home products updated successfully.',
-        ]);
+            // Reverse the array so the newest selection (at the end of the input array) 
+            // gets position 1 (leftmost when ordered ASC)
+            $reversedIds = array_reverse($ids);
+
+            foreach ($reversedIds as $index => $id) {
+                // Assign position in order (first item in reversed array gets position 1)
+                $position = $index + 1;
+                \App\Models\Product::where('id', $id)->update([
+                    'show_on_home' => $position,
+                    'updated_by'   => auth()->id(),
+                ]);
+            }
+
+            return response()->json([
+                'ok' => true,
+                'message' => empty($ids)
+                    ? 'Home products cleared successfully.'
+                    : 'Home products updated successfully.',
+            ]);
+        });
     }
 
 
