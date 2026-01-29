@@ -28,8 +28,8 @@ class PromotionController extends Controller
             'image'       => ['nullable', 'image', 'max:5120'],
             'type'        => ['required', 'in:promotion,news'],
             'status'      => ['required', 'in:draft,published,archived'],
-            'start_date'  => ['nullable', 'date'],
-            'end_date'    => ['nullable', 'date', 'after_or_equal:start_date'],
+            'start_date'  => ['required_if:type,promotion', 'nullable', 'date'],
+            'end_date'    => ['required_if:type,promotion', 'nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
         $imagePath = null;
@@ -101,8 +101,8 @@ class PromotionController extends Controller
             'image'       => ['nullable', 'image', 'max:5120'],
             'type'        => ['required', 'in:promotion,news'],
             'status'      => ['required', 'in:draft,published,archived'],
-            'start_date'  => ['nullable', 'date'],
-            'end_date'    => ['nullable', 'date', 'after_or_equal:start_date'],
+            'start_date'  => ['required_if:type,promotion', 'nullable', 'date'],
+            'end_date'    => ['required_if:type,promotion', 'nullable', 'date', 'after_or_equal:start_date'],
         ]);
 
         $imagePath = $imgService->storeReplace(

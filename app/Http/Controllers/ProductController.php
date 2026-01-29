@@ -27,7 +27,7 @@ class ProductController extends Controller
     }
 
 
-    public function store(Request $request, ImageStorageService $imgService)
+    public function store(Request $request, ImageStorageService $imgService, \App\Services\ProductService $productService)
     {
         $validated = $request->validate([
             'category_id'   => ['nullable', 'exists:categories,id'],
@@ -48,32 +48,14 @@ class ProductController extends Controller
         }
 
         // Start a database transaction to ensure data consistency
-        return \DB::transaction(function () use ($validated, $imagePath) {
+        return \DB::transaction(function () use ($validated, $imagePath, $productService) {
             // If show_on_home is true, we need to update the existing home page products
             $showOnHome = $validated['show_on_home'] ?? false;
+            $showOnHomeValue = 0;
             
-            // If we're showing on home and there are already 3 products, remove the oldest one
             if ($showOnHome) {
-                // Get the current home page products ordered by show_on_home (ascending)
-                $currentHomeProducts = Product::where('show_on_home', '>', 0)
-                    ->orderBy('show_on_home')
-                    ->get();
-                
-                // If we already have 3 products, remove the last one (oldest)
-                if ($currentHomeProducts->count() >= 3) {
-                    $currentHomeProducts->last()->update(['show_on_home' => 0]);
-                    
-                    // Remove the last item from the collection since we've unset it
-                    $currentHomeProducts->pop();
-                }
-                
-                // Shift all existing products up by 1 to make room for the new one
-                foreach ($currentHomeProducts as $product) {
-                    $product->update(['show_on_home' => $product->show_on_home + 1]);
-                }
-                
-                // The new product will be at position 1 (leftmost)
-                $showOnHomeValue = 1;
+                // Use service to rotate products and get the new position
+                $showOnHomeValue = $productService->rotateHomeProducts();
             }
             
             // Create the new product
@@ -83,7 +65,7 @@ class ProductController extends Controller
                 'description'  => $validated['description'] ?? null,
                 'image_path'   => $imagePath,
                 'is_new'       => $validated['is_new'] ?? false,
-                'show_on_home' => $showOnHome ? $showOnHomeValue : 0,
+                'show_on_home' => $showOnHomeValue,
                 'status'       => $validated['status'],
                 'published_at' => $validated['published_at'] ?? null,
                 'start_date'   => $validated['start_date'] ?? null,
@@ -258,7 +240,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function home(Request $request)
+    public function home(Request $request, \App\Services\ProductService $productService)
     {
         $data = $request->validate([
             'product_ids' => ['nullable', 'array'],
@@ -274,33 +256,14 @@ class ProductController extends Controller
             ], 422);
         }
 
-        return \DB::transaction(function () use ($ids) {
-            // Reset all
-            \App\Models\Product::query()->where('show_on_home', '>', 0)->update([
-                'show_on_home' => 0,
-                'updated_by'   => auth()->id(),
-            ]);
+        $productService->setHomeProducts($ids);
 
-            // Reverse the array so the newest selection (at the end of the input array) 
-            // gets position 1 (leftmost when ordered ASC)
-            $reversedIds = array_reverse($ids);
-
-            foreach ($reversedIds as $index => $id) {
-                // Assign position in order (first item in reversed array gets position 1)
-                $position = $index + 1;
-                \App\Models\Product::where('id', $id)->update([
-                    'show_on_home' => $position,
-                    'updated_by'   => auth()->id(),
-                ]);
-            }
-
-            return response()->json([
-                'ok' => true,
-                'message' => empty($ids)
-                    ? 'Home products cleared successfully.'
-                    : 'Home products updated successfully.',
-            ]);
-        });
+        return response()->json([
+            'ok' => true,
+            'message' => empty($ids)
+                ? 'Home products cleared successfully.'
+                : 'Home products updated successfully.',
+        ]);
     }
 
 

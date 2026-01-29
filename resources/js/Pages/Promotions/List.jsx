@@ -1,124 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CommonToast from "@/Components/CommonToast";
 import CommonConfirmModal from "@/Components/CommonConfirmModal";
 
-/* =======================
-   Helpers
-======================= */
-function cn(...xs) {
-    return xs.filter(Boolean).join(" ");
-}
+// Libs & Services
+import { cn, buildQuery, toPublicUrl, formatDateShort } from "@/lib/utils";
+import { apiFetch, extract422Errors } from "@/services/api";
 
-function buildQuery(params) {
-    const usp = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-        if (v === null || v === undefined || v === "") return;
-        usp.set(k, String(v));
-    });
-    return usp.toString();
-}
+// Components
+import { Input, Select } from "@/Components/AdminUI";
+import PromotionFormModal from "./Partials/PromotionFormModal";
+import PromotionCell from "@/Components/Products/PromotionCell";
 
-function toPublicUrl(path) {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    if (path.startsWith("/storage/")) return path;
-    return `/storage/${path}`;
-}
-
-function formatDateShort(dateStr) {
-    if (!dateStr) return "-";
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "-";
-    const dd = String(d.getDate()).padStart(2, "0");
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    return `${dd}-${mm}-${yyyy}`;
-}
-
-function toDateInputValue(dateStr) {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return "";
-    return d.toISOString().slice(0, 10);
-}
-
-function csrfToken() {
-    return document.querySelector("meta[name='csrf-token']")?.content || "";
-}
-
-async function apiFetch(url, options = {}) {
-    const method = (options.method || "GET").toUpperCase();
-    const headers = {
-        Accept: "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-        ...(options.headers || {}),
-    };
-    if (method !== "GET") headers["X-CSRF-TOKEN"] = csrfToken();
-
-    const res = await fetch(url, { credentials: "same-origin", ...options, headers });
-    const text = await res.text();
-    let data = null;
-    try { data = text ? JSON.parse(text) : null; } catch { data = text; }
-
-    if (!res.ok) {
-        const err = new Error(data?.message || "Request failed");
-        err.status = res.status;
-        err.data = data;
-        throw err;
-    }
-    return data;
-}
-
-/* =======================
-   UI Components
-======================= */
-const Input = React.forwardRef(({ className = "", ...props }, ref) => (
-    <input
-        ref={ref}
-        className={cn(
-            "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100",
-            className
-        )}
-        {...props}
-    />
-));
-
-const Select = ({ className = "", children, ...props }) => (
-    <select
-        className={cn(
-            "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100",
-            className
-        )}
-        {...props}
-    >
-        {children}
-    </select>
-);
-
-const Modal = ({ open, title, subtitle, children, onClose, maxWidth = "max-w-xl" }) => {
-    if (!open) return null;
-    return (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-            <div className={cn("relative w-full rounded-2xl bg-white shadow-xl border overflow-hidden", maxWidth)}>
-                <div className="px-5 py-4 border-b flex items-start justify-between gap-3">
-                    <div>
-                        <div className="text-lg font-semibold text-slate-900">{title}</div>
-                        {subtitle ? <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div> : null}
-                    </div>
-                    <button className="px-2 py-1 rounded-lg hover:bg-slate-100 text-slate-600" onClick={onClose} type="button">✕</button>
-                </div>
-                <div className="p-5 max-h-[calc(100vh-180px)] overflow-y-auto">{children}</div>
-            </div>
-        </div>
-    );
-};
-
-/* =======================
-   Main Component
-======================= */
 export default function List({ categories = [] }) {
     const [loading, setLoading] = useState(false);
     const [rows, setRows] = useState([]);
@@ -207,17 +100,32 @@ export default function List({ categories = [] }) {
     }
 
     async function handleSubmit() {
+        const nextErrors = {};
+        if (!form.title.trim()) nextErrors.title = "Title is required.";
+        if (!editRow && !form.image) nextErrors.image = "Image is required.";
+        
+        if (form.type === 'promotion') {
+            if (!form.start_date) nextErrors.start_date = "Start date is required.";
+            if (!form.end_date) nextErrors.end_date = "End date is required.";
+        }
+        
+        if (Object.keys(nextErrors).length > 0) {
+            setErrors(nextErrors);
+            return;
+        }
+
         setLoading(true);
+        setErrors({});
         try {
             const fd = new FormData();
             if (editRow) fd.append("_method", "PUT");
-            fd.append("title", form.title);
+            fd.append("title", form.title.trim());
             fd.append("type", form.type);
             fd.append("category_id", form.category_id);
-            fd.append("description", form.description);
+            fd.append("description", (form.description || "").trim());
             fd.append("status", form.status);
-            fd.append("start_date", form.start_date);
-            fd.append("end_date", form.end_date);
+            fd.append("start_date", form.start_date || "");
+            fd.append("end_date", form.end_date || "");
             if (form.image) fd.append("image", form.image);
 
             const url = editRow ? `/admin/promotions/${editRow.id}` : "/admin/promotions";
@@ -227,8 +135,11 @@ export default function List({ categories = [] }) {
             setModalOpen(false);
             fetchData();
         } catch (err) {
-            if (err.status === 422) setErrors(err.data.errors);
-            else showToast("error", "Error", err.message);
+            if (err.status === 422) {
+                setErrors(extract422Errors(err));
+            } else {
+                showToast("error", "Error", err.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -247,180 +158,173 @@ export default function List({ categories = [] }) {
     return (
         <AuthenticatedLayout header="Promotions & News" subtitle="Manage your marketing content">
             <div className="p-4 rounded-2xl border bg-white shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                     <div className="md:col-span-2">
+                        <label className="text-xs text-slate-500">Search</label>
                         <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search..." />
                     </div>
-                    <Select value={type} onChange={e => setType(e.target.value)}>
-                        <option value="">All Types</option>
-                        <option value="promotion">Promotion</option>
-                        <option value="news">News</option>
-                    </Select>
-                    <Select value={status} onChange={e => setStatus(e.target.value)}>
-                        <option value="">All Status</option>
-                        <option value="published">Published</option>
-                        <option value="draft">Draft</option>
-                        <option value="archived">Archived</option>
-                    </Select>
-                    <button onClick={openCreate} className="h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">+ Create</button>
+                    <div>
+                        <label className="text-xs text-slate-500">Type</label>
+                        <Select value={type} onChange={e => setType(e.target.value)}>
+                            <option value="">All Types</option>
+                            <option value="promotion">Promotion</option>
+                            <option value="news">News</option>
+                        </Select>
+                    </div>
+                    <div>
+                        <label className="text-xs text-slate-500">Status</label>
+                        <Select value={status} onChange={e => setStatus(e.target.value)}>
+                            <option value="">All Status</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </Select>
+                    </div>
+                </div>
+
+                {/* Actions Row */}
+                <div className="mt-4 flex items-center justify-between flex-wrap gap-2">
+                    <div className="text-sm text-slate-500 flex items-center gap-3">
+                        <div>
+                            Total: <span className="font-semibold text-slate-900">{meta.total}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-2 flex-wrap justify-end">
+                        <button 
+                            onClick={openCreate} 
+                            className="h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-sm"
+                        >
+                            + Create Content
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
-                <table className="w-full text-sm">
-                    <thead className="bg-slate-50 text-slate-600">
-                        <tr className="sticky top-0 z-10">
-                            <th className="px-4 py-3 text-left">Content</th>
-                            <th className="px-4 py-3 text-left">Type</th>
-                            <th className="px-4 py-3 text-left">Category</th>
-                            <th className="px-4 py-3 text-left">Dates</th>
-                            <th className="px-4 py-3 text-left">Status</th>
-                            <th className="px-4 py-3 text-left">Created By</th>
-                            <th className="px-4 py-3 text-left">Updated By</th>
-                            <th className="px-4 py-3 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                        {rows.map(r => (
-                            <tr key={r.id}>
-                                <td className="px-4 py-3 flex gap-3 items-center">
-                                    <img src={toPublicUrl(r.image_path)} className="w-10 h-10 rounded object-cover" onError={e => e.target.src = "/images/placeholder.png"} />
-                                    <div>
-                                        <div className="font-semibold">{r.title}</div>
-                                        <div className="text-xs text-slate-500 truncate w-40">{r.description}</div>
-                                    </div>
-                                </td>
-                                <td className="px-4 py-3 capitalize">{r.type}</td>
-                                <td className="px-4 py-3">{r.category?.name || "—"}</td>
-                                <td className="px-4 py-3 text-xs">
-                                    {r.type === 'promotion' ? (
-                                        <div>{formatDateShort(r.start_date)} to {formatDateShort(r.end_date)}</div>
-                                    ) : "—"}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className={cn("px-2 py-1 rounded-full text-[10px] font-bold uppercase",
-                                        r.status === 'published' ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-slate-100 text-slate-600")}>
-                                        {r.status}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-3">
-                                    <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
-                                    <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
-                                </td>
-                                <td className="px-4 py-3">
-                                    {r.updated_at !== r.created_at ? (
-                                        <>
-                                            <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
-                                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
-                                        </>
-                                    ) : (
-                                        <span className="text-xs text-slate-400">—</span>
-                                    )}
-                                </td>
-                                <td className="px-4 py-3 text-center space-x-2 whitespace-nowrap">
-                                    <button onClick={() => openEdit(r)} className="text-indigo-600 font-semibold">Edit</button>
-                                    <button onClick={() => setConfirm({
-                                        open: true,
-                                        title: "Delete Content?",
-                                        message: `Delete "${r.title}"?`,
-                                        onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); }
-                                    })} className="text-rose-600 font-semibold">Delete</button>
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="min-w-[1350px] w-full text-sm">
+                        <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
+                            <tr>
+                                <th className="px-3 py-3 text-left w-[90px]">Image</th>
+                                <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
+                                <th className="px-3 py-3 text-left w-[120px]">Type</th>
+                                <th className="px-3 py-3 text-left w-[180px]">Category</th>
+                                <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
+                                <th className="px-3 py-3 text-left w-[120px]">Status</th>
+                                <th className="px-3 py-3 text-left w-[180px]">Created By</th>
+                                <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
+                                <th className="px-3 py-3 text-center w-[250px]">Action</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {/* Simple Pagination */}
-                <div className="p-4 bg-slate-50 border-t flex justify-between items-center text-xs">
-                    <div>Page {meta.current_page} of {meta.last_page}</div>
-                    <div className="flex gap-2">
-                        <button disabled={meta.current_page === 1} onClick={() => setPage(p => p - 1)} className="px-3 py-1 bg-white border rounded">Prev</button>
-                        <button disabled={meta.current_page === meta.last_page} onClick={() => setPage(p => p + 1)} className="px-3 py-1 bg-white border rounded">Next</button>
+                        </thead>
+                        <tbody className="divide-y">
+                            {rows.map(r => (
+                                <tr key={r.id}>
+                                    <td className="px-3 py-3">
+                                        <img 
+                                            src={toPublicUrl(r.image_path)} 
+                                            className="w-12 h-12 rounded-lg object-cover border" 
+                                            onError={e => e.target.src = "/images/placeholder.png"} 
+                                        />
+                                    </td>
+                                    <td className="px-3 py-3">
+                                        <div className="font-semibold text-slate-900">{r.title}</div>
+                                        <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
+                                    </td>
+                                    <td className="px-3 py-3 capitalize">{r.type}</td>
+                                    <td className="px-3 py-3">{r.category?.name || "—"}</td>
+                                    <td className="px-3 py-3">
+                                        {r.type === 'promotion' ? (
+                                            <PromotionCell start={r.start_date} end={r.end_date} />
+                                        ) : <span className="text-xs text-slate-400">—</span>}
+                                    </td>
+                                    <td className="px-3 py-3">
+                                        <span className={cn("inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold",
+                                            r.status === 'published' ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 text-slate-700 border border-slate-200")}>
+                                            {r.status}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-3">
+                                        <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
+                                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
+                                    </td>
+                                    <td className="px-3 py-3">
+                                        {r.updated_at !== r.created_at ? (
+                                            <>
+                                                <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
+                                                <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
+                                            </>
+                                        ) : (
+                                            <span className="text-xs text-slate-400">—</span>
+                                        )}
+                                    </td>
+                                    <td className="px-3 py-3 text-right">
+                                        <div className="flex justify-end gap-2 flex-wrap">
+                                            <button 
+                                                className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold"
+                                                onClick={() => openEdit(r)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button 
+                                                className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold"
+                                                onClick={() => setConfirm({
+                                                    open: true,
+                                                    title: "Delete Content?",
+                                                    message: `Are you sure you want to delete "${r.title}"?`,
+                                                    onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); }
+                                                })}
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                            {rows.length === 0 && !loading && (
+                                <tr>
+                                    <td colSpan={9} className="px-3 py-10 text-center text-slate-500">No data found.</td>
+                                </tr>
+                            )}
+                            {loading && (
+                                <tr>
+                                    <td colSpan={9} className="px-3 py-10 text-center text-slate-500">Loading...</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
+                    <div className="text-sm font-Medium text-slate-500">Page <span className="font-Bold text-slate-900">{meta.current_page}</span> of <span className="font-Bold text-slate-900">{meta.last_page}</span></div>
+                    <div className="flex gap-3">
+                        <button disabled={meta.current_page === 1 || loading} onClick={() => setPage(p => p - 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Prev
+                        </button>
+                        <button disabled={meta.current_page === meta.last_page || loading} onClick={() => setPage(p => p + 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            Next
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <Modal open={modalOpen} title={editRow ? "Edit Content" : "Create Content"} onClose={() => setModalOpen(false)} maxWidth="max-w-2xl">
-                <div className="space-y-4">
-                    <div>
-                        <label className="text-xs font-semibold">Title</label>
-                        <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
-                        {errors.title && <div className="text-rose-600 text-[10px]">{errors.title}</div>}
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="text-xs font-semibold">Type</label>
-                            <Select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                                <option value="promotion">Promotion</option>
-                                <option value="news">News</option>
-                            </Select>
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold">Category (Label)</label>
-                            <Select value={form.category_id} onChange={e => setForm({ ...form, category_id: e.target.value })}>
-                                <option value="">None</option>
-                                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                            </Select>
-                        </div>
-                    </div>
-                    <div>
-                        <label className="text-xs font-semibold">Description</label>
-                        <textarea rows={3} className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
-                    </div>
-                    {form.type === 'promotion' && (
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="text-xs font-semibold">Start Date</label>
-                                <Input type="date" value={form.start_date} onChange={e => setForm({ ...form, start_date: e.target.value })} />
-                            </div>
-                            <div>
-                                <label className="text-xs font-semibold">End Date</label>
-                                <Input type="date" value={form.end_date} onChange={e => setForm({ ...form, end_date: e.target.value })} />
-                            </div>
-                        </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-4 items-end">
-                        <div>
-                            <label className="text-xs font-semibold">Status</label>
-                            <Select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
-                                <option value="published">Published</option>
-                                <option value="draft">Draft</option>
-                                <option value="archived">Archived</option>
-                            </Select>
-                        </div>
-                        <div>
-                            <label className="text-xs font-semibold">Image</label>
-                            <input type="file" onChange={e => {
-                                const file = e.target.files[0];
-                                if (file) setForm({ ...form, image: file, imagePreview: URL.createObjectURL(file) });
-                            }} />
-                        </div>
-                    </div>
-                    {form.imagePreview && <img src={form.imagePreview} className="h-32 rounded object-cover" alt="Preview" />}
-
-                    {editRow && (
-                        <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100 flex flex-wrap gap-x-8 gap-y-3">
-                            <div className="space-y-1">
-                                <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Created By</div>
-                                <div className="text-sm font-SemiBold text-slate-700">{editRow.creator?.name ?? "—"}</div>
-                                <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.created_at)}</div>
-                            </div>
-                            {editRow.updated_at !== editRow.created_at && (
-                                <div className="space-y-1">
-                                    <div className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest leading-none">Last Updated</div>
-                                    <div className="text-sm font-SemiBold text-slate-700">{editRow.updater?.name ?? "—"}</div>
-                                    <div className="text-[10px] text-slate-400 font-Medium">{formatDateShort(editRow.updated_at)}</div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    <div className="flex justify-end gap-2 pt-4">
-                        <button onClick={() => setModalOpen(false)} className="px-4 py-2 border rounded-xl">Cancel</button>
-                        <button onClick={handleSubmit} disabled={loading} className="px-4 py-2 bg-indigo-600 text-white rounded-xl">{loading ? "Saving..." : "Save"}</button>
-                    </div>
-                </div>
-            </Modal>
+            <PromotionFormModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                loading={loading}
+                editRow={editRow}
+                form={form}
+                setForm={setForm}
+                errors={errors}
+                categories={categories}
+                onSubmit={handleSubmit}
+            />
 
             <CommonToast open={toast.open} type={toast.type} title={toast.title} message={toast.message} onClose={() => setToast(p => ({ ...p, open: false }))} />
             <CommonConfirmModal open={confirm.open} title={confirm.title} message={confirm.message} onCancel={() => setConfirm(p => ({ ...p, open: false }))} onConfirm={confirm.onConfirm} />
