@@ -395,6 +395,7 @@ export default function ProductCreate() {
 
   // ✅ Save Product (multipart + REQUIRED)
   async function onSaveProduct() {
+    // 1. Reset all errors at the start
     const nextErrors = {
       title: "",
       categoryId: "",
@@ -405,6 +406,7 @@ export default function ProductCreate() {
       newCategoryName: "",
     };
 
+    // 2. Client-side validation
     if (!title.trim()) nextErrors.title = "Title is required.";
     if (!categoryId) nextErrors.categoryId = "Category is required.";
     if (!description.trim()) nextErrors.description = "Description is required.";
@@ -414,16 +416,9 @@ export default function ProductCreate() {
 
     setFieldErrors(nextErrors);
 
-    if (
-      nextErrors.title ||
-      nextErrors.categoryId ||
-      nextErrors.description ||
-      nextErrors.status ||
-      nextErrors.publishedAt ||
-      nextErrors.image
-    )
-      return;
+    if (Object.values(nextErrors).some(err => err !== "")) return;
 
+    // 3. Prepare data
     const fd = new FormData();
     fd.append("title", title.trim());
     fd.append("category_id", String(Number(categoryId)));
@@ -445,7 +440,7 @@ export default function ProductCreate() {
         message: "Product saved successfully.",
       });
 
-      // ✅ reset
+      // 4. Full Reset
       setTitle("");
       setCategoryId("");
       setDescription("");
@@ -454,8 +449,8 @@ export default function ProductCreate() {
       setShowOnHome(false);
       setPublishedAt("");
       setImageFile(null);
+      setImagePreviewUrl(""); // Clear the preview too
 
-      // ✅ IMPORTANT: reset choose file UI (file name disappear)
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -464,28 +459,29 @@ export default function ProductCreate() {
     } catch (e) {
       if (e.status === 422) {
         const errs = extract422Errors(e);
-        setFieldErrors((p) => ({
-          ...p,
-          title: errs.title || p.title,
-          categoryId: errs.category_id || p.categoryId,
-          description: errs.description || p.description,
-          status: errs.status || p.status,
-          publishedAt: errs.published_at || p.publishedAt,
-          image: errs.image || p.image,
-        }));
+        // Map server errors back to state (clear old ones)
+        setFieldErrors({
+          title: errs.title || "",
+          categoryId: errs.category_id || "",
+          description: errs.description || "",
+          status: errs.status || "",
+          publishedAt: errs.published_at || "",
+          image: errs.image || "",
+          newCategoryName: "",
+        });
 
         setToast({
           open: true,
           type: "error",
           title: "Save Failed",
-          message: e?.data?.message || "Validation error.",
+          message: e?.data?.message || "Please fix the errors below.",
         });
       } else {
         setToast({
           open: true,
           type: "error",
           title: "Error",
-          message: "Failed to save product.",
+          message: "A server error occurred. Please try again.",
         });
       }
     } finally {
