@@ -175,30 +175,6 @@ class ProductController extends Controller
         ]);
     }
 
-    public function promotion(Request $request)
-    {
-        $data = $request->validate([
-            'product_ids' => ['required', 'array'],
-            'product_ids.*' => ['integer', 'exists:products,id'],
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date'],
-        ]);
-
-        // ✅ If start_date and end_date both null => clear promotion
-        \App\Models\Product::whereIn('id', $data['product_ids'])->update([
-            'start_date' => $data['start_date'] ?? null,
-            'end_date'   => $data['end_date'] ?? null,
-            'updated_by' => auth()->id(),
-        ]);
-
-        return response()->json([
-            'ok' => true,
-            'message' => ($data['start_date'] && $data['end_date'])
-                ? 'Promotion updated successfully.'
-                : 'Promotion cleared successfully.',
-        ]);
-    }
-
     public function allIds(Request $request)
     {
         $q = $request->q;

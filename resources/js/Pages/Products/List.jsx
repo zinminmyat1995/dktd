@@ -4,14 +4,12 @@ import CommonToast from "@/Components/CommonToast";
 import CommonConfirmModal from "@/Components/CommonConfirmModal";
 
 // Libs & Services
-import { cn, buildQuery, toPublicUrl, formatDateShort, toDateInputValue } from "@/lib/utils";
+import { cn, buildQuery, toPublicUrl, formatDateShort } from "@/lib/utils";
 import { apiFetch } from "@/services/api";
 
 // Components
 import { NewBadge, HomeBadge } from "@/Components/Products/ProductBadges";
-import PromotionCell from "@/Components/Products/PromotionCell";
 import HomeModal from "./Partials/HomeModal";
-import PromotionModal from "./Partials/PromotionModal";
 import EditModal from "./Partials/EditModal";
 
 /* =======================
@@ -116,12 +114,6 @@ export default function List({ categories = [] }) {
     const [selected, setSelected] = useState([]);
     const selectedItems = selected;
     const [isAllSelected, setIsAllSelected] = useState(false);
-
-    /* ===== Promotion modal ===== */
-    const [promoOpen, setPromoOpen] = useState(false);
-    const [promoStart, setPromoStart] = useState("");
-    const [promoEnd, setPromoEnd] = useState("");
-    const [promoError, setPromoError] = useState("");
 
     /* ===== Home modal ===== */
     const [homeOpen, setHomeOpen] = useState(false);
@@ -267,111 +259,6 @@ export default function List({ categories = [] }) {
         } catch (err) {
             console.error(err);
             showToast("error", "Error", err?.data?.message || "Failed to delete product.");
-        }
-    }
-
-    /* =======================
-       Promotion
-    ======================= */
-    function openPromotionModal() {
-        if (selectedItems.length === 0) {
-            showToast("warning", "Warning", "Please select at least 1 product before setting promotion.");
-            return;
-        }
-
-        const starts = selectedItems.map((x) => x.start_date || "");
-        const ends = selectedItems.map((x) => x.end_date || "");
-
-        const allSameStart = starts.every((s) => s === starts[0]);
-        const allSameEnd = ends.every((e) => e === ends[0]);
-
-        const s0 = starts[0];
-        const e0 = ends[0];
-
-        if (allSameStart && allSameEnd && s0 && e0) {
-            setPromoStart(toDateInputValue(s0));
-            setPromoEnd(toDateInputValue(e0));
-        } else {
-            setPromoStart("");
-            setPromoEnd("");
-        }
-
-        setPromoError("");
-        setPromoOpen(true);
-    }
-
-    async function submitPromotion() {
-        setPromoError("");
-
-        if (!promoStart || !promoEnd) {
-            setPromoError("Start date and end date are required.");
-            return;
-        }
-        if (promoEnd < promoStart) {
-            setPromoError("End date must be after start date.");
-            return;
-        }
-
-        try {
-            setLoading(true);
-
-            const json = await apiFetch(`/admin/products/promotion`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    product_ids: selectedItems.map((x) => x.id),
-                    start_date: promoStart,
-                    end_date: promoEnd,
-                }),
-            });
-
-            if (json?.ok === false) {
-                setPromoError(json?.message || "Failed to update promotion.");
-                return;
-            }
-
-            showToast("success", "Success", json?.message || "Promotion updated.");
-            setPromoOpen(false);
-            setPromoStart("");
-            setPromoEnd("");
-            fetchData();
-        } catch (err) {
-            console.error(err);
-            setPromoError(err?.data?.message || "Network error. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    async function clearPromotion() {
-        try {
-            setLoading(true);
-
-            const json = await apiFetch(`/admin/products/promotion`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    product_ids: selectedItems.map((x) => x.id),
-                    start_date: null,
-                    end_date: null,
-                }),
-            });
-
-            if (json?.ok === false) {
-                showToast("error", "Failed", json?.message || "Failed to clear promotion.");
-                return;
-            }
-
-            showToast("success", "Cleared", json?.message || "Promotion cleared.");
-            setPromoOpen(false);
-            setPromoStart("");
-            setPromoEnd("");
-            fetchData();
-        } catch (err) {
-            console.error(err);
-            showToast("error", "Error", err?.data?.message || "Failed to clear promotion.");
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -669,15 +556,6 @@ export default function List({ categories = [] }) {
                         >
                             Home Products
                         </button>
-
-                        <button
-                            onClick={openPromotionModal}
-                            className="h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700"
-                            type="button"
-                            disabled={loading}
-                        >
-                            Promotion
-                        </button>
                     </div>
                 </div>
             </div>
@@ -702,7 +580,6 @@ export default function List({ categories = [] }) {
                                 <th className="px-3 py-3 text-left w-[110px]">New</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Home</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Status</th>
-                                <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Created By</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
                                 <th className="px-3 py-3 text-center w-[250px]">Action</th>
@@ -778,10 +655,6 @@ export default function List({ categories = [] }) {
                                                 >
                                                     {r.status}
                                                 </span>
-                                            </td>
-
-                                            <td className="px-3 py-3">
-                                                <PromotionCell start={r.start_date} end={r.end_date} />
                                             </td>
 
                                             <td className="px-3 py-3">
@@ -895,30 +768,6 @@ export default function List({ categories = [] }) {
                     },
                 })}
                 Modal={Modal}
-            />
-
-            <PromotionModal
-                open={promoOpen}
-                onClose={() => setPromoOpen(false)}
-                loading={loading}
-                selectedItems={selectedItems}
-                promoStart={promoStart}
-                setPromoStart={setPromoStart}
-                promoEnd={promoEnd}
-                setPromoEnd={setPromoEnd}
-                promoError={promoError}
-                onClear={() => setConfirm({
-                    open: true,
-                    title: "Clear Promotion",
-                    message: "Are you sure you want to clear promotion dates for selected products?",
-                    onConfirm: async () => {
-                        setConfirm((p) => ({ ...p, open: false }));
-                        await clearPromotion();
-                    },
-                })}
-                onSave={submitPromotion}
-                Modal={Modal}
-                Input={Input}
             />
 
             <EditModal
