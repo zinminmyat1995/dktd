@@ -90,8 +90,8 @@ export default function List({ categories = [] }) {
             category_id: row.category_id ? String(row.category_id) : "",
             description: row.description || "",
             status: row.status,
-            start_date: row.start_date || "",
-            end_date: row.end_date || "",
+            start_date: row.start_date ? String(row.start_date).slice(0, 10) : "",
+            end_date: row.end_date ? String(row.end_date).slice(0, 10) : "",
             image: null,
             imagePreview: toPublicUrl(row.image_path) || "",
         });
@@ -102,6 +102,7 @@ export default function List({ categories = [] }) {
     async function handleSubmit() {
         const nextErrors = {};
         if (!form.title.trim()) nextErrors.title = "Title is required.";
+        if (!form.description.trim()) nextErrors.description = "Description is required.";
         if (!editRow && !form.image) nextErrors.image = "Image is required.";
         
         if (form.type === 'promotion') {

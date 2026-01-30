@@ -14,7 +14,7 @@ return [
     'read_more' => 'Read More',
     'view_more' => 'View More',
     'new_badge' => 'NEW',
-    'latest_update' => 'Latest Update',
+    'latest_update' => 'Latest News',
     'get_directions' => 'Get Directions',
 
     // Home Page Specific

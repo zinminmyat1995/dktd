@@ -1,4 +1,4 @@
-import React from "react";
+    import React from "react";
 import { cn, formatDateShort } from "@/lib/utils";
 
 export default function EditModal({
@@ -60,17 +60,15 @@ export default function EditModal({
                     {editErrors.category_id && <div className="mt-1 text-xs font-medium text-rose-600">{editErrors.category_id}</div>}
                 </div>
 
-                <div>
+                <div className="relative">
                     <label className="text-sm font-semibold text-slate-700">Upload Image</label>
                     <Input type="file" accept="image/*" onChange={(e) => onImageChange(e.target.files?.[0])} />
 
-                    <div className="mt-3 w-44 h-28 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center">
-                        {editForm.imagePreview ? (
-                            <img src={editForm.imagePreview} alt="preview" className="w-full h-full object-cover" />
-                        ) : (
-                            <span className="text-xs text-slate-400">No image</span>
-                        )}
-                    </div>
+                    {editForm.imagePreview && (
+                        <div className="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 p-2 flex items-center justify-center overflow-hidden">
+                            <img src={editForm.imagePreview} alt="preview" className="h-28 w-full object-contain rounded-lg" />
+                        </div>
+                    )}
                 </div>
 
                 <div>

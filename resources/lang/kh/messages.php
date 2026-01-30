@@ -13,7 +13,7 @@ return [
     'read_more' => 'អានបន្ថែម',
     'view_more' => 'មើល​បន្ថែម',
     'new_badge' => 'ថ្មី',
-    'latest_update' => 'ការធ្វើបច្ចុប្បន្នភាពចុងក្រោយ',
+    'latest_update' => 'ព័ត៌មានចុងក្រោយ',
     'get_directions' => 'រកមើលទិសដៅ',
 
     // Home Page Specific

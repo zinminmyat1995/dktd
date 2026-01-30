@@ -23,8 +23,8 @@ class PromotionController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
-            'title'       => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'title'       => ['required', 'string', 'max:255', 'unique:promotions,title'],
+            'description' => ['required', 'string'],
             'image'       => ['nullable', 'image', 'max:5120'],
             'type'        => ['required', 'in:promotion,news'],
             'status'      => ['required', 'in:draft,published,archived'],
@@ -96,8 +96,11 @@ class PromotionController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
-            'title'       => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'title'       => [
+                'required', 'string', 'max:255',
+                Rule::unique('promotions', 'title')->ignore($promotion->id),
+            ],
+            'description' => ['required', 'string'],
             'image'       => ['nullable', 'image', 'max:5120'],
             'type'        => ['required', 'in:promotion,news'],
             'status'      => ['required', 'in:draft,published,archived'],

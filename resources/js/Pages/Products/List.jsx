@@ -474,30 +474,20 @@ export default function List({ categories = [] }) {
     async function openEditModal(row) {
         setEditErrors({});
         setEditRow(row);
+
+        const preview = toPublicUrl(row.image_path) || "";
+        setEditForm({
+            title: row.title ?? "",
+            category_id: row.category_id ? String(row.category_id) : "",
+            description: row.description ?? "",
+            status: row.status ?? "draft",
+            is_new: Boolean(row.is_new),
+            published_at: row.published_at ? String(row.published_at).slice(0, 10) : "",
+            image: null,
+            imagePreview: preview,
+        });
+
         setEditOpen(true);
-
-        try {
-            setLoading(true);
-            const json = await apiFetch(`/admin/products/${row.id}`, { method: "GET" });
-
-            const data = json?.data ?? row;
-            const preview = toPublicUrl(data.image_path) || "";
-
-            setEditForm({
-                title: data.title ?? "",
-                category_id: data.category_id ? String(data.category_id) : "",
-                description: data.description ?? "",
-                status: data.status ?? "draft",
-                is_new: Boolean(data.is_new),
-                published_at: data.published_at ? String(data.published_at).slice(0, 10) : "",
-                image: null,
-                imagePreview: preview,
-            });
-        } catch (err) {
-            showToast("error", "Error", err?.data?.message || "Failed to load product detail.");
-        } finally {
-            setLoading(false);
-        }
     }
 
     function closeEditModal() {
