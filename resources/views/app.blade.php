@@ -7,7 +7,9 @@
         <!-- ✅ CSRF token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'DKTD Genki') }}</title>
+
+        <link rel="icon" type="image/png" href="/images/logo.png">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
