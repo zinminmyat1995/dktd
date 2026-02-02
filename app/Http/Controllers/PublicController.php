@@ -139,7 +139,7 @@ class PublicController extends Controller
                 $contact->update([
                     'full_name' => $validated['name'], // Update name just in case
                     'status' => Contact::STATUS_PENDING, // 0
-                    'last_message_at' => now(),
+                    
                 ]);
             } else {
                 // Create new contact
@@ -147,7 +147,7 @@ class PublicController extends Controller
                     'full_name' => $validated['name'],
                     'email' => $validated['email'],
                     'status' => Contact::STATUS_PENDING, // 0
-                    'last_message_at' => now(),
+                    
                 ]);
             }
 
