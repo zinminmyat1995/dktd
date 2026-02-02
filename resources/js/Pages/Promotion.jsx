@@ -31,6 +31,7 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
     return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+  console.log("promotions",promotions)
   return (
     <InnerPageLayout titleKey="messages.promotion">
       <section className="py-14">

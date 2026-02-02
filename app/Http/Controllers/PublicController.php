@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Log;
 class PublicController extends Controller
 {
     public function home()
@@ -71,16 +71,38 @@ class PublicController extends Controller
     public function promotion()
     {
         $type = request()->query('type');
+        $today = \Carbon\Carbon::today();
 
-        $promotions = \App\Models\Promotion::where('status', 'published')
-            ->when($type, function($query, $type) {
+        $promotions = \App\Models\Promotion::query()
+            ->where('status', 'published')
+            ->where(function ($q) use ($today) {
+                $q->whereNull('start_date')
+                ->orWhereDate('start_date', '<=', $today);
+            })
+            ->where(function ($q) use ($today) {
+                $q->whereNull('end_date')
+                ->orWhereDate('end_date', '>=', $today);
+            })
+            ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
             })
             ->latest()
             ->paginate(10)
             ->withQueryString();
-        
-        $latestNewsId = \App\Models\Promotion::where('type', 'news')->latest()->value('id');
+
+        $latestNewsId = \App\Models\Promotion::query()
+            ->where('status', 'published')
+            ->where('type', 'news')
+            ->where(function ($q) use ($today) {
+                $q->whereNull('start_date')
+                ->orWhereDate('start_date', '<=', $today);
+            })
+            ->where(function ($q) use ($today) {
+                $q->whereNull('end_date')
+                ->orWhereDate('end_date', '>=', $today);
+            })
+            ->latest()
+            ->value('id');
 
         return Inertia::render('Promotion', [
             'promotions' => $promotions,
@@ -90,6 +112,7 @@ class PublicController extends Controller
             'latestNewsId' => $latestNewsId
         ]);
     }
+
 
     public function contact()
     {

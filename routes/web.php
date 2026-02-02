@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -97,6 +98,9 @@ Route::middleware(['auth', 'verified'])
 
             // ✅ Show MUST be at the bottom (after create)
             Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+            // contact
+            Route::get('/contact', [ContactController::class, 'index'])->name('contacts.index');
     });
 
 /*
