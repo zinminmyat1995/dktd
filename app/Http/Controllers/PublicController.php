@@ -75,32 +75,16 @@ class PublicController extends Controller
 
         $promotions = \App\Models\Promotion::query()
             ->where('status', 'published')
-            ->where(function ($q) use ($today) {
-                $q->whereNull('start_date')
-                ->orWhereDate('start_date', '<=', $today);
-            })
-            ->where(function ($q) use ($today) {
-                $q->whereNull('end_date')
-                ->orWhereDate('end_date', '>=', $today);
-            })
             ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
             })
             ->latest()
-            ->paginate(10)
+            ->paginate(6)
             ->withQueryString();
 
         $latestNewsId = \App\Models\Promotion::query()
             ->where('status', 'published')
             ->where('type', 'news')
-            ->where(function ($q) use ($today) {
-                $q->whereNull('start_date')
-                ->orWhereDate('start_date', '<=', $today);
-            })
-            ->where(function ($q) use ($today) {
-                $q->whereNull('end_date')
-                ->orWhereDate('end_date', '>=', $today);
-            })
             ->latest()
             ->value('id');
 
