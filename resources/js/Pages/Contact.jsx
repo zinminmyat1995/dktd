@@ -1,26 +1,22 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
-import { Link } from "@inertiajs/react";
-import { useState } from "react";
+import { useForm, usePage } from "@inertiajs/react";
 
 export default function Contact() {
   const { t, locale } = useTranslate();
+  const { flash } = usePage().props;
 
-  const [form, setForm] = useState({
+  const { data, setData, post, processing, errors, reset } = useForm({
     name: "",
     email: "",
     description: "",
   });
 
-  const onChange = (key) => (e) => {
-    setForm((p) => ({ ...p, [key]: e.target.value }));
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
-    // TODO: backend connection
-    // router.post(route("contact.submit"), form)
-    console.log(form);
+    post(route("contact.submit"), {
+      onSuccess: () => reset(),
+    });
   };
 
   return (
@@ -45,6 +41,13 @@ export default function Contact() {
             {/* Form container narrowed for better readability and centering */}
             <div className="w-full max-w-4xl">
               <div className="bg-white rounded-[3rem] p-8 sm:p-12 shadow-2xl shadow-slate-200 border border-slate-50">
+
+                {flash?.success && (
+                  <div className="mb-8 rounded-2xl bg-green-50 border border-green-100 p-4 text-center text-green-700 font-Bold text-[15px] shadow-sm">
+                    {flash.success}
+                  </div>
+                )}
+
                 <form onSubmit={onSubmit} className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
@@ -52,12 +55,13 @@ export default function Contact() {
                         {t("messages.contact_full_name")}
                       </label>
                       <input
-                        value={form.name}
-                        onChange={onChange("name")}
+                        value={data.name}
+                        onChange={(e) => setData('name', e.target.value)}
                         type="text"
                         placeholder={t("messages.contact_your_name_placeholder")}
-                        className="w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
+                        className={`w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300 ${errors.name ? '!border-red-500 bg-red-50' : ''}`}
                       />
+                      {errors.name && <p className="text-red-500 text-xs px-2">{errors.name}</p>}
                     </div>
 
                     <div className="space-y-2">
@@ -65,12 +69,13 @@ export default function Contact() {
                         {t("messages.contact_email_address")}
                       </label>
                       <input
-                        value={form.email}
-                        onChange={onChange("email")}
+                        value={data.email}
+                        onChange={(e) => setData('email', e.target.value)}
                         type="email"
                         placeholder={t("messages.contact_your_email_placeholder")}
-                        className="w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
+                        className={`w-full rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300 ${errors.email ? '!border-red-500 bg-red-50' : ''}`}
                       />
+                      {errors.email && <p className="text-red-500 text-xs px-2">{errors.email}</p>}
                     </div>
                   </div>
 
@@ -79,12 +84,13 @@ export default function Contact() {
                       {t("messages.contact_message")}
                     </label>
                     <textarea
-                      value={form.description}
-                      onChange={onChange("description")}
+                      value={data.description}
+                      onChange={(e) => setData('description', e.target.value)}
                       rows={6}
                       placeholder={t("messages.contact_help_placeholder")}
-                      className="w-full resize-none rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300"
+                      className={`w-full resize-none rounded-2xl border-slate-200 bg-slate-50/50 px-6 py-4 text-[14px] font-Medium text-slate-700 outline-none focus:border-[#185C9B] focus:ring-4 focus:ring-[#185C9B]/5 transition-all duration-300 ${errors.description ? '!border-red-500 bg-red-50' : ''}`}
                     />
+                    {errors.description && <p className="text-red-500 text-xs px-2">{errors.description}</p>}
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-4">
@@ -103,9 +109,10 @@ export default function Contact() {
 
                     <button
                       type="submit"
-                      className={`w-full sm:w-auto px-12 py-4 bg-[#C46A2A] text-white text-[14px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-widest'} rounded-full shadow-xl shadow-orange-900/20 hover:bg-[#A85924] hover:translate-y-[-2px] transition-all duration-500`}
+                      disabled={processing}
+                      className={`w-full sm:w-auto px-12 py-4 bg-[#C46A2A] text-white text-[14px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-widest'} rounded-full shadow-xl shadow-orange-900/20 hover:bg-[#A85924] hover:translate-y-[-2px] transition-all duration-500 ${processing ? 'opacity-75 cursor-not-allowed' : ''}`}
                     >
-                      {t("messages.contact_send_message")}
+                      {processing ? t("messages.contact_send_message") + "..." : t("messages.contact_send_message")}
                     </button>
                   </div>
                 </form>

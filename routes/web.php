@@ -128,6 +128,7 @@ Route::get('/products/{product}', [PublicController::class, 'show'])->name('prod
 Route::get('/promotion', [PublicController::class, 'promotion'])->name('promotion');
 Route::get('/promotion/{promotion}', [PublicController::class, 'promotionDetail'])->name('promotions.show_detail');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+Route::post('/contact', [PublicController::class, 'storeContact'])->name('contact.submit');
 
 Route::get('/language/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'kh'])) {

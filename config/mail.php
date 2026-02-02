@@ -115,4 +115,8 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'receiver' => [
+        'address' => env('MAIL_RECEIVER', 'finance@hscace-tech.com'),
+    ],
+
 ];

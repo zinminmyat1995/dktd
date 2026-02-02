@@ -1,0 +1,1 @@
+echo \App\Models\Promotion::where('status', 'published')->where(function ($q) { $q->whereNull('start_date')->orWhereDate('start_date', '<=', now()); })->where(function ($q) { $q->whereNull('end_date')->orWhereDate('end_date', '>=', now()); })->count();
