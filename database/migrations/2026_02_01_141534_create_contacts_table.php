@@ -4,26 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('contacts', function (Blueprint $table) {
-            $table->id();
-            $table->string('full_name');
-            $table->string('email');
-            $table->text('message');
+            $table->bigIncrements('id');
 
+            // user info only
+            $table->string('full_name')->nullable();
+            $table->string('email')->nullable();
 
-            $table->string('status')->default('new')->index();
+            /**
+             * contacts.status
+             * 0 = pending  (user sent message, admin not replied yet)
+             * 1 = replied  (admin already replied)
+             */
+            $table->unsignedTinyInteger('status')->default(0)->index();
 
-            $table->text('reply_message')->nullable();
-            $table->timestamp('replied_at')->nullable();
-            $table->foreignId('replied_by')->nullable()->constrained('users')->nullOnDelete();
 
             $table->timestamps();
-
-          
-            $table->index(['email', 'created_at']);
         });
     }
 
@@ -32,4 +32,3 @@ return new class extends Migration {
         Schema::dropIfExists('contacts');
     }
 };
-
