@@ -96,7 +96,7 @@ function ProductCard({ product, t, locale }) { // Added t prop
 
       {/* Simple Overlay with Product Name & Desc */}
       <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/0 text-white p-5 opacity-80 transition-opacity duration-300 group-hover:opacity-100">
-        <h3 className={`text-base font-SemiBold ${locale === 'kh' ? '' : 'tracking-wider'} uppercase mb-1`}>
+        <h3 className={`text-base font-Medium ${locale === 'kh' ? '' : 'tracking-wider'} mb-1`}>
           {product.title}
         </h3>
         <p className="text-[11px] leading-relaxed text-slate-200 line-clamp-2">

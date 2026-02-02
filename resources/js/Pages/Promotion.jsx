@@ -108,7 +108,7 @@ function PromoRow({ promo, t, locale, toPublicUrl, formatDate }) {
       {/* Right content */}
       <div className="relative md:col-span-8 flex flex-col justify-center py-2">
         <div className="flex items-center justify-between gap-6 mb-2">
-          <h3 className="text-[26px] font-Bold tracking-tight text-slate-900 group-hover:text-[#185C9B] transition-colors duration-500 uppercase">
+          <h3 className="text-[26px] font-Medium tracking-tight text-slate-700 group-hover:text-[#185C9B] transition-colors duration-500">
             {promo.title}
           </h3>
           <div className={`shrink-0 bg-[#D4793F]/10 px-5 py-1 text-[10px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.2em]'} text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase`}>

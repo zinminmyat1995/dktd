@@ -73,7 +73,7 @@ export default function PromotionDetail({ promotion }) {
                                             <svg className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-slate-300" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                                             </svg>
-                                            <span className="ml-2 sm:ml-4 text-[12px] sm:text-sm font-Bold text-slate-900 uppercase tracking-wider truncate max-w-[150px] sm:max-w-none">
+                                            <span className="ml-2 sm:ml-4 text-[12px] sm:text-sm font-Bold text-slate-900 tracking-wider truncate max-w-[150px] sm:max-w-none">
                                                 {promotion.title}
                                             </span>
                                         </div>
@@ -92,7 +92,7 @@ export default function PromotionDetail({ promotion }) {
                                 )}
                             </div>
 
-                            <h1 className="text-[28px] sm:text-4xl lg:text-5xl font-Bold tracking-tight text-slate-900 font-display uppercase leading-tight break-words">
+                            <h1 className="text-[28px] sm:text-4xl lg:text-5xl font-Medium tracking-tight text-slate-700 font-display leading-tight break-words">
                                 {promotion.title}
                             </h1>
 
