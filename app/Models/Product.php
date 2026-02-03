@@ -59,4 +59,9 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class, 'product_promotion');
+    }
 }

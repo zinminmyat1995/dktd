@@ -16,6 +16,7 @@ class PromotionController extends Controller
     {
         return Inertia::render('Promotions/List', [
             'categories' => Category::orderBy('name')->get(),
+            'products'   => \App\Models\Product::orderBy('title')->get(['id', 'title', 'category_id']),
         ]);
     }
 
@@ -23,6 +24,8 @@ class PromotionController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
+            'product_ids' => ['nullable', 'array'],
+            'product_ids.*' => ['exists:products,id'],
             'title'       => ['required', 'string', 'max:255', 'unique:promotions,title'],
             'description' => ['required', 'string'],
             'image'       => ['nullable', 'image', 'max:5120'],
@@ -50,10 +53,14 @@ class PromotionController extends Controller
             'updated_by'  => $request->user()->id,
         ]);
 
+        if (!empty($validated['product_ids'])) {
+            $promotion->products()->sync($validated['product_ids']);
+        }
+
         return response()->json([
             'ok' => true,
             'message' => 'Created successfully.',
-            'data' => $promotion->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+            'data' => $promotion->load(['category:id,name', 'products:id,title,category_id', 'creator:id,name', 'updater:id,name']),
         ], 201);
     }
 
@@ -61,12 +68,13 @@ class PromotionController extends Controller
     {
         $q        = $req->q;
         $category = $req->category_id;
+        $product  = $req->product_id;
         $status   = $req->status;
         $type     = $req->type;
         $perPage  = $req->per_page ?? 10;
 
         $query = Promotion::query()
-            ->with(['category:id,name', 'creator:id,name', 'updater:id,name']);
+            ->with(['category:id,name', 'products:id,title,category_id', 'creator:id,name', 'updater:id,name']);
 
         if ($q) {
             $query->where(function ($qq) use ($q) {
@@ -76,6 +84,13 @@ class PromotionController extends Controller
         }
 
         if ($category) $query->where('category_id', $category);
+        
+        if ($product) {
+            $query->whereHas('products', function ($q) use ($product) {
+                $q->where('product_id', $product);
+            });
+        }
+        
         if ($status) $query->where('status', $status);
         if ($type) $query->where('type', $type);
 
@@ -88,7 +103,7 @@ class PromotionController extends Controller
     {
         return response()->json([
             'ok' => true,
-            'data' => $promotion->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+            'data' => $promotion->load(['category:id,name', 'products:id,title,category_id', 'creator:id,name', 'updater:id,name']),
         ]);
     }
 
@@ -96,6 +111,8 @@ class PromotionController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['nullable', 'exists:categories,id'],
+            'product_ids' => ['nullable', 'array'],
+            'product_ids.*' => ['exists:products,id'],
             'title'       => [
                 'required', 'string', 'max:255',
                 Rule::unique('promotions', 'title')->ignore($promotion->id),
@@ -126,10 +143,14 @@ class PromotionController extends Controller
             'updated_by'  => $request->user()->id,
         ]);
 
+        if (isset($validated['product_ids'])) {
+            $promotion->products()->sync($validated['product_ids']);
+        }
+
         return response()->json([
             'ok' => true,
             'message' => "Updated successfully.",
-            'data' => $promotion->fresh()->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+            'data' => $promotion->fresh()->load(['category:id,name', 'products:id,title,category_id', 'creator:id,name', 'updater:id,name']),
         ]);
     }
 

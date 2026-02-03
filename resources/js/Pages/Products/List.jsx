@@ -578,6 +578,7 @@ export default function List({ categories = [] }) {
                                 <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Category</th>
                                 <th className="px-3 py-3 text-left w-[110px]">New</th>
+                                <th className="px-3 py-3 text-left w-[120px]">Promotion</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Home</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Status</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Created By</th>
@@ -636,6 +637,16 @@ export default function List({ categories = [] }) {
 
                                             <td className="px-3 py-3">
                                                 <NewBadge value={r.is_new} />
+                                            </td>
+
+                                            <td className="px-3 py-3">
+                                                {r.promotions && r.promotions.some(p => p.status === 'published') ? (
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">
+                                                        Promotion
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-slate-400 text-xs text-center block w-full">—</span>
+                                                )}
                                             </td>
 
                                             <td className="px-3 py-3">

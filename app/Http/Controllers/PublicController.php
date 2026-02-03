@@ -18,6 +18,9 @@ class PublicController extends Controller
         $products = Product::where('status', 'published')
             ->where('show_on_home', '>', 0)
             ->orderBy('show_on_home', 'asc')
+            ->with(['promotions' => function($q) {
+                $q->where('status', 'published');
+            }])
             ->take(3)
             ->get();
 
@@ -70,7 +73,12 @@ class PublicController extends Controller
         }
 
         return Inertia::render('ProductDetail', [
-            'product' => $product->load('category:id,name')
+            'product' => $product->load([
+                'category:id,name',
+                'promotions' => function ($q) {
+                    $q->where('status', 'published')->latest();
+                }
+            ])
         ]);
     }
 
@@ -116,7 +124,7 @@ class PublicController extends Controller
         }
 
         return Inertia::render('PromotionDetail', [
-            'promotion' => $promotion->load('category:id,name')
+            'promotion' => $promotion->load(['category:id,name', 'products:id,title,image_path'])
         ]);
     }
 

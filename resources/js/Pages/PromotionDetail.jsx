@@ -45,15 +45,20 @@ export default function PromotionDetail({ promotion }) {
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch h-full">
 
                     {/* Left: Promotion Image */}
-                    <div className="overflow-hidden rounded-[2rem] bg-gray-50 shadow-xl shadow-slate-200/50 h-fit aspect-square ring-1 ring-slate-100 flex items-center justify-center">
-                        <img
-                            src={toPublicUrl(promotion.image_path)}
-                            alt={promotion.title}
-                            className="w-full h-[90%] object-contain transition-transform duration-700 hover:scale-105"
-                            onError={(e) => {
-                                e.target.src = "/images/placeholder.png";
-                            }}
-                        />
+                    {/* Left: Promotion Image & Linked Products */}
+                    <div className="flex flex-col gap-4 h-full">
+                        <div className="overflow-hidden rounded-[2rem] bg-gray-50 shadow-xl shadow-slate-200/50 aspect-square ring-1 ring-slate-100 flex items-center justify-center relative">
+                            <img
+                                src={toPublicUrl(promotion.image_path)}
+                                alt={promotion.title}
+                                className="w-full h-[90%] object-contain transition-transform duration-700 hover:scale-105"
+                                onError={(e) => {
+                                    e.target.src = "/images/placeholder.png";
+                                }}
+                            />
+                        </div>
+
+
                     </div>
 
                     {/* Right: Promotion Details Panel */}
@@ -147,7 +152,7 @@ export default function PromotionDetail({ promotion }) {
 
                         {/* Bottom Buttons - Strictly level with image bottom */}
                         <div className="mt-auto pt-6 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
-                        {promotion.type === 'promotion' && (
+                            {promotion.type === 'promotion' && (
                                 <Link
                                     href={route('contact')}
                                     className="flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase tracking-widest"
@@ -163,15 +168,39 @@ export default function PromotionDetail({ promotion }) {
                             </button>
                         </div>
                     </div>
+
+                    {/* Linked Products (Moved to Row 2, Col 1) */}
+                    {promotion.products && promotion.products.length > 0 && (
+                        <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 h-fit">
+                            <h4 className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mb-3">Linked Products</h4>
+                            <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+                                {promotion.products.map(p => (
+                                    <Link
+                                        key={p.id}
+                                        href={route('products.show_detail', p.id)}
+                                        className="w-20 aspect-square shrink-0 bg-white rounded-xl border border-slate-200 p-1 flex items-center justify-center hover:border-indigo-400 hover:shadow-md transition-all group relative overflow-hidden"
+                                        title={p.title}
+                                    >
+                                        <img
+                                            src={toPublicUrl(p.image_path)}
+                                            alt={p.title}
+                                            className="w-full h-full object-contain p-1 rounded-lg"
+                                            onError={(e) => { e.target.src = "/images/placeholder.png"; }}
+                                        />
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
             `}} />
         </InnerPageLayout>
     );

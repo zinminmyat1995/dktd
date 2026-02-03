@@ -88,4 +88,9 @@ return [
     'error_generic_title' => 'Error',
     'error_back_home' => 'Go Home',
     'error_page_subtitle' => 'Oops!',
+
+    // New additions
+    'status_label' => 'Status',
+    'posted_date' => 'Posted Date',
+    'related_promotions' => 'Related Promotions',
 ];

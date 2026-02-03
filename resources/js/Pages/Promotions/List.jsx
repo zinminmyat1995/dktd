@@ -12,7 +12,7 @@ import { Input, Select } from "@/Components/AdminUI";
 import PromotionFormModal from "./Partials/PromotionFormModal";
 import PromotionCell from "@/Components/Products/PromotionCell";
 
-export default function List({ categories = [] }) {
+export default function List({ categories = [], products = [] }) {
     const [loading, setLoading] = useState(false);
     const [rows, setRows] = useState([]);
     const [meta, setMeta] = useState({ total: 0, per_page: 10, current_page: 1, last_page: 1 });
@@ -21,6 +21,7 @@ export default function List({ categories = [] }) {
 
     const [q, setQ] = useState("");
     const [categoryId, setCategoryId] = useState("");
+    const [productId, setProductId] = useState("");
     const [status, setStatus] = useState("");
     const [type, setType] = useState("");
     const [page, setPage] = useState(1);
@@ -31,6 +32,7 @@ export default function List({ categories = [] }) {
         title: "",
         type: "promotion",
         category_id: "",
+        product_id: "",
         description: "",
         status: "published",
         start_date: "",
@@ -47,7 +49,7 @@ export default function List({ categories = [] }) {
     async function fetchData() {
         setLoading(true);
         try {
-            const query = buildQuery({ q, category_id: categoryId, status, type, page });
+            const query = buildQuery({ q, category_id: categoryId, product_id: productId, status, type, page });
             const json = await apiFetch(`/admin/promotions/data?${query}`);
             setRows(json.data ?? []);
             setMeta({
@@ -63,7 +65,7 @@ export default function List({ categories = [] }) {
         }
     }
 
-    useEffect(() => { fetchData(); }, [q, categoryId, status, type, page]);
+    useEffect(() => { fetchData(); }, [q, categoryId, productId, status, type, page]);
 
     function openCreate() {
         setEditRow(null);
@@ -71,6 +73,7 @@ export default function List({ categories = [] }) {
             title: "",
             type: "promotion",
             category_id: "",
+            product_ids: [],
             description: "",
             status: "published",
             start_date: "",
@@ -88,6 +91,7 @@ export default function List({ categories = [] }) {
             title: row.title,
             type: row.type,
             category_id: row.category_id ? String(row.category_id) : "",
+            product_ids: row.products ? row.products.map(p => p.id) : [],
             description: row.description || "",
             status: row.status,
             start_date: row.start_date ? String(row.start_date).slice(0, 10) : "",
@@ -104,12 +108,15 @@ export default function List({ categories = [] }) {
         if (!form.title.trim()) nextErrors.title = "Title is required.";
         if (!form.description.trim()) nextErrors.description = "Description is required.";
         if (!editRow && !form.image) nextErrors.image = "Image is required.";
-        
+
         if (form.type === 'promotion') {
+            if (!form.product_ids || form.product_ids.length === 0) {
+                nextErrors.product_ids = "At least one product must be selected.";
+            }
             if (!form.start_date) nextErrors.start_date = "Start date is required.";
             if (!form.end_date) nextErrors.end_date = "End date is required.";
         }
-        
+
         if (Object.keys(nextErrors).length > 0) {
             setErrors(nextErrors);
             return;
@@ -123,6 +130,15 @@ export default function List({ categories = [] }) {
             fd.append("title", form.title.trim());
             fd.append("type", form.type);
             fd.append("category_id", form.category_id);
+
+            if (form.product_ids && form.product_ids.length > 0) {
+                form.product_ids.forEach((id, index) => {
+                    fd.append(`product_ids[${index}]`, id);
+                });
+            } else {
+                fd.append(`product_ids`, ""); // Send empty to clear if needed
+            }
+
             fd.append("description", (form.description || "").trim());
             fd.append("status", form.status);
             fd.append("start_date", form.start_date || "");
@@ -159,10 +175,17 @@ export default function List({ categories = [] }) {
     return (
         <AuthenticatedLayout header="Promotions & News" subtitle="Manage your marketing content">
             <div className="p-4 rounded-2xl border bg-white shadow-sm">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                    <div className="md:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div className="md:col-span-1">
                         <label className="text-xs text-slate-500">Search</label>
                         <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search..." />
+                    </div>
+                    <div>
+                        <label className="text-xs text-slate-500">Product</label>
+                        <Select value={productId} onChange={e => setProductId(e.target.value)}>
+                            <option value="">All Products</option>
+                            {products.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                        </Select>
                     </div>
                     <div>
                         <label className="text-xs text-slate-500">Type</label>
@@ -192,8 +215,8 @@ export default function List({ categories = [] }) {
                     </div>
 
                     <div className="flex gap-2 flex-wrap justify-end">
-                        <button 
-                            onClick={openCreate} 
+                        <button
+                            onClick={openCreate}
                             className="h-10 px-4 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-sm"
                         >
                             + Create Content
@@ -207,75 +230,91 @@ export default function List({ categories = [] }) {
                     <table className="min-w-[1350px] w-full text-sm">
                         <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
                             <tr>
-                                <th className="px-3 py-3 text-left w-[90px]">Image</th>
-                                <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
-                                <th className="px-3 py-3 text-left w-[120px]">Type</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Category</th>
-                                <th className="px-3 py-3 text-left w-[200px]">Promotion</th>
-                                <th className="px-3 py-3 text-left w-[120px]">Status</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Created By</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
+                                <th className="px-3 py-3 text-left w-[80px]">Image</th>
+                                <th className="px-3 py-3 text-left min-w-[150px]">Title</th>
+                                <th className="px-3 py-3 text-left w-[100px]">Type</th>
+                                <th className="px-3 py-3 text-left w-[22%]">Product Context</th>
+                                <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
+                                <th className="px-3 py-3 text-left w-[100px]">Status</th>
+                                <th className="px-3 py-3 text-left w-[150px]">Updated By</th>
                                 <th className="px-3 py-3 text-center w-[250px]">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y">
+                        <tbody className="divide-y relative">
                             {rows.map(r => (
                                 <tr key={r.id}>
                                     <td className="px-3 py-3">
-                                        <img 
-                                            src={toPublicUrl(r.image_path)} 
-                                            className="w-12 h-12 rounded-lg object-cover border" 
-                                            onError={e => e.target.src = "/images/placeholder.png"} 
+                                        <img
+                                            src={toPublicUrl(r.image_path)}
+                                            className="w-12 h-12 rounded-lg object-cover border"
+                                            onError={e => e.target.src = "/images/placeholder.png"}
                                         />
                                     </td>
                                     <td className="px-3 py-3">
-                                        <div className="font-semibold text-slate-900">{r.title}</div>
-                                        <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
+                                        <div className="font-bold text-slate-900 line-clamp-2 leading-tight mb-1">{r.title}</div>
+                                        <div className="text-[11px] text-slate-400 font-Medium">{formatDateShort(r.created_at)}</div>
                                     </td>
-                                    <td className="px-3 py-3 capitalize">{r.type}</td>
-                                    <td className="px-3 py-3">{r.category?.name || "—"}</td>
+                                    <td className="px-3 py-3 capitalize">
+                                        <span className={cn("inline-flex px-2 py-0.5 rounded text-[11px] font-Bold uppercase tracking-wider", r.type === 'promotion' ? "bg-purple-50 text-purple-700" : "bg-sky-50 text-sky-700")}>
+                                            {r.type}
+                                        </span>
+                                    </td>
+                                    <td className="px-3 py-3">
+                                        <div className="flex flex-col gap-2">
+                                            {r.category ? (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[10px] font-Bold text-slate-400 uppercase tracking-wider min-w-[35px]">Cat:</span>
+                                                    <span className="text-xs font-Medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 truncate max-w-[200px]">
+                                                        {r.category.name}
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Cat:</span>
+                                                    <span className="text-xs">—</span>
+                                                </div>
+                                            )}
+
+                                            {r.products && r.products.length > 0 ? (
+                                                <div className="flex items-start gap-2">
+                                                    <span className="text-[10px] font-Bold text-[#D4793F] uppercase tracking-wider min-w-[35px] mt-0.5">Prod:</span>
+                                                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[350px] custom-scrollbar">
+                                                        {r.products.map(p => (
+                                                            <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
+                                                                {p.title}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Prod:</span>
+                                                    <span className="text-xs">—</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </td>
                                     <td className="px-3 py-3">
                                         {r.type === 'promotion' ? (
                                             <PromotionCell start={r.start_date} end={r.end_date} />
                                         ) : <span className="text-xs text-slate-400">—</span>}
                                     </td>
                                     <td className="px-3 py-3">
-                                        <span className={cn("inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold",
-                                            r.status === 'published' ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 text-slate-700 border border-slate-200")}>
+                                        <span className={cn("inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-Bold uppercase tracking-wider border",
+                                            r.status === 'published' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-50 text-slate-500 border-slate-200")}>
                                             {r.status}
                                         </span>
                                     </td>
                                     <td className="px-3 py-3">
-                                        <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
-                                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        {r.updated_at !== r.created_at ? (
-                                            <>
-                                                <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
-                                                <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
-                                            </>
-                                        ) : (
-                                            <span className="text-xs text-slate-400">—</span>
-                                        )}
+                                        <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
+                                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
                                     </td>
                                     <td className="px-3 py-3 text-right">
                                         <div className="flex justify-end gap-2 flex-wrap">
-                                            <button 
-                                                className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold"
-                                                onClick={() => openEdit(r)}
-                                            >
+                                            <button className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold" onClick={() => openEdit(r)}>
                                                 Edit
                                             </button>
-                                            <button 
-                                                className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold"
-                                                onClick={() => setConfirm({
-                                                    open: true,
-                                                    title: "Delete Content?",
-                                                    message: `Are you sure you want to delete "${r.title}"?`,
-                                                    onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); }
-                                                })}
-                                            >
+                                            <button className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold" onClick={() => setConfirm({ open: true, title: "Delete Content?", message: `Are you sure you want to delete "${r.title}"?`, onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); } })}>
                                                 Delete
                                             </button>
                                         </div>
@@ -324,11 +363,18 @@ export default function List({ categories = [] }) {
                 setForm={setForm}
                 errors={errors}
                 categories={categories}
+                products={products}
                 onSubmit={handleSubmit}
             />
 
             <CommonToast open={toast.open} type={toast.type} title={toast.title} message={toast.message} onClose={() => setToast(p => ({ ...p, open: false }))} />
             <CommonConfirmModal open={confirm.open} title={confirm.title} message={confirm.message} onCancel={() => setConfirm(p => ({ ...p, open: false }))} onConfirm={confirm.onConfirm} />
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+            `}</style>
         </AuthenticatedLayout>
     );
 }

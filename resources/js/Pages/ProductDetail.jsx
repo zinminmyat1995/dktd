@@ -32,10 +32,17 @@ export default function ProductDetail({ product }) {
         };
     }, [product.description]);
 
+    const toPublicUrl = (path) => {
+        if (!path) return null;
+        if (path.startsWith("http")) return path;
+        if (path.startsWith("/storage/")) return path;
+        return `/storage/${path}`;
+    };
+
     return (
         <InnerPageLayout titleKey="messages.products">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch h-full">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[35%_1fr_280px] lg:items-stretch h-full">
 
                     {/* Left: Product Image */}
                     <div className="overflow-hidden rounded-[2rem] bg-gray-50 shadow-xl shadow-slate-200/50 h-fit aspect-square ring-1 ring-slate-100 flex items-center justify-center">
@@ -85,11 +92,20 @@ export default function ProductDetail({ product }) {
                                         {t("messages.new_badge")}
                                     </span>
                                 )}
+                                {product.promotions && product.promotions.length > 0 && (
+                                    <span className="inline-flex items-center rounded-full bg-[#D4793F] px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-white uppercase shadow-sm">
+                                        {t("messages.promotion_label") || "Promotion"}
+                                    </span>
+                                )}
                             </div>
 
                             <h1 className="mt-4 text-[28px] sm:text-4xl lg:text-5xl font-Medium tracking-tight text-slate-700 font-display leading-tight break-words">
                                 {product.title}
                             </h1>
+
+                            <div className="mt-2 text-[10px] font-Bold text-slate-400 uppercase tracking-widest">
+                                {t("messages.posted_date") || "Posted"}: {new Date(product.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </div>
                         </div>
 
                         {/* Middle Content */}
@@ -128,6 +144,10 @@ export default function ProductDetail({ product }) {
                             )}
                         </div>
 
+
+
+
+
                         {/* Bottom Buttons */}
                         <div className="mt-auto pt-6 sm:pt-8 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
                             <Link
@@ -144,15 +164,57 @@ export default function ProductDetail({ product }) {
                             </button>
                         </div>
                     </div>
+
+                    {/* Related Promotions (Right Column) */}
+                    <div>
+                        <div className="bg-slate-50/50 rounded-[2rem] p-5 border border-slate-100 lg:sticky lg:top-8">
+                            <h4 className="text-[10px] font-Bold text-[#D4793F] uppercase tracking-[0.2em] mb-3">
+                                {t("messages.related_promotions") || "Related Promotions"}
+                            </h4>
+                            <div className="space-y-2 max-h-[335px] overflow-y-auto custom-scrollbar pr-1">
+                                {product.promotions && product.promotions.length > 0 ? (
+                                    product.promotions.map(promo => (
+                                        <Link
+                                            key={promo.id}
+                                            href={route('promotions.show_detail', promo.id)}
+                                            className="group flex gap-2 items-start p-1.5 -mx-1.5 rounded-xl hover:bg-white hover:shadow-sm hover:border-slate-100 border border-transparent transition-all duration-300"
+                                        >
+                                            <div className="w-12 h-12 shrink-0 rounded-lg bg-white overflow-hidden border border-slate-200">
+                                                <img
+                                                    src={toPublicUrl(promo.image_path)}
+                                                    alt={promo.title}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                />
+                                            </div>
+                                            <div className="min-w-0 flex-1 overflow-hidden">
+                                                <h5 className="text-[11px] font-Bold text-slate-700 leading-tight mb-0.5 group-hover:text-[#185C9B] transition-colors line-clamp-2 truncate">
+                                                    {promo.title}
+                                                </h5>
+                                                <p className="text-[10px] text-slate-400 font-Medium uppercase tracking-wider">
+                                                    {new Date(promo.start_date || promo.created_at).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    ))
+                                ) : (
+                                    <div className="text-[10px] text-slate-400 italic text-center py-4 opacity-50">
+                                        No active promotions
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+
+
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
             `}} />
         </InnerPageLayout>
     );

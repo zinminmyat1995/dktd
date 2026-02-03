@@ -93,7 +93,7 @@ class ProductController extends Controller
         $perPage  = $req->per_page ?? 10;
 
         $query = Product::query()
-            ->with(['category:id,name', 'creator:id,name', 'updater:id,name']);
+            ->with(['category:id,name', 'creator:id,name', 'updater:id,name', 'promotions']);
 
         if ($q) {
             $query->where(function ($qq) use ($q) {

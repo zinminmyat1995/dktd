@@ -21,7 +21,7 @@ class Promotion extends Model
         });
     }
 
-    protected $with = ['creator:id,name', 'updater:id,name'];
+    protected $with = ['creator:id,name', 'updater:id,name', 'products:id,title,category_id'];
 
     protected $fillable = [
         'title',
@@ -44,6 +44,11 @@ class Promotion extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_promotion');
     }
 
     public function creator()
