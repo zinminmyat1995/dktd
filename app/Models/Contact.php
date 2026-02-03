@@ -13,14 +13,10 @@ class Contact extends Model
         'full_name',
         'email',
         'status',           // 0=pending, 1=replied
-        'last_message_at',
-        'last_replied_at',
+    
     ];
 
-    protected $casts = [
-        'last_message_at' => 'datetime',
-        'last_replied_at' => 'datetime',
-    ];
+
 
     public const STATUS_PENDING = 0;
     public const STATUS_REPLIED = 1;

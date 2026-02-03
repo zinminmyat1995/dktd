@@ -60,7 +60,6 @@ class ContactController extends Controller
             // 2. Update Contact Status
             $contact->update([
                 'status' => Contact::STATUS_REPLIED,
-                'last_replied_at' => now(),
             ]);
 
             // 3. Log Message
