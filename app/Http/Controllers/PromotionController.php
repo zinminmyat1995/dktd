@@ -9,6 +9,7 @@ use App\Services\ImageStorageService;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class PromotionController extends Controller
 {
@@ -66,6 +67,7 @@ class PromotionController extends Controller
 
     public function data(Request $req)
     {
+        
         $q        = $req->q;
         $category = $req->category_id;
         $product  = $req->product_id;

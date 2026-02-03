@@ -235,9 +235,9 @@ export default function List({ categories = [], products = [] }) {
                                 <th className="px-3 py-3 text-left w-[100px]">Type</th>
                                 <th className="px-3 py-3 text-left w-[22%]">Product Context</th>
                                 <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
-                                <th className="px-3 py-3 text-left w-[100px]">Status</th>
+                                <th className="px-3 py-3 text-left w-[130px]">Status</th>
                                 <th className="px-3 py-3 text-left w-[150px]">Updated By</th>
-                                <th className="px-3 py-3 text-center w-[250px]">Action</th>
+                                <th className="px-3 py-3 text-center w-[150px]">Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y relative">
@@ -294,7 +294,7 @@ export default function List({ categories = [], products = [] }) {
                                             )}
                                         </div>
                                     </td>
-                                    <td className="px-3 py-3">
+                                    <td className=" py-3">
                                         {r.type === 'promotion' ? (
                                             <PromotionCell start={r.start_date} end={r.end_date} />
                                         ) : <span className="text-xs text-slate-400">—</span>}
