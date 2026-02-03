@@ -45,6 +45,18 @@ class ContactController extends Controller
         return response()->json($contacts);
     }
 
+    public function messages(Contact $contact)
+    {
+        $messages = $contact->messages()
+            ->with('admin:id,name')
+            ->orderBy('created_at', 'asc')
+            ->get();
+            
+        return response()->json([
+            'data' => $messages
+        ]);
+    }
+
     public function reply(Request $request, Contact $contact)
     {
         $validated = $request->validate([

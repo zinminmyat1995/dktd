@@ -23,4 +23,9 @@ class ContactMessage extends Model
     {
         return $this->belongsTo(Contact::class, 'contact_id');
     }
+
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 }

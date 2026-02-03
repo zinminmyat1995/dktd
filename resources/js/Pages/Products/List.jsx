@@ -578,7 +578,7 @@ export default function List({ categories = [] }) {
                                 <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Category</th>
                                 <th className="px-3 py-3 text-left w-[110px]">New</th>
-                                <th className="px-3 py-3 text-left w-[120px]">Promotion</th>
+                                <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Home</th>
                                 <th className="px-3 py-3 text-left w-[120px]">Status</th>
                                 <th className="px-3 py-3 text-left w-[180px]">Created By</th>
@@ -640,10 +640,14 @@ export default function List({ categories = [] }) {
                                             </td>
 
                                             <td className="px-3 py-3">
-                                                {r.promotions && r.promotions.some(p => p.status === 'published') ? (
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700 border border-orange-200">
-                                                        Promotion
-                                                    </span>
+                                                {r.promotions && r.promotions.filter(p => p.status === 'published').length > 0 ? (
+                                                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[200px] custom-scrollbar">
+                                                        {r.promotions.filter(p => p.status === 'published').map(p => (
+                                                            <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
+                                                                {p.title}
+                                                            </span>
+                                                        ))}
+                                                    </div>
                                                 ) : (
                                                     <span className="text-slate-400 text-xs text-center block w-full">—</span>
                                                 )}
@@ -819,6 +823,12 @@ export default function List({ categories = [] }) {
                 onCancel={() => setConfirm((p) => ({ ...p, open: false }))}
                 onConfirm={confirm.onConfirm}
             />
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+            `}</style>
         </AuthenticatedLayout>
     );
 }

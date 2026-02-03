@@ -102,6 +102,7 @@ Route::middleware(['auth', 'verified'])
             // contact
             Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
             Route::get('/contacts/data', [ContactController::class, 'data'])->name('contacts.data');
+            Route::get('/contacts/{contact}/messages', [ContactController::class, 'messages'])->name('contacts.messages');
             Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
     });
 
