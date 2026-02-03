@@ -99,7 +99,7 @@ export default function ProductDetail({ product }) {
                                 )}
                             </div>
 
-                            <h1 className="mt-4 text-[28px] sm:text-4xl lg:text-5xl font-Medium tracking-tight text-slate-700 font-display leading-tight break-words">
+                            <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-Medium tracking-tight text-slate-700 font-display leading-tight">
                                 {product.title}
                             </h1>
 

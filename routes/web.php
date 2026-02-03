@@ -100,7 +100,9 @@ Route::middleware(['auth', 'verified'])
             Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
             // contact
-            Route::get('/contact', [ContactController::class, 'index'])->name('contacts.index');
+            Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+            Route::get('/contacts/data', [ContactController::class, 'data'])->name('contacts.data');
+            Route::post('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
     });
 
 /*
