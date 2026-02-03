@@ -170,14 +170,14 @@ export default function Home({ products, promotions, latestNewsId }) {
                 href={route('products.show_detail', product.id)}
                 className="group relative h-120 overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
               >
-                <div className="absolute top-5 right-5 z-10 flex flex-col gap-2 items-end transition-transform duration-500 group-hover:scale-110">
+                <div className="absolute top-5 right-5 z-10 flex flex-row gap-2 items-center transition-transform duration-500 group-hover:scale-110">
                   {product.promotions && product.promotions.length > 0 && (
-                    <span className="bg-[#D4793F] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl uppercase">
+                    <span className={`bg-[#D4793F] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
                       {t("messages.promotion_label") || "Promotion"}
                     </span>
                   )}
                   {product.is_new && (
-                    <span className="bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full tracking-[0.2em] shadow-xl">
+                    <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
                       {t("messages.new_badge")}
                     </span>
                   )}

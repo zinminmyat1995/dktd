@@ -51,6 +51,9 @@ class PublicController extends Controller
             ->when($categoryId, function($query, $categoryId) {
                 return $query->where('category_id', $categoryId);
             })
+            ->with(['promotions' => function($q) {
+                $q->where('status', 'published');
+            }])
             ->latest()
             ->paginate(9)
             ->withQueryString();

@@ -78,13 +78,18 @@ function ProductCard({ product, t, locale }) { // Added t prop
       href={route('products.show_detail', product.id)}
       className="group relative overflow-hidden rounded-2xl aspect-square shadow-md transition-all duration-500 hover:shadow-xl flex items-center justify-center"
     >
-      {product.is_new && (
-        <div className="absolute top-5 right-5 z-10 transition-transform duration-500 group-hover:scale-110">
-          <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl`}>
+      <div className="absolute top-5 right-5 z-10 flex flex-row gap-2 items-center transition-transform duration-500 group-hover:scale-110">
+        {product.promotions && product.promotions.length > 0 && (
+          <span className={`bg-[#D4793F] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
+            {t("messages.promotion_label") || "Promotion"}
+          </span>
+        )}
+        {product.is_new && (
+          <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
             {t("messages.new_badge")}
           </span>
-        </div>
-      )}
+        )}
+      </div>
       <img
         src={product.image_path}
         alt={product.title}

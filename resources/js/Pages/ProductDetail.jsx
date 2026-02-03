@@ -87,14 +87,14 @@ export default function ProductDetail({ product }) {
                                         {product.category.name}
                                     </span>
                                 )}
+                                {product.promotions && product.promotions.length > 0 && (
+                                    <span className={`inline-flex items-center rounded-full bg-[#D4793F] px-4 py-1.5 text-[10px] sm:text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-white uppercase shadow-sm`}>
+                                        {t("messages.promotion_label") || "Promotion"}
+                                    </span>
+                                )}
                                 {product.is_new && (
                                     <span className={`inline-flex items-center rounded-full bg-[#1E4F7A] px-4 py-1.5 text-[10px] sm:text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-white uppercase shadow-sm`}>
                                         {t("messages.new_badge")}
-                                    </span>
-                                )}
-                                {product.promotions && product.promotions.length > 0 && (
-                                    <span className="inline-flex items-center rounded-full bg-[#D4793F] px-4 py-1.5 text-[10px] sm:text-xs font-Bold tracking-widest text-white uppercase shadow-sm">
-                                        {t("messages.promotion_label") || "Promotion"}
                                     </span>
                                 )}
                             </div>
