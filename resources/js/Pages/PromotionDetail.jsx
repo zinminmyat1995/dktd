@@ -2,9 +2,10 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import { Link } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
 import { useState, useRef, useLayoutEffect } from "react";
+import { cn } from "@/lib/utils";
 
 export default function PromotionDetail({ promotion }) {
-    const { t } = useTranslate();
+    const { t, locale } = useTranslate();
     const [isExpanded, setIsExpanded] = useState(false);
     const [showViewMore, setShowViewMore] = useState(false);
     const descriptionRef = useRef(null);
@@ -41,7 +42,7 @@ export default function PromotionDetail({ promotion }) {
 
     return (
         <InnerPageLayout titleKey="messages.promotion">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 min-h-[60vh] flex flex-col justify-center">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-stretch h-full">
 
                     {/* Left: Promotion Image */}
@@ -97,7 +98,7 @@ export default function PromotionDetail({ promotion }) {
                                 )}
                             </div>
 
-                            <h1 className="text-[28px] sm:text-4xl lg:text-5xl font-Medium tracking-tight text-slate-700 font-display leading-tight break-words">
+                            <h1 className={`text-[28px] sm:text-4xl lg:text-5xl font-Medium ${locale === 'kh' ? '' : 'tracking-tight'} text-slate-700 font-display leading-tight break-words`}>
                                 {promotion.title}
                             </h1>
 
@@ -114,7 +115,7 @@ export default function PromotionDetail({ promotion }) {
 
                         {/* Middle Content (Stretchy Description Area) */}
                         <div className="mt-8 mb-6 flex-1 flex flex-col min-h-0">
-                            <h3 className="text-sm font-SemiBold text-[#D4793F] tracking-[0.2em] uppercase mb-4 font-display">
+                            <h3 className={`text-sm font-SemiBold text-[#D4793F] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase mb-4 font-display`}>
                                 {t("messages.product_description_heading") || 'Description'}
                             </h3>
 
@@ -172,7 +173,9 @@ export default function PromotionDetail({ promotion }) {
                     {/* Linked Products (Moved to Row 2, Col 1) */}
                     {promotion.products && promotion.products.length > 0 && (
                         <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 h-fit">
-                            <h4 className="text-[10px] font-Bold text-slate-400 uppercase tracking-widest mb-3">Linked Products</h4>
+                            <h4 className={`text-[10px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mb-3`}>
+                                {t("messages.linked_products") || 'Linked Products'}
+                            </h4>
                             <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
                                 {promotion.products.map(p => (
                                     <Link
@@ -194,7 +197,6 @@ export default function PromotionDetail({ promotion }) {
                     )}
                 </div>
             </div>
-
             <style dangerouslySetInnerHTML={{
                 __html: `
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -202,6 +204,6 @@ export default function PromotionDetail({ promotion }) {
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
             `}} />
-        </InnerPageLayout>
+        </InnerPageLayout >
     );
 }

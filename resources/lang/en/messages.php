@@ -9,6 +9,7 @@ return [
     'contact' => 'Contact Us',
     'locations' => 'Locations',
     'terms' => 'Terms & Conditions',
+    'useful_links' => 'Useful Links',
 
     // Common Buttons & Labels
     'read_more' => 'Read More',
@@ -55,6 +56,7 @@ return [
 
     // Promotion Page
     'promotion_heading' => 'PROMOTIONS',
+    'promotion_news_heading' => 'Promotion & New',
     'all_types' => 'All Types',
     'no_promotions' => 'No active promotions at the moment.',
 
@@ -93,4 +95,8 @@ return [
     'status_label' => 'Status',
     'posted_date' => 'Posted Date',
     'related_promotions' => 'Related Promotions',
+    'linked_products' => 'Linked Products',
+    'contact_success_message' => 'Message sent successfully!',
+    'contact_error_message' => 'Something went wrong. Please try again.',
+    'admin_reply_success_message' => 'Reply sent successfully.',
 ];

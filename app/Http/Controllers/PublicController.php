@@ -200,12 +200,12 @@ class PublicController extends Controller
                 // We don't fail the request if email fails, but we log it.
             }
 
-            return back()->with('success', 'Message sent successfully!');
+            return back()->with('success', __('messages.contact_success_message'));
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Contact form error: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+            return back()->withErrors(['error' => __('messages.contact_error_message')]);
         }
     }
 }

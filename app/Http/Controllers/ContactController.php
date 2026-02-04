@@ -86,7 +86,7 @@ class ContactController extends Controller
 
             return response()->json([
                 'ok' => true,
-                'message' => 'Reply sent successfully.',
+                'message' => __('messages.admin_reply_success_message'),
             ]);
 
         } catch (\Exception $e) {

@@ -38,8 +38,8 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
-            <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F] font-display">
-              Promotion & New
+            <h2 className={`text-[35px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display`}>
+              {t("messages.promotion_news_heading")}
             </h2>
             <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
               {t("messages.promotion_intro_subtitle")}

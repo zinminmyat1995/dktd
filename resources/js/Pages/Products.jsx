@@ -1,7 +1,8 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import { Link, router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
-import useTranslate from "@/hooks/useTranslate"; // Added useTranslate import
+import useTranslate from "@/hooks/useTranslate";
+import { cn } from "@/lib/utils";
 
 export default function Products({ products, categories, filters }) {
   const { t, locale } = useTranslate(); // Initialize useTranslate
