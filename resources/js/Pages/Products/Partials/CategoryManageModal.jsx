@@ -71,9 +71,9 @@ export default function CategoryManageModal({
                                         </td>
 
                                         <td className="px-4 py-3">
-                                            {c.updated_at !== c.created_at ? (
+                                            {c.updater ? (
                                                 <>
-                                                    <div className="text-xs font-Medium text-slate-900">{c.updater?.name ?? "—"}</div>
+                                                    <div className="text-xs font-Medium text-slate-900">{c.updater.name}</div>
                                                     <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(c.updated_at)}</div>
                                                 </>
                                             ) : (

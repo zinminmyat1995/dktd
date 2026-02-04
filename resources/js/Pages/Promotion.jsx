@@ -23,15 +23,15 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
 
   const formatDate = (promo) => {
     if (promo.type === 'news') {
-        if (promo.id === latestNewsId) {
-            return t("messages.latest_update");
-        }
-        return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      if (promo.id === latestNewsId) {
+        return t("messages.latest_update");
+      }
+      return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     }
     return new Date(promo.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  console.log("promotions",promotions)
+  console.log("promotions", promotions)
   return (
     <InnerPageLayout titleKey="messages.promotion">
       <section className="py-14">
@@ -39,7 +39,7 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
           {/* Page Heading */}
           <div className="text-center">
             <h2 className="text-[35px] font-SemiBold tracking-[0.25em] text-[#D4793F] font-display">
-              {t("messages.promotion_heading")}
+              Promotion & New
             </h2>
             <p className={`mt-3 text-[15px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
               {t("messages.promotion_intro_subtitle")}

@@ -561,199 +561,211 @@ export default function List({ categories = [] }) {
             </div>
 
             {/* Table */}
-            <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-[1350px] w-full text-sm">
-                        <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
-                            <tr>
-                                <th className="px-3 py-3 text-left w-[44px]">
-                                    <input
-                                        type="checkbox"
-                                        checked={headerChecked}
-                                        ref={(el) => el && (el.indeterminate = headerIndeterminate)}
-                                        onChange={toggleSelectAll}
-                                    />
-                                </th>
-                                <th className="px-3 py-3 text-left w-[90px]">Image</th>
-                                <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Category</th>
-                                <th className="px-3 py-3 text-left w-[110px]">New</th>
-                                <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
-                                <th className="px-3 py-3 text-left w-[120px]">Home</th>
-                                <th className="px-3 py-3 text-left w-[120px]">Status</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Created By</th>
-                                <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
-                                <th className="px-3 py-3 text-center w-[250px]">Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {loading && (
+            {!loading && rows.length === 0 ? (
+                <div className="mt-8 rounded-2xl border border-dashed border-slate-300 p-12 text-center">
+                    <div className="mx-auto w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                        <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-slate-900">No Products Found</h3>
+                    <p className="text-slate-500 text-sm mt-1">Get started by creating a new product.</p>
+                </div>
+            ) : (
+                <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-[1350px] w-full text-sm">
+                            <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
                                 <tr>
-                                    <td colSpan={11} className="px-3 py-10 text-center text-slate-500">
-                                        Loading...
-                                    </td>
+                                    <th className="px-3 py-3 text-left w-[44px]">
+                                        <input
+                                            type="checkbox"
+                                            checked={headerChecked}
+                                            ref={(el) => el && (el.indeterminate = headerIndeterminate)}
+                                            onChange={toggleSelectAll}
+                                        />
+                                    </th>
+                                    <th className="px-3 py-3 text-left w-[90px]">Image</th>
+                                    <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
+                                    <th className="px-3 py-3 text-left w-[180px]">Category</th>
+                                    <th className="px-3 py-3 text-left w-[110px]">New</th>
+                                    <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
+                                    <th className="px-3 py-3 text-left w-[120px]">Home</th>
+                                    <th className="px-3 py-3 text-left w-[120px]">Status</th>
+                                    <th className="px-3 py-3 text-left w-[180px]">Created By</th>
+                                    <th className="px-3 py-3 text-left w-[180px]">Updated By</th>
+                                    <th className="px-3 py-3 text-center w-[250px]">Action</th>
                                 </tr>
-                            )}
+                            </thead>
 
-                            {!loading && rows.length === 0 && (
-                                <tr>
-                                    <td colSpan={11} className="px-3 py-10 text-center text-slate-500">
-                                        No data
-                                    </td>
-                                </tr>
-                            )}
+                            <tbody>
+                                {loading && (
+                                    <tr>
+                                        <td colSpan={11} className="px-3 py-10 text-center text-slate-500">
+                                            Loading...
+                                        </td>
+                                    </tr>
+                                )}
 
-                            {!loading &&
-                                rows.map((r) => {
-                                    const img = toPublicUrl(r.image_path);
+                                {!loading && rows.length === 0 && (
+                                    <tr>
+                                        <td colSpan={11} className="px-3 py-10 text-center text-slate-500">
+                                            No data
+                                        </td>
+                                    </tr>
+                                )}
 
-                                    return (
-                                        <tr key={r.id} className="border-t">
-                                            <td className="px-3 py-3">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selected.some((x) => x.id === r.id)}
-                                                    onChange={() => toggleSelect(r)}
-                                                />
-                                            </td>
+                                {!loading &&
+                                    rows.map((r) => {
+                                        const img = toPublicUrl(r.image_path);
 
-                                            <td className="px-3 py-3">
-                                                {img ? (
-                                                    <img src={img} alt="" className="w-12 h-12 rounded-lg object-cover border" />
-                                                ) : (
-                                                    <div className="w-12 h-12 rounded-lg bg-slate-100 border flex items-center justify-center text-slate-400">
-                                                        —
-                                                    </div>
-                                                )}
-                                            </td>
+                                        return (
+                                            <tr key={r.id} className="border-t">
+                                                <td className="px-3 py-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selected.some((x) => x.id === r.id)}
+                                                        onChange={() => toggleSelect(r)}
+                                                    />
+                                                </td>
 
-                                            <td className="px-3 py-3">
-                                                <div className="font-semibold text-slate-900">{r.title}</div>
-                                                <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
-                                            </td>
-
-                                            <td className="px-3 py-3">{r.category?.name ?? "—"}</td>
-
-                                            <td className="px-3 py-3">
-                                                <NewBadge value={r.is_new} />
-                                            </td>
-
-                                            <td className="px-3 py-3">
-                                                {r.promotions && r.promotions.filter(p => p.status === 'published').length > 0 ? (
-                                                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[200px] custom-scrollbar">
-                                                        {r.promotions.filter(p => p.status === 'published').map(p => (
-                                                            <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
-                                                                {p.title}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-slate-400 text-xs text-center block w-full">—</span>
-                                                )}
-                                            </td>
-
-                                            <td className="px-3 py-3">
-                                                <HomeBadge value={r.show_on_home} />
-                                            </td>
-
-                                            <td className="px-3 py-3">
-                                                <span
-                                                    className={cn(
-                                                        "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold",
-                                                        r.status === "published"
-                                                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                                            : r.status === "archived"
-                                                                ? "bg-rose-50 text-rose-700 border border-rose-200"
-                                                                : "bg-slate-100 text-slate-700 border border-slate-200"
+                                                <td className="px-3 py-3">
+                                                    {img ? (
+                                                        <img src={img} alt="" className="w-12 h-12 rounded-lg object-cover border" />
+                                                    ) : (
+                                                        <div className="w-12 h-12 rounded-lg bg-slate-100 border flex items-center justify-center text-slate-400">
+                                                            —
+                                                        </div>
                                                     )}
-                                                >
-                                                    {r.status}
-                                                </span>
-                                            </td>
+                                                </td>
 
-                                            <td className="px-3 py-3">
-                                                <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
-                                                <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
-                                            </td>
+                                                <td className="px-3 py-3">
+                                                    <div className="font-semibold text-slate-900">{r.title}</div>
+                                                    <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
+                                                </td>
 
-                                            <td className="px-3 py-3">
-                                                {r.updated_at !== r.created_at ? (
-                                                    <>
-                                                        <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
-                                                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
-                                                    </>
-                                                ) : (
-                                                    <span className="text-xs text-slate-400">—</span>
-                                                )}
-                                            </td>
+                                                <td className="px-3 py-3">{r.category?.name ?? "—"}</td>
 
-                                            <td className="px-3 py-3 text-right">
-                                                <div className="flex justify-end gap-2 flex-wrap">
-                                                    <button
-                                                        className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold"
-                                                        onClick={() => openEditModal(r)}
+                                                <td className="px-3 py-3">
+                                                    <NewBadge value={r.is_new} />
+                                                </td>
+
+                                                <td className="px-3 py-3">
+                                                    {r.promotions && r.promotions.filter(p => p.status === 'published').length > 0 ? (
+                                                        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[200px] custom-scrollbar">
+                                                            {r.promotions.filter(p => p.status === 'published').map(p => (
+                                                                <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
+                                                                    {p.title}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-slate-400 text-xs text-center block w-full">—</span>
+                                                    )}
+                                                </td>
+
+                                                <td className="px-3 py-3">
+                                                    <HomeBadge value={r.show_on_home} />
+                                                </td>
+
+                                                <td className="px-3 py-3">
+                                                    <span
+                                                        className={cn(
+                                                            "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold",
+                                                            r.status === "published"
+                                                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                                                : r.status === "archived"
+                                                                    ? "bg-rose-50 text-rose-700 border border-rose-200"
+                                                                    : "bg-slate-100 text-slate-700 border border-slate-200"
+                                                        )}
                                                     >
-                                                        Edit
-                                                    </button>
+                                                        {r.status}
+                                                    </span>
+                                                </td>
 
-                                                    <button
-                                                        className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold"
-                                                        onClick={() =>
-                                                            setConfirm({
-                                                                open: true,
-                                                                title: "Delete Product",
-                                                                message: `Are you sure you want to delete "${r.title}"?`,
-                                                                onConfirm: async () => {
-                                                                    setConfirm((p) => ({ ...p, open: false }));
-                                                                    await deleteOne(r);
-                                                                },
-                                                            })
-                                                        }
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
-                </div>
+                                                <td className="px-3 py-3">
+                                                    <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
+                                                    <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
+                                                </td>
 
-                {/* Pagination */}
-                <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
-                    <div className="text-sm font-Medium text-slate-500">
-                        Showing page <span className="text-slate-900 font-Bold">{meta.current_page}</span> of{" "}
-                        <span className="text-slate-900 font-Bold">{meta.last_page}</span>
+                                                <td className="px-3 py-3">
+                                                    {r.updater ? (
+                                                        <>
+                                                            <div className="text-xs font-Medium text-slate-900">{r.updater.name}</div>
+                                                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-xs text-slate-400">—</span>
+                                                    )}
+                                                </td>
+
+                                                <td className="px-3 py-3 text-right">
+                                                    <div className="flex justify-end gap-2 flex-wrap">
+                                                        <button
+                                                            className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold"
+                                                            onClick={() => openEditModal(r)}
+                                                        >
+                                                            Edit
+                                                        </button>
+
+                                                        <button
+                                                            className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold"
+                                                            onClick={() =>
+                                                                setConfirm({
+                                                                    open: true,
+                                                                    title: "Delete Product",
+                                                                    message: `Are you sure you want to delete "${r.title}"?`,
+                                                                    onConfirm: async () => {
+                                                                        setConfirm((p) => ({ ...p, open: false }));
+                                                                        await deleteOne(r);
+                                                                    },
+                                                                })
+                                                            }
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div className="flex gap-3">
-                        <button
-                            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                            disabled={meta.current_page <= 1 || loading}
-                            onClick={() => setPage((p) => Math.max(1, p - 1))}
-                        >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Prev
-                        </button>
+                    {/* Pagination */}
+                    <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
+                        <div className="text-sm font-Medium text-slate-500">
+                            Showing page <span className="text-slate-900 font-Bold">{meta.current_page}</span> of{" "}
+                            <span className="text-slate-900 font-Bold">{meta.last_page}</span>
+                        </div>
 
-                        <button
-                            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                            disabled={meta.current_page >= meta.last_page || loading}
-                            onClick={() => setPage((p) => p + 1)}
-                        >
-                            Next
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                disabled={meta.current_page <= 1 || loading}
+                                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                            >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Prev
+                            </button>
+
+                            <button
+                                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                disabled={meta.current_page >= meta.last_page || loading}
+                                onClick={() => setPage((p) => p + 1)}
+                            >
+                                Next
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Modals */}
             <HomeModal

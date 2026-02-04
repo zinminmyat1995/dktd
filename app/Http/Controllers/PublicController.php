@@ -92,6 +92,16 @@ class PublicController extends Controller
 
         $promotions = \App\Models\Promotion::query()
             ->where('status', 'published')
+            ->where(function ($q) use ($today) {
+                // Show items if they are "news" type OR if their dates are valid (for promotions)
+                // Note: If users want specific dates for news too, this should be adjusted.
+                // Assuming "Active Promotion Filter" checks the date range specifically for promotions.
+                $q->where('type', 'news')
+                  ->orWhere(function ($sub) use ($today) {
+                      $sub->whereDate('start_date', '<=', $today)
+                          ->whereDate('end_date', '>=', $today);
+                  });
+            })
             ->when($type, function ($query, $type) {
                 return $query->where('type', $type);
             })

@@ -13,7 +13,7 @@ const navItems = [
   { key: "messages.home", routeName: "home" },
   { key: "messages.about", routeName: "about" },
   { key: "messages.products", routeName: "products" },
-  { key: "messages.promotion", routeName: "promotion" },
+  { label: "Promos", routeName: "promotion" },
   { key: "messages.contact", routeName: "contact" },
 ];
 
@@ -89,7 +89,7 @@ export default function PublicLayout({ children }) {
                   ].join(" ")}
                 >
                   {/* ✅ translation key မရရင် fallback */}
-                  {t(item.key)}
+                  {item.label || t(item.key)}
                 </Link>
               );
             })}
@@ -193,7 +193,7 @@ export default function PublicLayout({ children }) {
                     `}
                     style={{ transitionDelay: `${idx * 50}ms` }}
                   >
-                    {t(item.key)}
+                    {item.label || t(item.key)}
                   </Link>
                 );
               })}

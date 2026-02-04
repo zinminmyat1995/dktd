@@ -225,134 +225,157 @@ export default function List({ categories = [], products = [] }) {
                 </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-[1350px] w-full text-sm">
-                        <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
-                            <tr>
-                                <th className="px-3 py-3 text-left w-[80px]">Image</th>
-                                <th className="px-3 py-3 text-left min-w-[150px]">Title</th>
-                                <th className="px-3 py-3 text-left w-[100px]">Type</th>
-                                <th className="px-3 py-3 text-left w-[22%]">Product Context</th>
-                                <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
-                                <th className="px-3 py-3 text-left w-[100px]">Status</th>
-                                <th className="px-3 py-3 text-left w-[150px]">Updated By</th>
-                                <th className="px-3 py-3 text-center w-[250px]">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y relative">
-                            {rows.map(r => (
-                                <tr key={r.id}>
-                                    <td className="px-3 py-3">
-                                        <img
-                                            src={toPublicUrl(r.image_path)}
-                                            className="w-12 h-12 rounded-lg object-cover border"
-                                            onError={e => e.target.src = "/images/placeholder.png"}
-                                        />
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        <div className="font-bold text-slate-900 line-clamp-2 leading-tight mb-1">{r.title}</div>
-                                        <div className="text-[11px] text-slate-400 font-Medium">{formatDateShort(r.created_at)}</div>
-                                    </td>
-                                    <td className="px-3 py-3 capitalize">
-                                        <span className={cn("inline-flex px-2 py-0.5 rounded text-[11px] font-Bold uppercase tracking-wider", r.type === 'promotion' ? "bg-purple-50 text-purple-700" : "bg-sky-50 text-sky-700")}>
-                                            {r.type}
-                                        </span>
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        <div className="flex flex-col gap-2">
-                                            {r.category ? (
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-[10px] font-Bold text-slate-400 uppercase tracking-wider min-w-[35px]">Cat:</span>
-                                                    <span className="text-xs font-Medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 truncate max-w-[200px]">
-                                                        {r.category.name}
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-2 text-slate-300">
-                                                    <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Cat:</span>
-                                                    <span className="text-xs">—</span>
-                                                </div>
-                                            )}
-
-                                            {r.products && r.products.length > 0 ? (
-                                                <div className="flex items-start gap-2">
-                                                    <span className="text-[10px] font-Bold text-[#D4793F] uppercase tracking-wider min-w-[35px] mt-0.5">Prod:</span>
-                                                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[350px] custom-scrollbar">
-                                                        {r.products.map(p => (
-                                                            <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
-                                                                {p.title}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-2 text-slate-300">
-                                                    <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Prod:</span>
-                                                    <span className="text-xs">—</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        {r.type === 'promotion' ? (
-                                            <PromotionCell start={r.start_date} end={r.end_date} />
-                                        ) : <span className="text-xs text-slate-400">—</span>}
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        <span className={cn("inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-Bold uppercase tracking-wider border",
-                                            r.status === 'published' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-50 text-slate-500 border-slate-200")}>
-                                            {r.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-3 py-3">
-                                        <div className="text-xs font-Medium text-slate-900">{r.updater?.name ?? "—"}</div>
-                                        <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
-                                    </td>
-                                    <td className="px-3 py-3 text-right">
-                                        <div className="flex justify-end gap-2 flex-wrap">
-                                            <button className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold" onClick={() => openEdit(r)}>
-                                                Edit
-                                            </button>
-                                            <button className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold" onClick={() => setConfirm({ open: true, title: "Delete Content?", message: `Are you sure you want to delete "${r.title}"?`, onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); } })}>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            {rows.length === 0 && !loading && (
-                                <tr>
-                                    <td colSpan={9} className="px-3 py-10 text-center text-slate-500">No data found.</td>
-                                </tr>
-                            )}
-                            {loading && (
-                                <tr>
-                                    <td colSpan={9} className="px-3 py-10 text-center text-slate-500">Loading...</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+            {!loading && rows.length === 0 ? (
+                <div className="mt-8 rounded-2xl border border-dashed border-slate-300 p-12 text-center">
+                    <div className="mx-auto w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                        <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-medium text-slate-900">No Promotions Found</h3>
+                    <p className="text-slate-500 text-sm mt-1">Create a new promotion or news item.</p>
                 </div>
+            ) : (
+                <div className="mt-4 rounded-2xl border bg-white shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-[1350px] w-full text-sm">
+                            <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
+                                <tr>
+                                    <th className="px-3 py-3 text-left w-[80px]">Image</th>
+                                    <th className="px-3 py-3 text-left min-w-[200px]">Title</th>
+                                    <th className="px-3 py-3 text-left w-[100px]">Type</th>
+                                    <th className="px-3 py-3 text-left w-[22%]">Product Context</th>
+                                    <th className="px-3 py-3 text-left w-[220px]">Promotion</th>
+                                    <th className="px-3 py-3 text-left w-[100px]">Status</th>
+                                    <th className="px-3 py-3 text-left w-[150px]">Created By</th>
+                                    <th className="px-3 py-3 text-left w-[150px]">Updated By</th>
+                                    <th className="px-3 py-3 text-center w-[250px]">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y relative">
+                                {rows.map(r => (
+                                    <tr key={r.id}>
+                                        <td className="px-3 py-3">
+                                            <img
+                                                src={toPublicUrl(r.image_path)}
+                                                className="w-12 h-12 rounded-lg object-cover border"
+                                                onError={e => e.target.src = "/images/placeholder.png"}
+                                            />
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            <div className="font-semibold text-slate-900">{r.title}</div>
+                                            <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
+                                        </td>
+                                        <td className="px-3 py-3 capitalize">
+                                            <span className={cn("inline-flex px-2 py-0.5 rounded text-[11px] font-Bold uppercase tracking-wider", r.type === 'promotion' ? "bg-purple-50 text-purple-700" : "bg-sky-50 text-sky-700")}>
+                                                {r.type}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            <div className="flex flex-col gap-2">
+                                                {r.category ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="text-[10px] font-Bold text-slate-400 uppercase tracking-wider min-w-[35px]">Cat:</span>
+                                                        <span className="text-xs font-Medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 truncate max-w-[200px]">
+                                                            {r.category.name}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2 text-slate-300">
+                                                        <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Cat:</span>
+                                                        <span className="text-xs">—</span>
+                                                    </div>
+                                                )}
 
-                <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
-                    <div className="text-sm font-Medium text-slate-500">Page <span className="font-Bold text-slate-900">{meta.current_page}</span> of <span className="font-Bold text-slate-900">{meta.last_page}</span></div>
-                    <div className="flex gap-3">
-                        <button disabled={meta.current_page === 1 || loading} onClick={() => setPage(p => p - 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Prev
-                        </button>
-                        <button disabled={meta.current_page === meta.last_page || loading} onClick={() => setPage(p => p + 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                            Next
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
+                                                {r.products && r.products.length > 0 ? (
+                                                    <div className="flex items-start gap-2">
+                                                        <span className="text-[10px] font-Bold text-[#D4793F] uppercase tracking-wider min-w-[35px] mt-0.5">Prod:</span>
+                                                        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 max-w-[350px] custom-scrollbar">
+                                                            {r.products.map(p => (
+                                                                <span key={p.id} className="flex-shrink-0 text-[10px] font-Bold text-[#D4793F] bg-orange-50 px-2 py-0.5 rounded border border-orange-100 whitespace-nowrap">
+                                                                    {p.title}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2 text-slate-300">
+                                                        <span className="text-[10px] font-Bold uppercase tracking-wider min-w-[35px]">Prod:</span>
+                                                        <span className="text-xs">—</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            {r.type === 'promotion' ? (
+                                                <PromotionCell start={r.start_date} end={r.end_date} />
+                                            ) : <span className="text-xs text-slate-400">—</span>}
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            <span className={cn("inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-Bold uppercase tracking-wider border",
+                                                r.status === 'published' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-50 text-slate-500 border-slate-200")}>
+                                                {r.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            <div className="text-xs font-Medium text-slate-900">{r.creator?.name ?? "—"}</div>
+                                            <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.created_at)}</div>
+                                        </td>
+                                        <td className="px-3 py-3">
+                                            {r.updater ? (
+                                                <>
+                                                    <div className="text-xs font-Medium text-slate-900">{r.updater.name}</div>
+                                                    <div className="text-[10px] text-slate-400 uppercase tracking-tighter">{formatDateShort(r.updated_at)}</div>
+                                                </>
+                                            ) : (
+                                                <span className="text-xs text-slate-400">—</span>
+                                            )}
+                                        </td>
+                                        <td className="px-3 py-3 text-right">
+                                            <div className="flex justify-end gap-2 flex-wrap">
+                                                <button className="px-3 py-2 rounded-lg border border-indigo-200 text-indigo-700 hover:bg-indigo-50 font-semibold" onClick={() => openEdit(r)}>
+                                                    Edit
+                                                </button>
+                                                <button className="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700 font-semibold" onClick={() => setConfirm({ open: true, title: "Delete Content?", message: `Are you sure you want to delete "${r.title}"?`, onConfirm: async () => { setConfirm(p => ({ ...p, open: false })); await handleDelete(r); } })}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {rows.length === 0 && !loading && (
+                                    <tr>
+                                        <td colSpan={10} className="px-3 py-10 text-center text-slate-500">No data found.</td>
+                                    </tr>
+                                )}
+                                {loading && (
+                                    <tr>
+                                        <td colSpan={10} className="px-3 py-10 text-center text-slate-500">Loading...</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="p-6 flex items-center justify-between border-t bg-slate-50/50">
+                        <div className="text-sm font-Medium text-slate-500">Page <span className="font-Bold text-slate-900">{meta.current_page}</span> of <span className="font-Bold text-slate-900">{meta.last_page}</span></div>
+                        <div className="flex gap-3">
+                            <button disabled={meta.current_page === 1 || loading} onClick={() => setPage(p => p - 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                                Prev
+                            </button>
+                            <button disabled={meta.current_page === meta.last_page || loading} onClick={() => setPage(p => p + 1)} className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-slate-200 bg-white text-sm font-SemiBold text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                                Next
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             <PromotionFormModal
                 open={modalOpen}

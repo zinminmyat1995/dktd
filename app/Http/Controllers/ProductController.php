@@ -71,7 +71,6 @@ class ProductController extends Controller
                 'start_date'   => $validated['start_date'] ?? null,
                 'end_date'     => $validated['end_date'] ?? null,
                 'created_by'   => auth()->id(),
-                'updated_by'   => auth()->id(),
             ]);
             
             return response()->json([
