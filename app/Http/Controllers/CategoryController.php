@@ -27,7 +27,6 @@ class CategoryController extends Controller
             'name' => $validated['name'],
             'is_active' => $validated['is_active'] ?? true,
             'created_by' => auth()->id(),
-            'updated_by' => auth()->id(),
         ])->load(['creator:id,name', 'updater:id,name']);
 
         return response()->json([

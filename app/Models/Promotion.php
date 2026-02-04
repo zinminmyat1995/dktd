@@ -13,7 +13,6 @@ class Promotion extends Model
     {
         static::creating(function ($model) {
             if (!$model->created_by) $model->created_by = auth()->id();
-            if (!$model->updated_by) $model->updated_by = auth()->id();
         });
 
         static::updating(function ($model) {

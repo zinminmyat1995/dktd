@@ -51,7 +51,6 @@ class PromotionController extends Controller
             'start_date'  => $validated['start_date'] ?? null,
             'end_date'    => $validated['end_date'] ?? null,
             'created_by'  => $request->user()->id,
-            'updated_by'  => $request->user()->id,
         ]);
 
         if (!empty($validated['product_ids'])) {
@@ -74,6 +73,12 @@ class PromotionController extends Controller
         $status   = $req->status;
         $type     = $req->type;
         $perPage  = $req->per_page ?? 10;
+
+        // Auto-archive expired promotions
+        Promotion::where('type', 'promotion')
+            ->where('status', 'published')
+            ->whereDate('end_date', '<', now()) // Expired
+            ->update(['status' => 'archived']);
 
         $query = Promotion::query()
             ->with(['category:id,name', 'products:id,title,category_id', 'creator:id,name', 'updater:id,name']);
