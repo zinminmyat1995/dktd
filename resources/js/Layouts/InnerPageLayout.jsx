@@ -1,6 +1,7 @@
 import PublicLayout from "@/Layouts/PublicLayout";
 import InnerBanner from "@/Components/InnerBanner";
 import useTranslate from "@/hooks/useTranslate";
+import { cn } from "@/lib/utils";
 
 function HomeHero({ image = "/images/banner1.png" }) {
   const { t, locale } = useTranslate();
@@ -33,13 +34,13 @@ function HomeHero({ image = "/images/banner1.png" }) {
               {/* Kicker with accent line */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-10 bg-[#C46A2A] shadow-md" />
-                <p className="text-[13px] sm:text-[14px] font-Bold uppercase tracking-[0.3em] text-white/90 drop-shadow-md">
+                <p className={`text-[13px] sm:text-[14px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-white/90 drop-shadow-md`}>
                   {t("messages.hero_kicker")}
                 </p>
               </div>
 
               {/* Main Title - White + Orange Accent */}
-              <h1 className={`${titleSizing} ${leadingSizing} font-Bold text-white drop-shadow-2xl font-display`}>
+              <h1 className={`${titleSizing} ${leadingSizing} font-Bold text-white drop-shadow-2xl font-display uppercase`}>
                 <span className="block drop-shadow-sm">{t("messages.hero_title_1")}</span>
                 <span className="block text-[#C46A2A] relative w-fit mt-1">
                   {t("messages.hero_title_2")}
@@ -119,9 +120,7 @@ export default function InnerPageLayout({ titleKey, children, isHome = false }) 
         />
       )}
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        {children}
-      </div>
+      <main>{children}</main>
     </PublicLayout>
   );
 }

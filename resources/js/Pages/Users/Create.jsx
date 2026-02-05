@@ -1,56 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CommonToast from "@/Components/CommonToast";
 import CommonConfirmModal from "@/Components/CommonConfirmModal";
 
-/* =======================
-   Helpers
-======================= */
-function cn(...xs) {
-  return xs.filter(Boolean).join(" ");
-}
-
-function getCsrfToken() {
-  const el = document.querySelector('meta[name="csrf-token"]');
-  return el ? el.getAttribute("content") : "";
-}
-
-async function apiGet(path) {
-  const res = await fetch(path, {
-    headers: { Accept: "application/json" },
-    credentials: "same-origin",
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
-
-async function apiJson(method, path, body) {
-  const res = await fetch(path, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "X-CSRF-TOKEN": getCsrfToken(),
-      "X-Requested-With": "XMLHttpRequest",
-    },
-    credentials: "same-origin",
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  const text = await res.text();
-  let data = null;
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {}
-
-  if (!res.ok) {
-    const err = new Error(text || "Request failed");
-    err.status = res.status;
-    err.data = data;
-    throw err;
-  }
-  return data;
-}
+// Libs & Services
+import { cn, toPublicUrl, formatDateShort } from "@/lib/utils";
+import { apiFetch, extract422Errors } from "@/services/api";
 
 function Modal({ open, title, children, onClose, maxWidth = "max-w-lg" }) {
   if (!open) return null;
@@ -77,6 +33,7 @@ function Modal({ open, title, children, onClose, maxWidth = "max-w-lg" }) {
    Main Component
 ======================= */
 export default function Create() {
+  const { auth } = usePage().props;
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
 
@@ -85,16 +42,16 @@ export default function Create() {
   const closeToast = () => setToast((p) => ({ ...p, open: false }));
 
   /* Confirm Modal */
-  const [confirm, setConfirm] = useState({ open: false, title: "", message: "", onConfirm: async () => {} });
+  const [confirm, setConfirm] = useState({ open: false, title: "", message: "", onConfirm: async () => { } });
 
   /* Register Form */
-  const [form, setForm] = useState({ name: "", email: "", role: "staff", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "staff", password: "", image: null, imagePreview: "" });
   const [errors, setErrors] = useState({});
 
   /* Edit Modal */
   const [editOpen, setEditOpen] = useState(false);
   const [editRow, setEditRow] = useState(null);
-  const [editForm, setEditForm] = useState({ name: "", email: "", role: "staff" });
+  const [editForm, setEditForm] = useState({ name: "", email: "", role: "staff", image: null, imagePreview: "" });
   const [editErrors, setEditErrors] = useState({});
 
   /* Password Modal */
@@ -110,7 +67,7 @@ export default function Create() {
   async function fetchUsers() {
     setLoading(true);
     try {
-      const res = await apiGet("/admin/users/data");
+      const res = await apiFetch("/admin/users/data");
       setUsers(res.data ?? []);
     } catch {
       showToast("error", "Error", "Failed to load users.");
@@ -127,28 +84,31 @@ export default function Create() {
      Create User
   ======================= */
   async function submitCreate() {
-    const e = {};
-    if (!form.name.trim()) e.name = "Name is required.";
-    if (!form.email.trim()) e.email = "Email is required.";
-    if (!form.role) e.role = "Role is required.";
-    if (!form.password) e.password = "Password is required.";
-    setErrors(e);
-
-    if (Object.keys(e).length) return;
-
+    setLoading(true);
+    setErrors({});
     try {
-      setLoading(true);
-      const res = await apiJson("POST", "/admin/users", form);
+      const fd = new FormData();
+      fd.append("name", form.name.trim());
+      fd.append("email", form.email.trim());
+      fd.append("role", form.role);
+      fd.append("password", form.password);
+      if (form.image) fd.append("image", form.image);
+
+      const res = await apiFetch("/admin/users", { method: "POST", body: fd });
       if (res?.ok === false) {
         showToast("error", "Failed", res?.message || "Cannot create user.");
         return;
       }
 
       showToast("success", "Success", res?.message || "User created.");
-      setForm({ name: "", email: "", role: "staff", password: "" });
+      setForm({ name: "", email: "", role: "staff", password: "", image: null, imagePreview: "" });
       fetchUsers();
     } catch (err) {
-      showToast("error", "Error", err?.data?.message || "Failed to create user.");
+      if (err.status === 422) {
+        setErrors(extract422Errors(err));
+      } else {
+        showToast("error", "Error", err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -159,23 +119,29 @@ export default function Create() {
   ======================= */
   function openEdit(row) {
     setEditRow(row);
-    setEditForm({ name: row.name ?? "", email: row.email ?? "", role: row.role ?? "staff" });
+    setEditForm({
+      name: row.name ?? "",
+      email: row.email ?? "",
+      role: row.role ?? "staff",
+      image: null,
+      imagePreview: toPublicUrl(row.image_path) || ""
+    });
     setEditErrors({});
     setEditOpen(true);
   }
 
   async function submitEdit() {
-    const e = {};
-    if (!editForm.name.trim()) e.name = "Name is required.";
-    if (!editForm.email.trim()) e.email = "Email is required.";
-    if (!editForm.role) e.role = "Role is required.";
-    setEditErrors(e);
-
-    if (Object.keys(e).length) return;
-
+    setLoading(true);
+    setEditErrors({});
     try {
-      setLoading(true);
-      const res = await apiJson("PUT", `/admin/users/${editRow.id}`, editForm);
+      const fd = new FormData();
+      fd.append("_method", "PUT");
+      fd.append("name", editForm.name.trim());
+      fd.append("email", editForm.email.trim());
+      fd.append("role", editForm.role);
+      if (editForm.image) fd.append("image", editForm.image);
+
+      const res = await apiFetch(`/admin/users/${editRow.id}`, { method: "POST", body: fd });
 
       if (res?.ok === false) {
         showToast("error", "Failed", res?.message || "Cannot update user.");
@@ -186,7 +152,11 @@ export default function Create() {
       setEditOpen(false);
       fetchUsers();
     } catch (err) {
-      showToast("error", "Error", err?.data?.message || "Failed to update user.");
+      if (err.status === 422) {
+        setEditErrors(extract422Errors(err));
+      } else {
+        showToast("error", "Error", err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -203,17 +173,13 @@ export default function Create() {
   }
 
   async function submitPassword() {
-    const e = {};
-    if (!pwdForm.password) e.password = "Password is required.";
-    if (pwdForm.password !== pwdForm.password_confirmation)
-      e.password_confirmation = "Password confirmation does not match.";
-
-    setPwdErrors(e);
-    if (Object.keys(e).length) return;
-
+    setLoading(true);
+    setPwdErrors({});
     try {
-      setLoading(true);
-      const res = await apiJson("PUT", `/admin/users/${pwdRow.id}/password`, pwdForm);
+      const res = await apiFetch(`/admin/users/${pwdRow.id}/password`, {
+        method: "PUT",
+        body: JSON.stringify(pwdForm)
+      });
 
       if (res?.ok === false) {
         showToast("error", "Failed", res?.message || "Cannot change password.");
@@ -223,7 +189,11 @@ export default function Create() {
       showToast("success", "Success", res?.message || "Password updated.");
       setPwdOpen(false);
     } catch (err) {
-      showToast("error", "Error", err?.data?.message || "Failed to change password.");
+      if (err.status === 422) {
+        setPwdErrors(extract422Errors(err));
+      } else {
+        showToast("error", "Error", err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -247,7 +217,7 @@ export default function Create() {
   async function doDelete(row) {
     try {
       setLoading(true);
-      const res = await apiJson("DELETE", `/admin/users/${row.id}`);
+      const res = await apiFetch(`/admin/users/${row.id}`, { method: "DELETE" });
 
       if (res?.ok === false) {
         showToast("error", "Failed", res?.message || "Cannot delete user.");
@@ -308,6 +278,26 @@ export default function Create() {
                   {errors.password && <p className="mt-1 text-xs text-rose-600">{errors.password}</p>}
                 </div>
 
+                {auth.user.role === 'admin' && (
+                  <div>
+                    <label className="text-sm font-semibold text-slate-700">Profile Image</label>
+                    <input
+                      type="file"
+                      onChange={e => {
+                        const file = e.target.files[0];
+                        if (file) setForm({ ...form, image: file, imagePreview: URL.createObjectURL(file) });
+                      }}
+                      className={cn("mt-1 w-full rounded-xl border px-3 py-2 text-sm", errors.image ? "border-rose-400" : "border-slate-200")}
+                    />
+                    {errors.image && <p className="mt-1 text-xs text-rose-600">{errors.image}</p>}
+                    {form.imagePreview && (
+                      <div className="mt-2 flex justify-center">
+                        <img src={form.imagePreview} alt="preview" className="h-20 w-20 rounded-full object-cover border-2 border-slate-100" />
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <button
                   onClick={() =>
                     setConfirm({
@@ -355,67 +345,82 @@ export default function Create() {
                       </tr>
                     </thead>
                     <tbody className="divide-y">
-                    {users.map((u) => {
-                    const isAdmin = u.role === "admin";
+                      {users.map((u) => {
+                        const isAdmin = u.role === "admin";
 
-                    return (
-                        <tr key={u.id}>
-                        {/* ✅ Name width + truncate */}
-                        <td className="px-4 py-3 font-semibold text-slate-900 w-[220px]">
-                            <div className="max-w-[220px] truncate">{u.name}</div>
-                        </td>
+                        return (
+                          <tr key={u.id}>
+                            {/* ✅ Avatar + Name */}
+                            <td className="px-4 py-3 font-semibold text-slate-900 w-[220px]">
+                              <div className="flex items-center gap-3">
+                                {u.image_path ? (
+                                  <img
+                                    src={toPublicUrl(u.image_path)}
+                                    className="w-8 h-8 rounded-full object-cover border"
+                                    onError={e => e.target.src = "/images/avatar-placeholder.png"}
+                                  />
+                                ) : (
+                                  <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+                                    <span className="text-[10px] font-bold text-slate-600 uppercase">
+                                      {u.name?.charAt(0) || "U"}
+                                    </span>
+                                  </div>
+                                )}
+                                <div className="max-w-[150px] truncate">{u.name}</div>
+                              </div>
+                            </td>
 
-                        {/* ✅ Email width + truncate */}
-                        <td className="px-4 py-3 text-slate-600 w-[280px]">
-                            <div className="max-w-[280px] truncate">{u.email}</div>
-                        </td>
+                            {/* ✅ Email width + truncate */}
+                            <td className="px-4 py-3 text-slate-600 w-[280px]">
+                              <div className="max-w-[280px] truncate">{u.email}</div>
+                            </td>
 
-                        {/* ✅ Role badge */}
-                        <td className="px-4 py-3 w-[110px]">
-                            <span
-                            className={cn(
-                                "inline-flex px-3 py-1 rounded-full text-xs font-bold",
-                                isAdmin
-                                ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                                : "bg-slate-100 text-slate-700 border border-slate-200"
-                            )}
-                            >
-                            {u.role}
-                            </span>
-                        </td>
+                            {/* ✅ Role badge */}
+                            <td className="px-4 py-3 w-[110px]">
+                              <span
+                                className={cn(
+                                  "inline-flex px-3 py-1 rounded-full text-xs font-bold",
+                                  isAdmin
+                                    ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                                    : "bg-slate-100 text-slate-700 border border-slate-200"
+                                )}
+                              >
+                                {u.role}
+                              </span>
+                            </td>
 
-                        {/* ✅ Actions (Admin cannot be edited/deleted) */}
-                        <td className="px-4 py-3 text-right w-[260px]">
-                            {isAdmin ? (
-                            <span className="text-xs text-slate-400 italic">Protected</span>
-                            ) : (
-                            <div className="inline-flex gap-2">
-                                <button
-                                className="rounded-lg border px-3 py-2 text-xs font-semibold hover:bg-slate-50"
-                                onClick={() => openEdit(u)}
-                                >
-                                Edit
-                                </button>
+                            {/* ✅ Actions (Admin cannot be edited/deleted) */}
+                            <td className="px-4 py-3 text-right w-[260px]">
+                              {isAdmin ? (
+                                <span className="text-xs text-slate-400 italic">Protected</span>
+                              ) : (
+                                <div className="inline-flex gap-2">
+                                  <button
+                                    className="rounded-lg border px-3 py-2 text-xs font-semibold hover:bg-slate-50"
+                                    onClick={() => openEdit(u)}
+                                  >
+                                    Edit
+                                  </button>
 
-                                <button
-                                className="rounded-lg border border-indigo-200 text-indigo-700 px-3 py-2 text-xs font-semibold hover:bg-indigo-50"
-                                onClick={() => openPassword(u)}
-                                >
-                                Password
-                                </button>
+                                  <button
+                                    className="rounded-lg border border-indigo-200 text-indigo-700 px-3 py-2 text-xs font-semibold hover:bg-indigo-50"
+                                    onClick={() => openPassword(u)}
+                                  >
+                                    Password
+                                  </button>
 
-                                <button
-                                className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-bold text-white hover:bg-rose-700"
-                                onClick={() => askDelete(u)}
-                                >
-                                Delete
-                                </button>
-                            </div>
-                            )}
-                        </td>
-                        </tr>
-                    );
-                    })}
+                                  <button
+                                    className="rounded-lg bg-rose-600 px-3 py-2 text-xs font-bold text-white hover:bg-rose-700"
+                                    onClick={() => askDelete(u)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
 
 
                       {users.length === 0 && (
@@ -460,7 +465,25 @@ export default function Create() {
             />
             {editErrors.email && <p className="mt-1 text-xs text-rose-600">{editErrors.email}</p>}
           </div>
-
+          {(editRow?.id === auth?.user?.id || auth?.user?.role === 'admin') && (
+            <div>
+              <label className="text-sm font-semibold text-slate-700">Profile Image</label>
+              <input
+                type="file"
+                onChange={e => {
+                  const file = e.target.files[0];
+                  if (file) setEditForm({ ...editForm, image: file, imagePreview: URL.createObjectURL(file) });
+                }}
+                className={cn("mt-1 w-full rounded-xl border px-3 py-2 text-sm", editErrors.image ? "border-rose-400" : "border-slate-200")}
+              />
+              {editErrors.image && <p className="mt-1 text-xs text-rose-600">{editErrors.image}</p>}
+              {editForm.imagePreview && (
+                <div className="mt-2 flex justify-center">
+                  <img src={editForm.imagePreview} alt="preview" className="h-20 w-20 rounded-full object-cover border-2 border-slate-100" />
+                </div>
+              )}
+            </div>
+          )}
           <div className="flex justify-end gap-2 pt-2">
             <button onClick={() => setEditOpen(false)} className="px-4 py-2 rounded-lg border hover:bg-slate-50">
               Cancel

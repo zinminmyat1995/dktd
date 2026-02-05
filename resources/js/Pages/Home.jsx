@@ -1,6 +1,7 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
 import { Link } from "@inertiajs/react";
+import { cn } from "@/lib/utils";
 
 export default function Home({ products, promotions, latestNewsId }) {
   const { t, locale } = useTranslate();
@@ -74,7 +75,7 @@ export default function Home({ products, promotions, latestNewsId }) {
               </div>
 
               <h2 className={`text-[40px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.1em]'} text-[#C46A2A] sm:text-[48px] font-display uppercase leading-tight`}>
-                {t("messages.about", "About Us")}
+                {t("messages.about")}
               </h2>
 
               <div className="mt-8 space-y-6">
@@ -152,189 +153,193 @@ export default function Home({ products, promotions, latestNewsId }) {
       </section>
 
       {/* ================= OUR PRODUCTS ================= */}
-      <section className="py-16 bg-white">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="text-center">
-            <h2 className={`mt-3 text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display font-SemiBold`}>
-              {t("messages.our_products")}
-            </h2>
-            <p className={`text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
-              {t("messages.products_intro_subtitle")}
-            </p>
-          </div>
+      {products && products.length > 0 && (
+        <section className="py-16 bg-white">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="text-center">
+              <h2 className={`mt-3 text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display font-SemiBold`}>
+                {t("messages.our_products")}
+              </h2>
+              <p className={`text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
+                {t("messages.products_intro_subtitle")}
+              </p>
+            </div>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product, index) => (
-              <Link
-                key={product.id}
-                href={route('products.show_detail', product.id)}
-                className="group relative h-120 overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
-              >
-                <div className="absolute top-5 right-5 z-10 flex flex-row gap-2 items-center transition-transform duration-500 group-hover:scale-110">
-                  {product.promotions && product.promotions.length > 0 && (
-                    <span className={`bg-[#D4793F] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
-                      {t("messages.promotion_label") || "Promotion"}
-                    </span>
-                  )}
-                  {product.is_new && (
-                    <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
-                      {t("messages.new_badge")}
-                    </span>
-                  )}
-                </div>
-                {/* Product Image */}
-                <div className="h-[300px] sm:h-[350px] lg:h-[450px] xl:h-[500px] w-full overflow-hidden flex items-center justify-center">
-                  <img
-                    src={product.image_path}
-                    alt={product.title}
-                    className=" h-[90%] w-[90%] object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.src = '/images/placeholder.png';
-                    }}
-                  />
-                </div>
-
-                {/* Product Info Overlay */}
-                <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-white/0 to-transparent p-8 text-white transition-all duration-500 group-hover:from-black/90">
-                  <div className="mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
-                    <span className="text-xl font-Bold text-[#D4793F] font-display">
-                      0{index + 1}
-                    </span>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products.map((product, index) => (
+                <Link
+                  key={product.id}
+                  href={route('products.show_detail', product.id)}
+                  className="group relative h-120 overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] block"
+                >
+                  <div className="absolute top-5 right-5 z-10 flex flex-row gap-2 items-center transition-transform duration-500 group-hover:scale-110">
+                    {product.promotions && product.promotions.length > 0 && (
+                      <span className={`bg-[#D4793F] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
+                        {t("messages.promotion_label") || "Promotion"}
+                      </span>
+                    )}
+                    {product.is_new && (
+                      <span className={`bg-[#1E4F7A] text-white text-[10px] font-Bold px-4 py-1.5 rounded-full ${locale === 'kh' ? '' : 'tracking-[0.2em]'} shadow-xl uppercase`}>
+                        {t("messages.new_badge")}
+                      </span>
+                    )}
+                  </div>
+                  {/* Product Image */}
+                  <div className="h-[300px] sm:h-[350px] lg:h-[450px] xl:h-[500px] w-full overflow-hidden flex items-center justify-center">
+                    <img
+                      src={product.image_path}
+                      alt={product.title}
+                      className=" h-[90%] w-[90%] object-contain transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.src = '/images/placeholder.png';
+                      }}
+                    />
                   </div>
 
-                  <h3 className="text-xl font-Bold tracking-wider text-white mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
-                    {product.title}
-                  </h3>
-
-                  {/* Fixed-height description area to keep title/number aligned */}
-                  <div className="min-h-[40px] mb-6">
-                    <p className="text-sm leading-5 text-slate-200 line-clamp-2 transition-all duration-500 group-hover:line-clamp-4 group-hover:text-white group-hover:-translate-y-1">
-                      {product.description}
-                    </p>
-                  </div>
-
-                  <div className="inline-flex items-center text-sm font-Bold text-[#D4793F] group-hover:text-amber-300 transition-all duration-500 transform group-hover:-translate-y-1">
-                    {t("messages.read_more")}
-                    <svg className="ml-2 h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <Link
-              href={route("products")}
-              className="
-                inline-flex items-center justify-center
-                border-2 border-[#C46A2A]
-                px-10 py-4 text-[13px]
-                font-Bold tracking-[0.2em]
-                text-[#C46A2A]
-                hover:bg-[#C46A2A] hover:text-white transition-all duration-500
-                rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
-                hover:translate-y-[-2px]
-                uppercase
-              "
-            >
-              {t("messages.view_more")}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= PROMOTION ================= */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4">
-          <h2 className={`mt-3 text-center text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display`}>
-            {t("messages.promotion")}
-          </h2>
-          <p className={`text-center text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
-            {t("messages.promotion_intro_subtitle")}
-          </p>
-
-
-          {/* List */}
-          <div className="mt-8 space-y-6">
-            {promotions.map((promo) => (
-              <Link
-                key={promo.id}
-                href={route('promotions.show_detail', promo.id)}
-                className="flex flex-col sm:flex-row gap-6 sm:gap-8 border-b border-slate-100 pb-6 pt-2 hover:bg-slate-50/50 transition-all duration-500 group rounded-xl px-2 sm:px-0"
-              >
-                {/* Left image */}
-                <div className="h-[180px] sm:h-[140px] w-full sm:w-[260px] shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
-                  <img
-                    src={toPublicUrl(promo.image_path)}
-                    alt={promo.title}
-                    className="h-full w-full object-fit transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
-                    loading="lazy"
-                    onError={(e) => (e.currentTarget.parentElement.style.display = "none")}
-                  />
-                </div>
-
-                <div className="min-w-0 flex-1 flex flex-col justify-between py-1 transform transition-all duration-500 sm:group-hover:translate-x-1">
-                  <div>
-                    {/* Title row + Type badge */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
-                      <h3 className="text-[20px] sm:text-[24px] font-Medium tracking-tight text-slate-700 group-hover:text-[#185C9B] transition-colors duration-500 truncate">
-                        {promo.title}
-                      </h3>
-
-                      <div className="shrink-0 bg-[#D4793F]/10 px-4 py-1 text-[10px] font-Bold tracking-[0.2em] text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase">
-                        {t(promo.type === 'promotion' ? 'messages.promotion_label' : 'messages.news_label')}
-                      </div>
+                  {/* Product Info Overlay */}
+                  <div className="absolute inset-0 flex flex-col justify-end rounded-2xl bg-gradient-to-t from-black/60 via-white/0 to-transparent p-8 text-white transition-all duration-500 group-hover:from-black/90">
+                    <div className="mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
+                      <span className="text-xl font-Bold text-[#D4793F] font-display">
+                        0{index + 1}
+                      </span>
                     </div>
 
-                    {/* dotted line under title */}
-                    <div className="h-[1px] w-full border-t border-dotted border-slate-300 mb-3 opacity-50" />
+                    <h3 className="text-xl font-Bold tracking-wider text-white mb-2 transform transition-all duration-500 group-hover:-translate-y-1">
+                      {product.title}
+                    </h3>
 
-                    {/* description */}
-                    <p className="text-[14px] leading-relaxed tracking-wide text-slate-600 line-clamp-2 transition-colors duration-500 group-hover:text-slate-900">
-                      {promo.description}
-                    </p>
-                  </div>
+                    {/* Fixed-height description area to keep title/number aligned */}
+                    <div className="min-h-[40px] mb-6">
+                      <p className="text-sm leading-5 text-slate-200 line-clamp-2 transition-all duration-500 group-hover:line-clamp-4 group-hover:text-white group-hover:-translate-y-1">
+                        {product.description}
+                      </p>
+                    </div>
 
-                  <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
-                    <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
-                      {formatDate(promo)}
-                    </span>
-                    <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
+                    <div className="inline-flex items-center text-sm font-Bold text-[#D4793F] group-hover:text-amber-300 transition-all duration-500 transform group-hover:-translate-y-1">
                       {t("messages.read_more")}
-                      <svg className="h-4 w-4 transform transition-all duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      <svg className="ml-2 h-4 w-4 transform transition-transform duration-500 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                       </svg>
-                    </span>
+                    </div>
                   </div>
-                </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center">
+              <Link
+                href={route("products")}
+                className="
+                  inline-flex items-center justify-center
+                  border-2 border-[#C46A2A]
+                  px-10 py-4 text-[13px]
+                  font-Bold tracking-[0.2em]
+                  text-[#C46A2A]
+                  hover:bg-[#C46A2A] hover:text-white transition-all duration-500
+                  rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
+                  hover:translate-y-[-2px]
+                  uppercase
+                "
+              >
+                {t("messages.view_more")}
               </Link>
-            ))}
+            </div>
           </div>
+        </section>
+      )}
+
+      {/* ================= PROMOTION ================= */}
+      {promotions && promotions.length > 0 && (
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-4">
+            <h2 className={`mt-3 text-center text-[35px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F] font-display`}>
+              {t("messages.promotion")}
+            </h2>
+            <p className={`text-center text-[15px] ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#185C9B]`}>
+              {t("messages.promotion_intro_subtitle")}
+            </p>
 
 
-          <div className="mt-6 text-center">
-            <Link
-              href={route("promotion")}
-              className="
-                inline-flex items-center justify-center
-                border-2 border-[#C46A2A]
-                px-10 py-4 text-[13px]
-                font-Bold tracking-[0.2em]
-                text-[#C46A2A]
-                hover:bg-[#C46A2A] hover:text-white transition-all duration-500
-                rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
-                hover:translate-y-[-2px]
-                uppercase
-              "
-            >
-              {t("messages.view_more")}
-            </Link>
+            {/* List */}
+            <div className="mt-8 space-y-6">
+              {promotions.map((promo) => (
+                <Link
+                  key={promo.id}
+                  href={route('promotions.show_detail', promo.id)}
+                  className="flex flex-col sm:flex-row gap-6 sm:gap-8 border-b border-slate-100 pb-6 pt-2 hover:bg-slate-50/50 transition-all duration-500 group rounded-xl px-2 sm:px-0"
+                >
+                  {/* Left image */}
+                  <div className="h-[180px] sm:h-[140px] w-full sm:w-[260px] shrink-0 overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                    <img
+                      src={toPublicUrl(promo.image_path)}
+                      alt={promo.title}
+                      className="h-full w-full object-fit transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"
+                      loading="lazy"
+                      onError={(e) => (e.currentTarget.parentElement.style.display = "none")}
+                    />
+                  </div>
+
+                  <div className="min-w-0 flex-1 flex flex-col justify-between py-1 transform transition-all duration-500 sm:group-hover:translate-x-1">
+                    <div>
+                      {/* Title row + Type badge */}
+                      <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+                        <h3 className="text-[20px] sm:text-[24px] font-Medium tracking-tight text-slate-700 group-hover:text-[#185C9B] transition-colors duration-500 truncate">
+                          {promo.title}
+                        </h3>
+
+                        <div className={`shrink-0 bg-[#D4793F]/10 px-4 py-1 text-[10px] font-Bold ${locale === 'kh' ? '' : 'tracking-[0.2em]'} text-[#D4793F] rounded-full border border-[#D4793F]/20 uppercase`}>
+                          {t(promo.type === 'promotion' ? 'messages.promotion_label' : 'messages.news_label')}
+                        </div>
+                      </div>
+
+                      {/* dotted line under title */}
+                      <div className="h-[1px] w-full border-t border-dotted border-slate-300 mb-3 opacity-50" />
+
+                      {/* description */}
+                      <p className="text-[14px] leading-relaxed tracking-wide text-slate-600 line-clamp-2 transition-colors duration-500 group-hover:text-slate-900">
+                        {promo.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-6 sm:mt-auto pb-1">
+                      <span className="text-[12px] font-Medium text-slate-400 uppercase tracking-widest">
+                        {formatDate(promo)}
+                      </span>
+                      <span className="text-[12px] font-Bold text-[#D4793F] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all duration-500">
+                        {t("messages.read_more")}
+                        <svg className="h-4 w-4 transform transition-all duration-500 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+
+            <div className="mt-6 text-center">
+              <Link
+                href={route("promotion")}
+                className="
+                  inline-flex items-center justify-center
+                  border-2 border-[#C46A2A]
+                  px-10 py-4 text-[13px]
+                  font-Bold tracking-[0.2em]
+                  text-[#C46A2A]
+                  hover:bg-[#C46A2A] hover:text-white transition-all duration-500
+                  rounded-full shadow-lg shadow-orange-900/5 hover:shadow-orange-900/20
+                  hover:translate-y-[-2px]
+                  uppercase
+                "
+              >
+                {t("messages.view_more")}
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="py-16 bg-slate-50/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">

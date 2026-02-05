@@ -1,5 +1,6 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
+import { cn } from "@/lib/utils";
 
 export default function About() {
   const { t, locale } = useTranslate();

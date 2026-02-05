@@ -2,6 +2,7 @@ import { Link, usePage, router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 import SiteFooter from "@/Components/SiteFooter";
 import useTranslate from "@/hooks/useTranslate";
+import { cn } from "@/lib/utils";
 
 const socials = [
   { name: "TikTok", href: "#", icon: TikTokIcon },
@@ -13,7 +14,7 @@ const navItems = [
   { key: "messages.home", routeName: "home" },
   { key: "messages.about", routeName: "about" },
   { key: "messages.products", routeName: "products" },
-  { label: "Promos", routeName: "promotion" },
+  { key: "messages.promotion", routeName: "promotion" },
   { key: "messages.contact", routeName: "contact" },
 ];
 
@@ -57,7 +58,7 @@ export default function PublicLayout({ children }) {
   }, [url]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen flex flex-col bg-white">
       <header className="sticky top-0 z-[100] w-full bg-white/80 backdrop-blur-md border-b border-slate-100">
         <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-12">
           {/* Left: Logo */}
@@ -82,7 +83,7 @@ export default function PublicLayout({ children }) {
                   key={item.routeName}
                   href={href}
                   className={[
-                    "text-[15px] font-Bold uppercase tracking-widest transition-all duration-300",
+                    `text-[15px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-widest'} transition-all duration-300`,
                     active
                       ? "text-[#185C9B] border-b-2 border-[#185C9B] pb-1"
                       : "text-slate-600 hover:text-[#185C9B] border-b-2 border-transparent pb-1",
@@ -232,11 +233,11 @@ export default function PublicLayout({ children }) {
             </div>
           </div>
         </div>
-      </header>
+      </header >
 
-      <main>{children}</main>
+      <main className="flex-grow">{children}</main>
       <SiteFooter />
-    </div>
+    </div >
   );
 }
 

@@ -82,9 +82,9 @@ export default function CommonToast({
   if (!open) return null;
 
   return (
-    <div className="fixed top-20 right-4  z-[9999] w-[92vw] max-w-sm">
+    <div className="fixed top-20 right-4 z-[9999] w-[92vw] max-w-sm pointer-events-none">
       <div
-        className={`rounded-2xl border bg-white shadow-lg overflow-hidden ${theme.border}`}
+        className={`rounded-2xl border bg-white shadow-lg overflow-hidden pointer-events-auto ${theme.border}`}
         role="status"
         aria-live="polite"
       >

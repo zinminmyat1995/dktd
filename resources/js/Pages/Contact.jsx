@@ -1,6 +1,7 @@
 import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import useTranslate from "@/hooks/useTranslate";
 import { useForm, usePage } from "@inertiajs/react";
+import { cn } from "@/lib/utils";
 
 export default function Contact() {
   const { t, locale } = useTranslate();

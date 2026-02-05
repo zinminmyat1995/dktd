@@ -8,23 +8,29 @@
 @layer base {
     html {
         font-family: 'Nunito', sans-serif;
-        font-weight: 500; /* Medium weight */
+        font-weight: 500;
+        /* Medium weight */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-    
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         font-family: 'Fredoka One', cursive;
         font-weight: 400;
-        letter-spacing: 0.05em;
+        letter-spacing: normal;
     }
 }
 
 
 /* ✅ Admin side only font override (don't affect public pages) */
 .admin-font {
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 500;
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 500;
 }
 
 .admin-font h1,
@@ -33,11 +39,7 @@
 .admin-font h4,
 .admin-font h5,
 .admin-font h6 {
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 700 !important;
-  letter-spacing: normal !important;
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: normal !important;
 }
-
-
-
-

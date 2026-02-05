@@ -2,6 +2,7 @@ import InnerPageLayout from "@/Layouts/InnerPageLayout";
 import { Link } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
 import { useState, useRef, useLayoutEffect } from "react";
+import { cn } from "@/lib/utils";
 
 export default function ProductDetail({ product }) {
     const { t, locale } = useTranslate();
@@ -41,7 +42,7 @@ export default function ProductDetail({ product }) {
 
     return (
         <InnerPageLayout titleKey="messages.products">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 min-h-[60vh] flex flex-col justify-center">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-[35%_1fr_280px] lg:items-stretch h-full">
 
                     {/* Left: Product Image */}
@@ -99,7 +100,7 @@ export default function ProductDetail({ product }) {
                                 )}
                             </div>
 
-                            <h1 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-Medium tracking-tight text-slate-700 font-display leading-tight">
+                            <h1 className={`mt-4 text-2xl sm:text-3xl lg:text-4xl font-Medium ${locale === 'kh' ? '' : 'tracking-tight'} text-slate-700 font-display leading-tight`}>
                                 {product.title}
                             </h1>
 
@@ -168,7 +169,7 @@ export default function ProductDetail({ product }) {
                     {/* Related Promotions (Right Column) */}
                     <div>
                         <div className="bg-slate-50/50 rounded-[2rem] p-5 border border-slate-100 lg:sticky lg:top-8">
-                            <h4 className="text-[10px] font-Bold text-[#D4793F] uppercase tracking-[0.2em] mb-3">
+                            <h4 className={`text-[10px] font-Bold text-[#D4793F] uppercase ${locale === 'kh' ? '' : 'tracking-[0.2em]'} mb-3`}>
                                 {t("messages.related_promotions") || "Related Promotions"}
                             </h4>
                             <div className="space-y-2 max-h-[335px] overflow-y-auto custom-scrollbar pr-1">
@@ -206,8 +207,6 @@ export default function ProductDetail({ product }) {
                     </div>
                 </div>
             </div>
-
-
 
             <style dangerouslySetInnerHTML={{
                 __html: `

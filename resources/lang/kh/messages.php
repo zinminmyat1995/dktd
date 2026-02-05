@@ -8,6 +8,7 @@ return [
     'contact' => 'ទំនាក់ទំនង',
     'locations' => 'ទីតាំង',
     'terms' => 'លក្ខខណ្ឌ',
+    'useful_links' => 'តំណភ្ជាប់ដែលមានប្រយោជន៍',
 
     // Common Buttons & Labels
     'read_more' => 'អានបន្ថែម',
@@ -87,5 +88,14 @@ return [
     'error_generic_title' => 'កំហុស',
     'error_back_home' => 'ត្រលប់ទៅទំព័រដើម',
     'error_page_subtitle' => 'អូហូ!',
-    // Note: 'contact' key is already defined in navigation
+    
+    // New additions
+    'promotion_news_heading' => 'ប្រូម៉ូសិន និងព័ត៌មានថ្មីៗ',
+    'status_label' => 'ស្ថានភាព',
+    'posted_date' => 'កាលបរិច្ឆេទបង្ហោះ',
+    'related_promotions' => 'ប្រូម៉ូសិនដែលពាក់ព័ន្ធ',
+    'linked_products' => 'ផលិតផលដែលពាក់ព័ន្ធ',
+    'contact_success_message' => 'សារត្រូវបានផ្ញើដោយជោគជ័យ!',
+    'contact_error_message' => 'មានបញ្ហាអ្វីមួយ។ សូមព្យាយាមម្តងទៀត។',
+    'admin_reply_success_message' => 'ការឆ្លើយតបត្រូវបានផ្ញើដោយជោគជ័យ។',
 ];

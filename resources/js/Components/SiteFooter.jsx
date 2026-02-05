@@ -1,5 +1,6 @@
 import { Link } from "@inertiajs/react";
 import useTranslate from "@/hooks/useTranslate";
+import { cn } from "@/lib/utils";
 
 const footerLinksCol1 = [
   { key: "messages.home", label: "Home", routeName: "home" },
@@ -25,7 +26,7 @@ const socials = [
 ];
 
 export default function SiteFooter() {
-  const { t } = useTranslate();
+  const { t, locale } = useTranslate();
 
   return (
     <footer className="mt-8">
@@ -66,8 +67,8 @@ export default function SiteFooter() {
           {/* Center: Useful links */}
           <div className="lg:col-span-8">
             <div className="text-center lg:text-left">
-              <div className="text-[18px] font-SemiBold tracking-[0.25em] text-[#C46A2A]">
-                USEFUL LINKS
+              <div className={`text-[18px] font-SemiBold ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#C46A2A]`}>
+                {t("messages.useful_links")}
               </div>
 
               <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
