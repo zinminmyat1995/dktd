@@ -8,8 +8,8 @@ function HomeHero({ image = "/images/banner1.png" }) {
 
   // Condition for Khmer font sizing (adjusting for larger Khmer script)
   const titleSizing = locale === 'kh'
-    ? "text-[18px] xs:text-[22px] sm:text-[32px] md:text-[42px] lg:text-[52px]"
-    : "text-[28px] xs:text-[32px] sm:text-[45px] md:text-[55px] lg:text-[65px]";
+    ? "text-[18px] xs:text-[21px] sm:text-[30px] md:text-[38px] lg:text-[48px]"
+    : "text-[26px] xs:text-[30px] sm:text-[40px] md:text-[50px] lg:text-[60px]";
 
   const leadingSizing = locale === 'kh' ? "leading-relaxed" : "leading-tight";
 
@@ -34,7 +34,7 @@ function HomeHero({ image = "/images/banner1.png" }) {
               {/* Kicker with accent line */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="h-[2px] w-10 bg-[#C46A2A] shadow-md" />
-                <p className={`text-[13px] sm:text-[14px] font-Bold uppercase ${locale === 'kh' ? '' : 'tracking-[0.3em]'} text-white/90 drop-shadow-md`}>
+                <p className={`text-[13px] sm:text-[14px] font-Bold uppercase tracking-[0.3em] text-white/90 drop-shadow-md`}>
                   {t("messages.hero_kicker")}
                 </p>
               </div>

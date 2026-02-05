@@ -63,7 +63,7 @@ return [
     'product_description_heading' => 'ការពិពណ៌នា',
     'no_description_available' => 'មិនមានការពិពណ៌នាសម្រាប់ផលិតផលនេះទេ។',
     'view_less' => 'មើលតិច',
-    'back' => 'ត្រឡប់មកវិញ',
+    'back' => 'ត្រឡប់ទៅវិញ',
 
     // Contact Page
     'contact_get_in_touch' => 'ទាក់ទងមកយើង',

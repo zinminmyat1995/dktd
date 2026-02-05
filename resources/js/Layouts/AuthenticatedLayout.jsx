@@ -198,8 +198,12 @@ export default function AuthenticatedLayout({
 
 
       {/* ===== Overlay (mobile drawer) ===== */}
-      {!isDesktop && drawerOpen && (
-        <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setDrawerOpen(false)} />
+      {/* Guard: Only show if not desktop AND drawer is open. Added md:hidden as extra safety. */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/30 md:hidden transition-opacity"
+          onClick={() => setDrawerOpen(false)}
+        />
       )}
 
       {/* ✅ ✅ ✅ Layout body (FIXED HEIGHT + ONLY BODY SCROLL) ✅ ✅ ✅ */}
