@@ -4,7 +4,7 @@ import useTranslate from "@/hooks/useTranslate";
 import { useState, useRef, useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
 
-export default function PromotionDetail({ promotion }) {
+export default function PromotionDetail({ promotion, latestNewsId }) {
     const { t, locale } = useTranslate();
     const [isExpanded, setIsExpanded] = useState(false);
     const [showViewMore, setShowViewMore] = useState(false);
@@ -107,7 +107,13 @@ export default function PromotionDetail({ promotion }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                                 <span className="text-[11px] font-Bold uppercase tracking-widest">
-                                    {promotion.start_date ? new Date(promotion.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Latest Update'}
+                                    {promotion.start_date
+                                        ? new Date(promotion.start_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                                        : (promotion.id === latestNewsId
+                                            ? `${t('messages.latest_update') || 'Latest Update'} - ${new Date(promotion.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
+                                            : new Date(promotion.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+                                        )
+                                    }
                                     {promotion.end_date && ` - ${new Date(promotion.end_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`}
                                 </span>
                             </div>

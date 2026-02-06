@@ -136,8 +136,15 @@ class PublicController extends Controller
             abort(404);
         }
 
+        $latestNewsId = \App\Models\Promotion::query()
+            ->where('status', 'published')
+            ->where('type', 'news')
+            ->latest()
+            ->value('id');
+
         return Inertia::render('PromotionDetail', [
-            'promotion' => $promotion->load(['category:id,name', 'products:id,title,image_path'])
+            'promotion' => $promotion->load(['category:id,name', 'products:id,title,image_path']),
+            'latestNewsId' => $latestNewsId
         ]);
     }
 

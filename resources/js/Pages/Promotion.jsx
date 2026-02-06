@@ -24,7 +24,8 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
   const formatDate = (promo) => {
     if (promo.type === 'news') {
       if (promo.id === latestNewsId) {
-        return t("messages.latest_update");
+        // Show both label and date for the latest news
+        return `${t("messages.latest_update")} - ${new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
       }
       return new Date(promo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     }
