@@ -10,13 +10,17 @@ export default function ProductDetail({ product }) {
     const [showViewMore, setShowViewMore] = useState(false);
     const descriptionRef = useRef(null);
 
-    // Reliable "View More" detection for 5 lines (Consistent with PromotionDetail)
+    // Check if description needs "View More" (exceeds 3 lines)
     useLayoutEffect(() => {
         const checkHeight = () => {
             if (descriptionRef.current) {
-                // ~125px is approximately 5 lines
-                const scrollHeight = descriptionRef.current.scrollHeight;
-                setShowViewMore(scrollHeight > 125);
+                // Check if scrollHeight is greater than clientHeight (when clamped)
+                // or if expanded, check if it exceeds a threshold (approx 3 lines ~ 4.5rem/72px)
+                // We'll use a safer check assuming default is clamped.
+                const isClamped = descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight;
+                // Double check with height calculation just in case (3 lines * 1.625rem line-height ~ 78px)
+                const isLong = descriptionRef.current.scrollHeight > 80;
+                setShowViewMore(isClamped || isLong);
             }
         };
 
@@ -58,7 +62,7 @@ export default function ProductDetail({ product }) {
                     </div>
 
                     {/* Right: Product Details Panel */}
-                    <div className="flex flex-col h-full min-h-0">
+                    <div className="flex flex-col h-full min-h-0 justify-between">
 
                         {/* Top Content */}
                         <div className="flex-none">
@@ -82,7 +86,7 @@ export default function ProductDetail({ product }) {
                                 </ol>
                             </nav>
 
-                            <div className="flex flex-wrap items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-3">
                                 {product.category && (
                                     <span className={`inline-flex items-center rounded-full bg-[#185C9B]/10 px-4 py-1.5 text-[10px] sm:text-xs font-Bold ${locale === 'kh' ? '' : 'tracking-widest'} text-[#185C9B] uppercase`}>
                                         {product.category.name}
@@ -104,9 +108,7 @@ export default function ProductDetail({ product }) {
                                 {product.title}
                             </h1>
 
-                            <div className="mt-2 text-[10px] font-Bold text-slate-400 uppercase tracking-widest">
-                                {t("messages.posted_date") || "Posted"}: {new Date(product.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                            </div>
+
                         </div>
 
                         {/* Middle Content */}
@@ -115,31 +117,27 @@ export default function ProductDetail({ product }) {
                                 {t("messages.product_description_heading")}
                             </h3>
 
-                            <div className="relative flex-1 overflow-hidden min-h-0">
+                            <div className="relative flex-1 min-h-0">
                                 <div
                                     ref={descriptionRef}
-                                    className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words custom-scrollbar
-                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'max-h-[125px] overflow-hidden'}`}
+                                    className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words
+                                    ${isExpanded ? '' : 'line-clamp-3'}`}
                                 >
                                     {product.description || t("messages.no_description_available")}
                                 </div>
-
-                                {showViewMore && !isExpanded && (
-                                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-                                )}
                             </div>
 
                             {showViewMore && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className={`mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase ${locale === 'kh' ? '' : 'tracking-widest'} flex items-center gap-1 group w-fit`}
+                                    className={`mt-2 text-sm font-semibold text-blue-600 hover:underline transition-colors ${locale === 'kh' ? '' : 'tracking-wide'} flex items-center gap-1 group w-fit`}
                                 >
                                     {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
-                                        className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}
+                                        className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
                             )}

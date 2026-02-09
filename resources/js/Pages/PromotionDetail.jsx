@@ -67,7 +67,7 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
 
                         {/* Top Content */}
                         <div className="flex-none">
-                            <nav className="flex mb-6 overflow-x-auto no-scrollbar" aria-label="Breadcrumb">
+                            <nav className="flex mb-6 overflow-x-auto custom-scrollbar pb-2" aria-label="Breadcrumb">
                                 <ol className="flex items-center space-x-2 sm:space-x-4 whitespace-nowrap">
                                     <li>
                                         <Link href={route('promotion')} className="text-[12px] sm:text-sm font-Bold text-slate-400 hover:text-[#185C9B] uppercase tracking-wider">
