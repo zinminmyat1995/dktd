@@ -56,7 +56,7 @@ return [
 
     // Promotion Page
     'promotion_heading' => 'PROMOTIONS',
-    'promotion_news_heading' => 'Promotion & New',
+    'promotion_news_heading' => 'Promotion & News',
     'all_types' => 'All Types',
     'no_promotions' => 'No active promotions at the moment.',
 

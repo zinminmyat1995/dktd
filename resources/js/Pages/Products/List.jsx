@@ -640,7 +640,7 @@ export default function List({ categories = [] }) {
                                                 </td>
 
                                                 <td className="px-3 py-3">
-                                                    <div className="font-semibold text-slate-900">{r.title}</div>
+                                                    <div className="font-semibold text-slate-900 line-clamp-1" title={r.title}>{r.title}</div>
                                                     <div className="text-xs text-slate-500 line-clamp-1">{r.description}</div>
                                                 </td>
 
