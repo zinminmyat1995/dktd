@@ -1,0 +1,51 @@
+TECHNICAL SETUP & DEPLOYMENT GUIDE
+
+1. SYSTEM REQUIREMENTS
+-----------------------
+- PHP: ^8.2
+- Node.js: v22.x (Recommended)
+- Database: SQLite (default) or MySQL
+- Web Server: Apache (via XAMPP) or PHP Built-in Server
+
+2. INSTALLATION STEPS
+-----------------------
+Step 1: Clone or extract the project.
+Step 2: Install PHP dependencies:
+        composer install
+
+Step 3: Install Frontend dependencies:
+        npm install
+
+Step 4: Environment Configuration:
+        copy .env.example .env
+        php artisan key:generate
+
+Step 5: Database Setup:
+        php artisan migrate --seed
+        (This will create the tables and the initial admin user)
+
+Step 6: Storage Link:
+        php artisan storage:link
+
+3. DEVELOPMENT COMMANDS
+-----------------------
+To run the project locally:
+- Terminal 1 (Backend): php artisan serve
+- Terminal 2 (Frontend): npm run dev
+
+4. PRODUCTION DEPLOYMENT
+-----------------------
+Before going live, you MUST run the build command for React:
+        npm run build
+
+Server Configuration:
+- Document Root: Ensure it points to the '/public' folder.
+- Permissions: Folder 'storage' and 'bootstrap/cache' must be writable.
+- Environment: Set APP_DEBUG=false and APP_ENV=production in .env.
+
+5. ADMIN ACCESS
+-----------------------
+- Admin URL: www.dktd-genki.com/admin
+- User Roles:
+  * Admin: Full access to Products, Promotions, Categories, and User Management.
+  * Staff: Access to manage Products and Promotions.

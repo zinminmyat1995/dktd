@@ -537,14 +537,7 @@ export default function List({ categories = [] }) {
                     </div>
 
                     <div className="flex gap-2 flex-wrap justify-end">
-                        <button
-                            onClick={toggleSelectAll}
-                            className="h-10 px-4 rounded-full border text-sm font-semibold hover:bg-slate-50 disabled:opacity-50"
-                            type="button"
-                            disabled={meta.total === 0 || loading}
-                        >
-                            {isAllSelected ? "Unselect All" : "Select All"}
-                        </button>
+
 
                         <button
                             onClick={openHomeModal}
@@ -577,13 +570,8 @@ export default function List({ categories = [] }) {
                         <table className="min-w-[1350px] w-full text-sm">
                             <thead className="bg-slate-50 text-slate-600 sticky top-0 z-10">
                                 <tr>
-                                    <th className="px-3 py-3 text-left w-[44px]">
-                                        <input
-                                            type="checkbox"
-                                            checked={headerChecked}
-                                            ref={(el) => el && (el.indeterminate = headerIndeterminate)}
-                                            onChange={toggleSelectAll}
-                                        />
+                                    <th className="px-3 py-3 text-left w-[44px] bg-slate-50 sticky top-0 z-20">
+                                        <span className="sr-only">Select</span>
                                     </th>
                                     <th className="px-3 py-3 text-left w-[90px]">Image</th>
                                     <th className="px-3 py-3 text-left min-w-[200px]">Title</th>

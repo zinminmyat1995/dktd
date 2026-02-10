@@ -17,6 +17,8 @@ export default {
             fontFamily: {
                 sans: ['Nunito', 'Kantumruy Pro', 'sans-serif'],
                 display: ['Fredoka One', 'Moul', 'cursive'],
+                kh: ['Kantumruy Pro', 'sans-serif'],
+                'kh-display': ['Moul', 'cursive'],
             },
             fontWeight: {
                 'body': '500', // This adds font-medium as the default for body text
