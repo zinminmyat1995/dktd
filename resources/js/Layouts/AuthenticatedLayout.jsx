@@ -31,13 +31,19 @@ export default function AuthenticatedLayout({
 
   // ===== media query listener (auto hide/show) =====
   useEffect(() => {
+    // Sync isDesktop with drawer state
+    if (isDesktop) {
+      setDrawerOpen(false);
+    }
+  }, [isDesktop]);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
     const mq = window.matchMedia("(min-width: 768px)");
 
     const onChange = (e) => {
       setIsDesktop(e.matches);
-      if (e.matches) setDrawerOpen(false);
     };
 
     setIsDesktop(mq.matches);
@@ -90,7 +96,7 @@ export default function AuthenticatedLayout({
     // ✅ BODY background ကို ပို premium ဖြစ်အောင်
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-b from-slate-50 to-slate-100 font-sans admin-font">
       {/* ===== Topbar ===== */}
-      <div className="sticky top-0 z-40 bg-[#4f46e5] border-b">
+      <div className="sticky top-0 z-50 bg-[#4f46e5] border-b">
         <div className="flex items-center justify-between h-16 px-4 sm:px-6">
 
           {/* Left Brand */}
@@ -199,7 +205,7 @@ export default function AuthenticatedLayout({
 
       {/* ===== Overlay (mobile drawer) ===== */}
       {/* Guard: Only show if not desktop AND drawer is open. Added md:hidden as extra safety. */}
-      {drawerOpen && (
+      {drawerOpen && !isDesktop && (
         <div
           className="fixed inset-0 z-40 bg-black/30 md:hidden transition-opacity"
           onClick={() => setDrawerOpen(false)}
