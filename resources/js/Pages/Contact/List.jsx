@@ -188,6 +188,9 @@ export default function List() {
                 // Refresh messages
                 const msgs = await apiFetch(`/admin/contacts/${selectedContact.id}/messages`, { method: "GET" });
                 setMessages(msgs.data || []);
+
+                // Update the status in the local list so when we go back it is updated
+                setRows((prev) => prev.map((r) => (r.id === selectedContact.id ? { ...r, status: 1 } : r)));
             } else {
                 fetchData(); // Refresh list
             }
