@@ -100,8 +100,8 @@ export default function Contact() {
                       <a href="#" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="TikTok">
                         <TikTokIcon className="h-5 w-5" />
                       </a>
-                      <a href="#" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#C46A2A] hover:bg-[#C46A2A] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="Instagram">
-                        <InstagramIcon className="h-5 w-5" />
+                      <a href="#" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="Telegram">
+                        <TelegramIcon className="h-5 w-5" />
                       </a>
                       <a href="https://www.facebook.com/DKTD.Genki" className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-[#185C9B] hover:bg-[#185C9B] hover:text-white transition-all duration-500 shadow-sm border border-slate-100" aria-label="Facebook">
                         <FacebookIcon className="h-5 w-5" />
@@ -198,12 +198,10 @@ function TikTokIcon({ className = "" }) {
   );
 }
 
-function InstagramIcon({ className = "" }) {
+function TelegramIcon({ className = "" }) {
   return (
     <svg className={className} viewBox="0 0 48 48" fill="currentColor">
-      <path d="M24 16.3A7.7 7.7 0 1 0 24 31.7a7.7 7.7 0 0 0 0-15.4zm0 12.7A5 5 0 1 1 24 19a5 5 0 0 1 0 10z" />
-      <path d="M31.8 8H16.2A8.2 8.2 0 0 0 8 16.2v15.6A8.2 8.2 0 0 0 16.2 40h15.6A8.2 8.2 0 0 0 40 31.8V16.2A8.2 8.2 0 0 0 31.8 8zm5.5 23.8a5.5 5.5 0 0 1-5.5 5.5H16.2a5.5 5.5 0 0 1-5.5-5.5V16.2a5.5 5.5 0 0 1 5.5-5.5h15.6a5.5 5.5 0 0 1 5.5 5.5v15.6z" />
-      <circle cx="33.5" cy="14.5" r="1.8" />
+      <path d="M24 4C13 4 4 13 4 24s9 20 20 20 20-9 20-20S35 4 24 4zm10.7 14.3-3.5 15.2c-.2 1.1-.8 1.3-1.6 1.3-1.4 0-1.9-1-2.9-1.7l-4.1-3-2 2c-.3.3-.6.6-1.2.6l.4-6.1 11.1-10.1c.5-.4-.1-.7-.8-.2L17.3 24l-5.9-1.8c-1.3-.4-1.3-1.3.3-1.9L34.1 11.8c1.2-.4 2.2.3 1.7 2.5z" />
     </svg>
   );
 }

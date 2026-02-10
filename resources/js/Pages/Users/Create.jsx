@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import CommonToast from "@/Components/CommonToast";
 import CommonConfirmModal from "@/Components/CommonConfirmModal";
@@ -150,7 +150,15 @@ export default function Create() {
 
       showToast("success", "Updated", res?.message || "User updated.");
       setEditOpen(false);
+
+      // ✅ Refresh list
       fetchUsers();
+
+      // ✅ If updated self, reload 'auth' prop so header avatar updates
+      if (editRow.id === auth.user.id) {
+        router.reload({ only: ['auth'] });
+      }
+
     } catch (err) {
       if (err.status === 422) {
         setEditErrors(extract422Errors(err));

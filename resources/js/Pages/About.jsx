@@ -87,7 +87,7 @@ export default function About() {
                 <img
                   src="/images/about/image4.png"
                   alt="Our Leader"
-                  className="h-[400px] w-full object-cover sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
+                  className="h-[400px] w-full object-contain sm:h-[500px] transition-transform duration-700 group-hover:scale-110"
                   loading="lazy"
                   onError={(e) => (e.target.src = "/images/placeholder.png")}
                 />

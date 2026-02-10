@@ -283,7 +283,7 @@ export default function Home({ products, promotions, latestNewsId }) {
                   <div className="min-w-0 flex-1 flex flex-col justify-between py-1 transform transition-all duration-500 sm:group-hover:translate-x-1">
                     <div>
                       {/* Title row + Type badge */}
-                      <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+                      <div className="flex items-center justify-between gap-4 mb-2">
                         <h3 className="text-[20px] sm:text-[24px] font-Medium tracking-tight text-slate-700 group-hover:text-[#185C9B] transition-colors duration-500 truncate">
                           {promo.title}
                         </h3>
