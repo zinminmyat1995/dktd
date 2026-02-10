@@ -130,14 +130,14 @@ export default function ProductDetail({ product }) {
                             {showViewMore && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className={`mt-2 text-sm font-semibold text-blue-600 hover:underline transition-colors ${locale === 'kh' ? '' : 'tracking-wide'} flex items-center gap-1 group w-fit`}
+                                    className="mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
                                 >
                                     {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
-                                        className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                                        className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'group-hover:translate-y-0.5'}`}
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
                             )}

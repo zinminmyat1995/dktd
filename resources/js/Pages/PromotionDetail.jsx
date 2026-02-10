@@ -14,9 +14,9 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
     useLayoutEffect(() => {
         const checkHeight = () => {
             if (descriptionRef.current) {
-                // ~125px is the target for 5 lines (25px per line)
+                // Match threshold with CSS max-h (approx 8 lines)
                 const scrollHeight = descriptionRef.current.scrollHeight;
-                setShowViewMore(scrollHeight > 125);
+                setShowViewMore(scrollHeight > 200);
             }
         };
 
@@ -129,7 +129,7 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                                 <div
                                     ref={descriptionRef}
                                     className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words custom-scrollbar
-                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'max-h-[125px] overflow-hidden'}`}
+                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'max-h-[200px] overflow-hidden'}`}
                                 >
                                     {promotion.description || t("messages.no_description_available")}
                                 </div>
