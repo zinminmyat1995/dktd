@@ -47,39 +47,47 @@ class ProductController extends Controller
             $imagePath = $imgService->store($request->file('image'), 'products');
         }
 
-        // Start a database transaction to ensure data consistency
-        return \DB::transaction(function () use ($validated, $imagePath, $productService) {
-            // If show_on_home is true, we need to update the existing home page products
-            $showOnHome = $validated['show_on_home'] ?? false;
-            $showOnHomeValue = 0;
-            
-            if ($showOnHome) {
-                // Use service to rotate products and get the new position
-                $showOnHomeValue = $productService->rotateHomeProducts();
-            }
-            
-            // Create the new product
-            $product = Product::create([
-                'category_id'  => $validated['category_id'] ?? null,
-                'title'        => $validated['title'],
-                'description'  => $validated['description'] ?? null,
-                'image_path'   => $imagePath,
-                'is_new'       => $validated['is_new'] ?? false,
-                'show_on_home' => $showOnHomeValue,
-                'status'       => $validated['status'],
-                'published_at' => $validated['published_at'] ?? null,
-                'start_date'   => $validated['start_date'] ?? null,
-                'end_date'     => $validated['end_date'] ?? null,
-                'created_by'   => auth()->id(),
-            ]);
-            
-            return response()->json([
-                'ok' => true,
-                'message' => 'Product created successfully.',
-                'data' => $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
-            ], 201);
-        });
+        try {
+            // Start a database transaction to ensure data consistency
+            return \DB::transaction(function () use ($validated, $imagePath, $productService) {
+                // If show_on_home is true, we need to update the existing home page products
+                $showOnHome = $validated['show_on_home'] ?? false;
+                $showOnHomeValue = 0;
+                
+                if ($showOnHome) {
+                    // Use service to rotate products and get the new position
+                    $showOnHomeValue = $productService->rotateHomeProducts();
+                }
+                
+                // Create the new product
+                $product = Product::create([
+                    'category_id'  => $validated['category_id'] ?? null,
+                    'title'        => $validated['title'],
+                    'description'  => $validated['description'] ?? null,
+                    'image_path'   => $imagePath,
+                    'is_new'       => $validated['is_new'] ?? false,
+                    'show_on_home' => $showOnHomeValue,
+                    'status'       => $validated['status'],
+                    'published_at' => $validated['published_at'] ?? null,
+                    'start_date'   => $validated['start_date'] ?? null,
+                    'end_date'     => $validated['end_date'] ?? null,
+                    'created_by'   => auth()->id(),
+                ]);
+                
+                return response()->json([
+                    'ok' => true,
+                    'message' => 'Product created successfully.',
+                    'data' => $product->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+                ], 201);
+            });
 
+        } catch (\Exception $e) {
+            // If DB transaction failed, delete the image we just uploaded so it doesn't become an orphan
+            if ($imagePath) {
+                $imgService->deleteOld($imagePath);
+            }
+            throw $e;
+        }
     }
 
     public function data(Request $req)
@@ -136,29 +144,43 @@ class ProductController extends Controller
             'published_at'  => ['nullable', 'date'],
         ]);
 
-        // ✅ replace image (new file + delete old file)
-        $imagePath = $imgService->storeReplace(
-            $request->file('image'),       // new image file (nullable)
-            $product->image_path,          // old path
-            'products'                     // folder name
-        );
+        $oldImageFn = $product->image_path;
+        $newImageFn = null;
 
-        $product->update([
-            'category_id'  => $validated['category_id'] ?? null,
-            'title'        => $validated['title'],
-            'description'  => $validated['description'] ?? null,
-            'image_path'   => $imagePath,  // ✅ new path or old path (if no new image)
-            'is_new'       => $validated['is_new'] ?? false,
-            'status'       => $validated['status'],
-            'published_at' => $validated['published_at'] ?? null,
-            'updated_by'   => auth()->id(),
-        ]);
+        if ($request->file('image')) {
+            $newImageFn = $imgService->store($request->file('image'), 'products');
+        }
 
-        return response()->json([
-            'ok' => true,
-            'message' => "Product updated successfully.",
-            'data' => $product->fresh()->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
-        ]);
+        try {
+            $product->update([
+                'category_id'  => $validated['category_id'] ?? null,
+                'title'        => $validated['title'],
+                'description'  => $validated['description'] ?? null,
+                'image_path'   => $newImageFn ?? $oldImageFn,  // Use new image if uploaded, else keep old
+                'is_new'       => $validated['is_new'] ?? false,
+                'status'       => $validated['status'],
+                'published_at' => $validated['published_at'] ?? null,
+                'updated_by'   => auth()->id(),
+            ]);
+
+            // If update successful & new image uploaded, delete the old one
+            if ($newImageFn && $oldImageFn) {
+                $imgService->deleteOld($oldImageFn);
+            }
+
+            return response()->json([
+                'ok' => true,
+                'message' => "Product updated successfully.",
+                'data' => $product->fresh()->load(['category:id,name', 'creator:id,name', 'updater:id,name']),
+            ]);
+
+        } catch (\Exception $e) {
+            // Transaction failed (or update failed): delete the NEW image we just uploaded
+            if ($newImageFn) {
+                $imgService->deleteOld($newImageFn);
+            }
+            throw $e;
+        }
     }
 
     public function destroy(Product $product, ImageStorageService $imgService)
