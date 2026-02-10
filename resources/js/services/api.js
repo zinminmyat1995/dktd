@@ -1,5 +1,8 @@
-export function csrfToken() {
-  return document.querySelector("meta[name='csrf-token']")?.content || "";
+function getCookie(name) {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(name + "="))
+    ?.split("=")[1];
 }
 
 export async function apiFetch(url, options = {}) {
@@ -11,9 +14,13 @@ export async function apiFetch(url, options = {}) {
     ...(options.headers || {}),
   };
 
-  // ✅ CSRF for POST/PUT/PATCH/DELETE
+  // ✅ Use XSRF cookie (avoid stale meta csrf-token issue)
   if (method !== "GET") {
-    headers["X-CSRF-TOKEN"] = csrfToken();
+    const xsrf = getCookie("XSRF-TOKEN");
+    if (xsrf) headers["X-XSRF-TOKEN"] = decodeURIComponent(xsrf);
+
+    // ❌ Don't send meta-based token (stale after login/session regenerate)
+    // headers["X-CSRF-TOKEN"] = csrfToken();
   }
 
   // If body is NOT FormData, and not already set, default to JSON
@@ -45,7 +52,6 @@ export async function apiFetch(url, options = {}) {
 
   return data;
 }
-
 export function extract422Errors(err) {
   const errors = err?.data?.errors;
   if (!errors) return {};

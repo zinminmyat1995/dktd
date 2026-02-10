@@ -116,7 +116,7 @@ return [
     ],
 
     'receiver' => [
-        'address' => env('MAIL_RECEIVER', 'finance@hscace-tech.com'),
+        'address' => env('MAIL_RECEIVER', 'zinminmyat051@gmail.com'),
     ],
 
 ];
