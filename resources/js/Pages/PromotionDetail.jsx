@@ -10,13 +10,15 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
     const [showViewMore, setShowViewMore] = useState(false);
     const descriptionRef = useRef(null);
 
-    // Reliable "View More" detection for 5 lines
+    // Reliable "View More" detection for 9 lines
     useLayoutEffect(() => {
         const checkHeight = () => {
-            if (descriptionRef.current) {
-                // Match threshold with CSS max-h (approx 8 lines)
-                const scrollHeight = descriptionRef.current.scrollHeight;
-                setShowViewMore(scrollHeight > 200);
+            if (descriptionRef.current && !isExpanded) {
+                const { scrollHeight, clientHeight } = descriptionRef.current;
+                // Check if scrollHeight is strictly greater than clientHeight
+                // AND ensure it's actually significantly larger than a single line variance
+                // using a small buffer (e.g. 1px) to avoid sub-pixel rendering issues
+                setShowViewMore(scrollHeight > clientHeight + 1);
             }
         };
 
@@ -31,7 +33,7 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
             observer.disconnect();
             timers.forEach(clearTimeout);
         };
-    }, [promotion.description]);
+    }, [promotion.description, isExpanded]);
 
     const toPublicUrl = (path) => {
         if (!path) return null;
@@ -120,16 +122,21 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                         </div>
 
                         {/* Middle Content (Stretchy Description Area) */}
-                        <div className="mt-8 mb-6 flex-1 flex flex-col min-h-0">
+                        <div className="mt-8 mb-2 flex-1 flex flex-col min-h-0">
                             <h3 className={`text-sm font-SemiBold text-[#D4793F] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase mb-4 font-display`}>
                                 {t("messages.product_description_heading") || 'Description'}
                             </h3>
 
-                            <div className="relative flex-1 overflow-hidden min-h-0">
+                            <div className={`relative overflow-hidden min-h-0 ${isExpanded ? 'flex-1' : ''}`}>
                                 <div
                                     ref={descriptionRef}
                                     className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words custom-scrollbar
-                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'max-h-[200px] overflow-hidden'}`}
+                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'overflow-hidden'}`}
+                                    style={!isExpanded ? {
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 9,
+                                        WebkitBoxOrient: 'vertical',
+                                    } : {}}
                                 >
                                     {promotion.description || t("messages.no_description_available")}
                                 </div>
@@ -144,7 +151,7 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                             {showViewMore && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
+                                    className="mt-2 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
                                 >
                                     {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
@@ -158,7 +165,7 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                         </div>
 
                         {/* Bottom Buttons - Strictly level with image bottom */}
-                        <div className="mt-auto pt-6 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
+                        <div className="mt-auto pt-4 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
                             {promotion.type === 'promotion' && (
                                 <Link
                                     href={route('contact')}
@@ -177,11 +184,11 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                     </div>
 
                     {/* Linked Products (Moved to Row 2, Col 1) */}
-                    {promotion.products && promotion.products.length > 0 && (
-                        <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 h-fit">
-                            <h4 className={`text-[10px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mb-3`}>
-                                {t("messages.linked_products") || 'Linked Products'}
-                            </h4>
+                    <div className="bg-slate-50 rounded-3xl p-4 border border-slate-100 h-fit">
+                        <h4 className={`text-[10px] font-Bold text-slate-400 uppercase ${locale === 'kh' ? '' : 'tracking-widest'} mb-3`}>
+                            {t("messages.linked_products") || 'Linked Products'}
+                        </h4>
+                        {promotion.products && promotion.products.length > 0 ? (
                             <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
                                 {promotion.products.map(p => (
                                     <Link
@@ -199,8 +206,12 @@ export default function PromotionDetail({ promotion, latestNewsId }) {
                                     </Link>
                                 ))}
                             </div>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="text-[10px] text-slate-400 italic text-center py-4 opacity-50">
+                                No active products
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <style dangerouslySetInnerHTML={{

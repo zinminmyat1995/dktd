@@ -74,7 +74,7 @@ export default function Promotion({ promotions = { data: [] }, filters = {}, lat
                 <PromoRow key={promo.id} promo={promo} t={t} locale={locale} toPublicUrl={toPublicUrl} formatDate={formatDate} />
               ))
             ) : (
-              <p className="text-center text-slate-500 py-20">{t("messages.no_promotions")}</p>
+              <p className="text-center text-slate-500 py-20 font-Medium italic">{t("messages.no_promotions")}</p>
             )}
           </div>
 

@@ -18,7 +18,7 @@ export default function Products({ products, categories, filters }) {
   return (
     <InnerPageLayout titleKey="messages.products">
       <section className="py-14">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page Heading */}
           <div className="text-center">
             <h2 className={`text-[35px] font-SemiBold font-display ${locale === 'kh' ? '' : 'tracking-[0.25em]'} text-[#D4793F]`}>
@@ -53,7 +53,7 @@ export default function Products({ products, categories, filters }) {
           </div>
 
           {/* Grid */}
-          <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {products.data.length > 0 ? (
               products.data.map((product) => (
                 <ProductCard key={product.id} product={product} t={t} locale={locale} />

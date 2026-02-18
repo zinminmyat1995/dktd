@@ -10,17 +10,14 @@ export default function ProductDetail({ product }) {
     const [showViewMore, setShowViewMore] = useState(false);
     const descriptionRef = useRef(null);
 
-    // Check if description needs "View More" (exceeds 3 lines)
+    // Reliable "View More" detection for 5 lines
     useLayoutEffect(() => {
         const checkHeight = () => {
-            if (descriptionRef.current) {
-                // Check if scrollHeight is greater than clientHeight (when clamped)
-                // or if expanded, check if it exceeds a threshold (approx 3 lines ~ 4.5rem/72px)
-                // We'll use a safer check assuming default is clamped.
-                const isClamped = descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight;
-                // Double check with height calculation just in case (3 lines * 1.625rem line-height ~ 78px)
-                const isLong = descriptionRef.current.scrollHeight > 80;
-                setShowViewMore(isClamped || isLong);
+            if (descriptionRef.current && !isExpanded) {
+                const { scrollHeight, clientHeight } = descriptionRef.current;
+                // Check if scrollHeight is strictly greater than clientHeight
+                // AND ensure it's actually significantly larger (small buffer)
+                setShowViewMore(scrollHeight > clientHeight + 1);
             }
         };
 
@@ -35,7 +32,7 @@ export default function ProductDetail({ product }) {
             observer.disconnect();
             timers.forEach(clearTimeout);
         };
-    }, [product.description]);
+    }, [product.description, isExpanded]);
 
     const toPublicUrl = (path) => {
         if (!path) return null;
@@ -47,7 +44,7 @@ export default function ProductDetail({ product }) {
     return (
         <InnerPageLayout titleKey="messages.products">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 min-h-[60vh] flex flex-col justify-center">
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[35%_1fr_280px] lg:items-stretch h-full">
+                <div className="grid grid-cols-1 gap-8 lg:grid-cols-[35%_1fr_280px] lg:items-start h-full">
 
                     {/* Left: Product Image */}
                     <div className="overflow-hidden rounded-[2rem] bg-gray-50 shadow-xl shadow-slate-200/50 h-fit aspect-square ring-1 ring-slate-100 flex items-center justify-center">
@@ -62,7 +59,7 @@ export default function ProductDetail({ product }) {
                     </div>
 
                     {/* Right: Product Details Panel */}
-                    <div className="flex flex-col h-full min-h-0 justify-between">
+                    <div className="flex flex-col min-h-0 justify-start h-full">
 
                         {/* Top Content */}
                         <div className="flex-none">
@@ -112,25 +109,35 @@ export default function ProductDetail({ product }) {
                         </div>
 
                         {/* Middle Content */}
-                        <div className="mt-8 mb-6 flex-1 flex flex-col min-h-0">
+                        <div className="mt-6 mb-2 flex flex-col min-h-0">
                             <h3 className={`text-sm font-SemiBold text-[#D4793F] ${locale === 'kh' ? '' : 'tracking-[0.2em]'} uppercase mb-4 font-display`}>
                                 {t("messages.product_description_heading")}
                             </h3>
 
-                            <div className="relative flex-1 min-h-0">
+                            <div className={`relative overflow-hidden min-h-0 ${isExpanded ? 'flex-1' : ''}`}>
                                 <div
                                     ref={descriptionRef}
-                                    className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words
-                                    ${isExpanded ? '' : 'line-clamp-3'}`}
+                                    className={`text-base leading-relaxed text-slate-600 whitespace-pre-line break-words custom-scrollbar
+                                    ${isExpanded ? 'overflow-y-auto h-full pr-4' : 'overflow-hidden'}`}
+                                    style={!isExpanded ? {
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 5,
+                                        WebkitBoxOrient: 'vertical',
+                                    } : {}}
                                 >
                                     {product.description || t("messages.no_description_available")}
                                 </div>
+
+                                {/* Gradient fade-out overlay when collapsed */}
+                                {showViewMore && !isExpanded && (
+                                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                                )}
                             </div>
 
                             {showViewMore && (
                                 <button
                                     onClick={() => setIsExpanded(!isExpanded)}
-                                    className="mt-4 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
+                                    className="mt-2 text-sm font-Bold text-[#185C9B] hover:text-[#1E4F7A] transition-colors uppercase tracking-widest flex items-center gap-1 group w-fit"
                                 >
                                     {isExpanded ? t("messages.view_less") : t("messages.view_more")}
                                     <svg
@@ -148,7 +155,7 @@ export default function ProductDetail({ product }) {
 
 
                         {/* Bottom Buttons */}
-                        <div className="mt-auto pt-6 sm:pt-8 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white flex-none">
+                        <div className="mt-auto pt-4 border-t border-slate-100 flex gap-2 sm:gap-4 bg-white">
                             <Link
                                 href={route('contact')}
                                 className={`flex flex-[2] items-center justify-center rounded-full border border-transparent bg-[#185C9B] px-4 py-3 sm:px-8 sm:py-4 text-[13px] sm:text-base font-Bold text-white shadow-lg shadow-blue-900/10 hover:bg-[#1E4F7A] hover:translate-y-[-1px] transition-all focus:outline-none uppercase ${locale === 'kh' ? '' : 'tracking-widest'}`}
